@@ -1,0 +1,35 @@
+<resources>
+    <string name="app_name">CareBridge</string>
+    <string name="app_tagline">Your Bridge to Better Care</string>
+    <string name="welcome_back">Welcome Back</string>
+    <string name="login_subtitle">Sign in to access your healthcare portal</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="remember_me">Remember me</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="sign_in">Sign In</string>
+
+    <!-- Error Messages -->
+    <string name="error_username_required">Username is required</string>
+    <string name="error_password_required">Password is required</string>
+    <string name="error_password_length">Password must be at least 6 characters</string>
+    <string name="error_invalid_credentials">Invalid username or password</string>
+    <string name="login_success">Login successful!</string>
+
+    <!-- Guardian Dashboard -->
+    <string name="guardian_dashboard_title">Guardian Dashboard</string>
+    <string name="patients_list">Patients</string>
+    <string name="reports">Reports</string>
+    <string name="appointments">Appointments</string>
+    <string name="guardian_profile">Guardian Profile</string>
+
+    <!-- Patient Dashboard -->
+    <string name="patient_dashboard_title">Patient Dashboard</string>
+    <string name="health_status">Health Status</string>
+    <string name="prescriptions">Prescriptions</string>
+    <string name="medical_records">Medical Records</string>
+    <string name="emergency">Emergency</string>
+    <string name="checkup">Check-up</string>
+    <string name="patient_profile">Patient Profile</string>
+
+</resources>
