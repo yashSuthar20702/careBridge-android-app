@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <network-security-config>
+    <!-- Allow HTTP traffic for local development -->
     <domain-config cleartextTrafficPermitted="true">
+        <!-- Your Mac local IP address -->
+        <domain includeSubdomains="true">10.0.0.165</domain>
+
+        <!-- Android emulator localhost -->
         <domain includeSubdomains="true">10.0.2.2</domain>
+
+        <!-- Fallbacks for local testing -->
+        <domain includeSubdomains="true">localhost</domain>
+        <domain includeSubdomains="true">127.0.0.1</domain>
     </domain-config>
 </network-security-config>

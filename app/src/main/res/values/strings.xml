@@ -1,15 +1,18 @@
 <resources>
+    <!-- App Info -->
     <string name="app_name">CareBridge</string>
     <string name="app_tagline">Your Bridge to Better Care</string>
+
+    <!-- Common -->
     <string name="welcome_back">Welcome Back</string>
-    <string name="login_subtitle">Sign in to access your healthcare portal</string>
+    <string name="sign_in">Sign In</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="remember_me">Remember me</string>
     <string name="forgot_password">Forgot Password?</string>
-    <string name="sign_in">Sign In</string>
 
-    <!-- Error Messages -->
+    <!-- Login Messages -->
+    <string name="login_subtitle">Sign in to access your healthcare portal</string>
     <string name="error_username_required">Username is required</string>
     <string name="error_password_required">Password is required</string>
     <string name="error_password_length">Password must be at least 6 characters</string>
@@ -31,5 +34,38 @@
     <string name="emergency">Emergency</string>
     <string name="checkup">Check-up</string>
     <string name="patient_profile">Patient Profile</string>
+
+    <!-- Sections -->
+    <string name="guardian_details">Guardian Details</string>
+    <string name="personal_information">Personal Information</string>
+    <string name="upcoming_medications">Upcoming Medications</string>
+
+    <!-- Labels -->
+    <string name="age_label">Age: %1$d years</string>
+    <string name="blood_type_label">Blood Type: %1$s</string>
+    <string name="allergies_label">Allergies: %1$s</string>
+    <string name="conditions_label">Conditions: %1$s</string>
+    <string name="relationship_label">Relationship: %1$s</string>
+    <string name="phone_label">Phone: %1$s</string>
+    <string name="email_label">Email: %1$s</string>
+
+    <!-- Logout -->
+    <string name="logout">Logout</string>
+    <string name="logout_confirmation">Are you sure you want to logout?</string>
+
+    <string name="patient_name_placeholder">John Patient</string>
+    <string name="patient_id_placeholder">ID: PAT-001</string>
+    <string name="health_status_value">Stable</string>
+    <string name="health_status_label">Good</string>
+
+    <string name="guardian_name_placeholder">Sarah Johnson</string>
+    <string name="guardian_relationship_placeholder">Relationship: Daughter</string>
+    <string name="guardian_phone_placeholder">Phone: +1 (555) 123-4567</string>
+    <string name="guardian_email_placeholder">Email: sarah.j@email.com</string>
+
+    <string name="patient_age_placeholder">Age: 72 years</string>
+    <string name="patient_blood_type_placeholder">Blood Type: O+</string>
+    <string name="patient_allergies_placeholder">Allergies: Penicillin, Shellfish</string>
+    <string name="patient_conditions_placeholder">Conditions: Hypertension, Diabetes</string>
 
 </resources>

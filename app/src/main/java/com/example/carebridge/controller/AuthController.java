@@ -6,7 +6,9 @@ import android.os.Looper;
 import android.util.Log;
 
 import com.example.carebridge.model.User;
+import com.example.carebridge.model.PatientInfo;
 import com.example.carebridge.utils.SharedPrefManager;
+import com.google.gson.Gson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -24,17 +26,18 @@ import okhttp3.Response;
 public class AuthController {
 
     private static final String TAG = "AuthController";
-    private Context context;
-    private SharedPrefManager sharedPrefManager;
+    private final Context context;
+    private final SharedPrefManager sharedPrefManager;
     private final OkHttpClient client;
 
-    // API URL for emulator localhost
-    private static final String LOGIN_URL = "http://10.0.2.2/CareBridge/careBridge-website/endpoints/auth/login.php";
+    private static final String BASE_URL = "http://10.0.0.165/CareBridge/careBridge-web-app/careBridge-website/endpoints/auth/";
+    private static final String LOGIN_URL = BASE_URL + "login.php";
 
     public AuthController(Context context) {
         this.context = context;
         this.sharedPrefManager = new SharedPrefManager(context);
         this.client = new OkHttpClient();
+        Log.d(TAG, "AuthController initialized");
     }
 
     public interface LoginCallback {
@@ -43,77 +46,71 @@ public class AuthController {
     }
 
     public void login(String username, String password, LoginCallback callback) {
-        Log.d(TAG, "login() called with username: " + username);
-
         JSONObject json = new JSONObject();
         try {
             json.put("username", username);
             json.put("password", password);
+            Log.d(TAG, "[LOGIN REQUEST] JSON: " + json.toString());
         } catch (JSONException e) {
-            Log.e(TAG, "JSON creation error: ", e);
-            callback.onFailure("Internal error creating request JSON");
+            Log.e(TAG, "[LOGIN ERROR] JSON creation failed", e);
+            callback.onFailure("Error creating request JSON");
             return;
         }
 
         RequestBody body = RequestBody.create(json.toString(), MediaType.get("application/json; charset=utf-8"));
-        Request request = new Request.Builder()
-                .url(LOGIN_URL)
-                .post(body)
-                .build();
-
-        Log.d(TAG, "Sending login request to " + LOGIN_URL + " with body: " + json.toString());
+        Request request = new Request.Builder().url(LOGIN_URL).post(body).build();
 
         client.newCall(request).enqueue(new Callback() {
-            Handler mainHandler = new Handler(Looper.getMainLooper());
+            final Handler mainHandler = new Handler(Looper.getMainLooper());
 
             @Override
             public void onFailure(Call call, IOException e) {
-                Log.e(TAG, "Network request failed: ", e);
+                Log.e(TAG, "[NETWORK ERROR] " + e.getMessage());
                 mainHandler.post(() -> callback.onFailure("Network error: " + e.getMessage()));
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String resString = response.body() != null ? response.body().string() : "";
-                Log.d(TAG, "Response received: " + resString);
+                Log.d(TAG, "[RESPONSE] " + resString);
 
                 mainHandler.post(() -> {
                     try {
                         JSONObject resJson = new JSONObject(resString);
-
                         String status = resJson.optString("status");
                         String message = resJson.optString("message");
 
-                        Log.d(TAG, "Response status: " + status + ", message: " + message);
-
                         if ("success".equalsIgnoreCase(status)) {
                             JSONObject userJson = resJson.getJSONObject("user");
-
                             User user = new User();
                             user.setId(userJson.optInt("user_id"));
                             user.setUsername(userJson.optString("username"));
                             user.setRole(userJson.optString("role"));
-                            user.setName(userJson.optString("username"));
-                            user.setEmail(userJson.optString("email", ""));
-                            user.setPhone(userJson.optString("phone", ""));
-                            user.setAddress(userJson.optString("address", ""));
+                            user.setReferenceId(userJson.optString("reference_id"));
+                            user.setCreatedAt(userJson.optString("created_at"));
 
-                            Log.d(TAG, "User parsed successfully: " + user.getUsername());
+                            // Parse linked_data (PatientInfo)
+                            JSONObject linkedDataJson = userJson.optJSONObject("linked_data");
+                            if (linkedDataJson != null && linkedDataJson.length() > 0) {
+                                PatientInfo patientInfo = new Gson().fromJson(linkedDataJson.toString(), PatientInfo.class);
+                                user.setPatientInfo(patientInfo);
+                                Log.d(TAG, "[PATIENT INFO] " + patientInfo.toString());
+                            } else {
+                                Log.w(TAG, "[PATIENT INFO] linked_data is empty or null");
+                                user.setPatientInfo(new PatientInfo()); // avoid null
+                            }
 
-                            // Save session (in background to avoid UI blocking)
-                            new Thread(() -> {
-                                sharedPrefManager.saveUserSession(user);
-                                Log.d(TAG, "User session saved successfully");
-                            }).start();
+                            // Save user session
+                            new Thread(() -> sharedPrefManager.saveUserSession(user)).start();
 
                             callback.onSuccess(user);
                         } else {
-                            Log.e(TAG, "Login failed: " + message);
-                            callback.onFailure(message);
+                            callback.onFailure(message.isEmpty() ? "Login failed" : message);
                         }
+
                     } catch (JSONException e) {
-                        Log.e(TAG, "JSON parsing error: ", e);
-                        callback.onFailure("Invalid response from server");
+                        Log.e(TAG, "[RESPONSE ERROR] Invalid server response", e);
+                        callback.onFailure("Invalid server response");
                     }
                 });
             }
@@ -121,20 +118,19 @@ public class AuthController {
     }
 
     public void logout() {
-        Log.d(TAG, "logout() called");
+        Log.d(TAG, "[LOGOUT] Clearing session");
         sharedPrefManager.clearSession();
-        Log.d(TAG, "Session cleared");
     }
 
     public boolean isLoggedIn() {
         boolean loggedIn = sharedPrefManager.isLoggedIn();
-        Log.d(TAG, "isLoggedIn(): " + loggedIn);
+        Log.d(TAG, "[SESSION CHECK] isLoggedIn=" + loggedIn);
         return loggedIn;
     }
 
     public User getCurrentUser() {
         User user = sharedPrefManager.getCurrentUser();
-        Log.d(TAG, "getCurrentUser(): " + (user != null ? user.getUsername() : "null"));
+        Log.d(TAG, "[SESSION USER] " + (user != null ? user.getUsername() : "null"));
         return user;
     }
 }

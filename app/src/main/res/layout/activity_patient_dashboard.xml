@@ -1,19 +1,18 @@
-<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_gradient_patient">
+    android:background="@color/bg_patient_dashboard">
 
-    <!-- Sticky Header Section -->
+    <!-- Sticky Header -->
     <LinearLayout
         android:id="@+id/headerLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="@color/white"
+        android:padding="24dp"
         android:elevation="8dp"
-        android:padding="24dp">
+        android:background="@color/white">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -31,7 +30,7 @@
                     android:id="@+id/tvWelcome"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Welcome Back,"
+                    android:text="@string/welcome_back"
                     android:textColor="@color/text_secondary"
                     android:textSize="16sp" />
 
@@ -39,7 +38,7 @@
                     android:id="@+id/tvPatientName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="John Patient"
+                    android:text="@string/patient_name_placeholder"
                     android:textColor="@color/text_primary"
                     android:textSize="24sp"
                     android:fontFamily="sans-serif-medium"
@@ -49,19 +48,18 @@
                     android:id="@+id/tvPatientId"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="ID: PAT-001"
+                    android:text="@string/patient_id_placeholder"
                     android:textColor="@color/text_secondary"
                     android:textSize="14sp"
                     android:layout_marginTop="2dp" />
 
             </LinearLayout>
 
-            <!-- Logout Button instead of Profile Photo -->
             <Button
                 android:id="@+id/btnHeaderLogout"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
-                android:text="Logout"
+                android:text="@string/logout"
                 android:textColor="@color/white"
                 android:textSize="14sp"
                 android:background="@drawable/button_logout_small"
@@ -70,511 +68,236 @@
                 android:elevation="4dp" />
 
         </LinearLayout>
-
-        <!-- Health Status Card -->
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="4dp"
-            app:cardBackgroundColor="@color/status_active_bg">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="16dp"
-                android:gravity="center_vertical">
-
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@drawable/ic_health_status"
-                    android:tint="@color/status_active" />
-
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:layout_marginStart="12dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Health Status"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        android:id="@+id/tvHealthStatus"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Stable"
-                        android:textColor="@color/status_active"
-                        android:textSize="16sp"
-                        android:fontFamily="sans-serif-medium"
-                        android:layout_marginTop="2dp" />
-
-                </LinearLayout>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Good"
-                    android:textColor="@color/status_active"
-                    android:textSize="12sp"
-                    android:background="@drawable/bg_rounded_status"
-                    android:paddingHorizontal="12dp"
-                    android:paddingVertical="4dp" />
-
-            </LinearLayout>
-
-        </androidx.cardview.widget.CardView>
-
     </LinearLayout>
 
-    <!-- ScrollView for content below header -->
+    <!-- Scrollable Content -->
     <ScrollView
+        android:id="@+id/scrollViewContent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/headerLayout"
-        android:fillViewport="true"
-        android:paddingTop="8dp">
+        android:padding="16dp"
+        android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- Upcoming Medications Section -->
-            <LinearLayout
+            <!-- Health Status Card -->
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="24dp"
-                android:background="@color/white"
-                android:layout_marginTop="8dp">
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="6dp"
+                app:cardBackgroundColor="@color/status_active_bg">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Upcoming Medications"
-                    android:textColor="@color/text_primary"
-                    android:textSize="20sp"
-                    android:fontFamily="sans-serif-medium"
-                    android:layout_marginBottom="16dp" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rvMedications"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp" />
+                    android:orientation="horizontal"
+                    android:padding="16dp"
+                    android:gravity="center_vertical">
 
-                <!-- Sample Medication Items -->
-                <androidx.cardview.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="2dp"
-                    app:cardBackgroundColor="@color/white">
+                    <ImageView
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:src="@drawable/ic_health_status"
+                        android:tint="@color/status_active" />
 
                     <LinearLayout
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:padding="16dp"
-                        android:gravity="center_vertical">
-
-                        <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:src="@drawable/ic_medication"
-                            android:tint="@color/primary_blue"
-                            android:layout_marginEnd="12dp" />
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Paracetamol 500mg"
-                                android:textColor="@color/text_primary"
-                                android:textSize="16sp"
-                                android:fontFamily="sans-serif-medium" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="1 tablet - After meals"
-                                android:textColor="@color/text_secondary"
-                                android:textSize="14sp"
-                                android:layout_marginTop="2dp" />
-
-                        </LinearLayout>
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:layout_marginStart="12dp">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="08:00 AM"
-                            android:textColor="@color/primary_blue"
-                            android:textSize="14sp"
-                            android:fontFamily="sans-serif-medium"
-                            android:background="@drawable/bg_rounded_time"
-                            android:paddingHorizontal="12dp"
-                            android:paddingVertical="6dp" />
-
-                    </LinearLayout>
-
-                </androidx.cardview.widget.CardView>
-
-                <androidx.cardview.widget.CardView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="2dp"
-                    app:cardBackgroundColor="@color/white">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:padding="16dp"
-                        android:gravity="center_vertical">
-
-                        <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:src="@drawable/ic_medication"
-                            android:tint="@color/primary_blue"
-                            android:layout_marginEnd="12dp" />
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Vitamin D3"
-                                android:textColor="@color/text_primary"
-                                android:textSize="16sp"
-                                android:fontFamily="sans-serif-medium" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="1 capsule - With breakfast"
-                                android:textColor="@color/text_secondary"
-                                android:textSize="14sp"
-                                android:layout_marginTop="2dp" />
-
-                        </LinearLayout>
+                            android:text="@string/health_status"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="14sp" />
 
                         <TextView
+                            android:id="@+id/tvHealthStatus"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="09:00 AM"
-                            android:textColor="@color/primary_blue"
-                            android:textSize="14sp"
+                            android:text="@string/health_status_value"
+                            android:textColor="@color/status_active"
+                            android:textSize="16sp"
                             android:fontFamily="sans-serif-medium"
-                            android:background="@drawable/bg_rounded_time"
-                            android:paddingHorizontal="12dp"
-                            android:paddingVertical="6dp" />
-
+                            android:layout_marginTop="2dp" />
                     </LinearLayout>
 
-                </androidx.cardview.widget.CardView>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/health_status_label"
+                        android:textColor="@color/status_active"
+                        android:textSize="12sp"
+                        android:background="@drawable/bg_rounded_status"
+                        android:paddingHorizontal="12dp"
+                        android:paddingVertical="4dp" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
 
-            </LinearLayout>
-
-            <!-- Guardian Details Section -->
-            <LinearLayout
+            <!-- Medications Section -->
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="24dp"
-                android:background="@color/white"
-                android:layout_marginTop="16dp">
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="6dp"
+                app:cardBackgroundColor="@color/white">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Guardian Details"
-                    android:textColor="@color/text_primary"
-                    android:textSize="20sp"
-                    android:fontFamily="sans-serif-medium"
-                    android:layout_marginBottom="16dp" />
-
-                <androidx.cardview.widget.CardView
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="4dp"
-                    app:cardBackgroundColor="@color/background_light">
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
+                    <TextView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="16dp">
+                        android:text="@string/upcoming_medications"
+                        android:textColor="@color/text_primary"
+                        android:textSize="20sp"
+                        android:fontFamily="sans-serif-medium"
+                        android:layout_marginBottom="12dp" />
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:gravity="center_vertical"
-                            android:layout_marginBottom="12dp">
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvMedications"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
 
-                            <ImageView
-                                android:layout_width="20dp"
-                                android:layout_height="20dp"
-                                android:src="@drawable/ic_guardian"
-                                android:tint="@color/primary_blue"
-                                android:layout_marginEnd="12dp" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
 
-                            <TextView
-                                android:id="@+id/tvGuardianName"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Sarah Johnson"
-                                android:textColor="@color/text_primary"
-                                android:textSize="18sp"
-                                android:fontFamily="sans-serif-medium" />
-
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:layout_marginBottom="8dp">
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="Relationship:"
-                                android:textColor="@color/text_secondary"
-                                android:textSize="14sp" />
-
-                            <TextView
-                                android:id="@+id/tvGuardianRelationship"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="Daughter"
-                                android:textColor="@color/text_primary"
-                                android:textSize="14sp"
-                                android:fontFamily="sans-serif-medium" />
-
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:layout_marginBottom="8dp">
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="Phone:"
-                                android:textColor="@color/text_secondary"
-                                android:textSize="14sp" />
-
-                            <TextView
-                                android:id="@+id/tvGuardianPhone"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="+1 (555) 123-4567"
-                                android:textColor="@color/text_primary"
-                                android:textSize="14sp"
-                                android:fontFamily="sans-serif-medium" />
-
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="Email:"
-                                android:textColor="@color/text_secondary"
-                                android:textSize="14sp" />
-
-                            <TextView
-                                android:id="@+id/tvGuardianEmail"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="sarah.j@email.com"
-                                android:textColor="@color/text_primary"
-                                android:textSize="14sp"
-                                android:fontFamily="sans-serif-medium" />
-
-                        </LinearLayout>
-
-                    </LinearLayout>
-
-                </androidx.cardview.widget.CardView>
-
-            </LinearLayout>
-
-            <!-- Personal Information Section -->
-            <LinearLayout
+            <!-- Guardian Section -->
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="24dp"
-                android:background="@color/white"
-                android:layout_marginTop="16dp">
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="6dp"
+                app:cardBackgroundColor="@color/white">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Personal Information"
-                    android:textColor="@color/text_primary"
-                    android:textSize="20sp"
-                    android:fontFamily="sans-serif-medium"
-                    android:layout_marginBottom="16dp" />
-
-                <androidx.cardview.widget.CardView
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="4dp"
-                    app:cardBackgroundColor="@color/white">
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
-                    <LinearLayout
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/guardian_details"
+                        android:textColor="@color/text_primary"
+                        android:textSize="20sp"
+                        android:fontFamily="sans-serif-medium"
+                        android:layout_marginBottom="12dp" />
+
+                    <TextView
+                        android:id="@+id/tvGuardianName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:padding="16dp">
+                        android:text="@string/guardian_name_placeholder"
+                        android:textColor="@color/text_primary"
+                        android:textSize="16sp"
+                        android:layout_marginBottom="6dp" />
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:layout_marginBottom="12dp">
+                    <TextView
+                        android:id="@+id/tvGuardianRelationship"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/guardian_relationship_placeholder"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="14sp"
+                        android:layout_marginBottom="6dp" />
 
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="Age:"
-                                android:textColor="@color/text_secondary"
-                                android:textSize="14sp" />
+                    <TextView
+                        android:id="@+id/tvGuardianPhone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/guardian_phone_placeholder"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="14sp"
+                        android:layout_marginBottom="6dp" />
 
-                            <TextView
-                                android:id="@+id/tvPatientAge"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="72 years"
-                                android:textColor="@color/text_primary"
-                                android:textSize="14sp"
-                                android:fontFamily="sans-serif-medium" />
+                    <TextView
+                        android:id="@+id/tvGuardianEmail"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/guardian_email_placeholder"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="14sp" />
 
-                        </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:layout_marginBottom="12dp">
+            <!-- Personal Info Section -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="6dp"
+                app:cardBackgroundColor="@color/white">
 
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="Blood Type:"
-                                android:textColor="@color/text_secondary"
-                                android:textSize="14sp" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
-                            <TextView
-                                android:id="@+id/tvBloodType"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="O+"
-                                android:textColor="@color/text_primary"
-                                android:textSize="14sp"
-                                android:fontFamily="sans-serif-medium" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/personal_information"
+                        android:textColor="@color/text_primary"
+                        android:textSize="20sp"
+                        android:fontFamily="sans-serif-medium"
+                        android:layout_marginBottom="12dp" />
 
-                        </LinearLayout>
+                    <TextView
+                        android:id="@+id/tvPatientAge"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/patient_age_placeholder"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="14sp"
+                        android:layout_marginBottom="6dp" />
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:layout_marginBottom="12dp">
+                    <TextView
+                        android:id="@+id/tvBloodType"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/patient_blood_type_placeholder"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="14sp"
+                        android:layout_marginBottom="6dp" />
 
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="Allergies:"
-                                android:textColor="@color/text_secondary"
-                                android:textSize="14sp" />
+                    <TextView
+                        android:id="@+id/tvAllergies"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/patient_allergies_placeholder"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="14sp"
+                        android:layout_marginBottom="6dp" />
 
-                            <TextView
-                                android:id="@+id/tvAllergies"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="Penicillin, Shellfish"
-                                android:textColor="@color/text_primary"
-                                android:textSize="14sp"
-                                android:fontFamily="sans-serif-medium" />
+                    <TextView
+                        android:id="@+id/tvConditions"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/patient_conditions_placeholder"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="14sp" />
 
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="Conditions:"
-                                android:textColor="@color/text_secondary"
-                                android:textSize="14sp" />
-
-                            <TextView
-                                android:id="@+id/tvConditions"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="Hypertension, Diabetes"
-                                android:textColor="@color/text_primary"
-                                android:textSize="14sp"
-                                android:fontFamily="sans-serif-medium" />
-
-                        </LinearLayout>
-
-                    </LinearLayout>
-
-                </androidx.cardview.widget.CardView>
-
-            </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
 
         </LinearLayout>
 

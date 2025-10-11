@@ -30,6 +30,7 @@
         <!-- Login Screen -->
         <activity
             android:name=".view.LoginActivity"
+            android:windowSoftInputMode="adjustResize|stateHidden"
             android:exported="false" />
 
         <!-- Patient Dashboard -->

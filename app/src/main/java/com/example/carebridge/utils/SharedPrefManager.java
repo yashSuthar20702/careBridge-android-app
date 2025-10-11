@@ -22,6 +22,7 @@ public class SharedPrefManager {
         gson = new Gson();
     }
 
+    // Save user session with new linkedData field
     public void saveUserSession(User user) {
         String userJson = gson.toJson(user);
         editor.putString(KEY_USER, userJson);
@@ -36,7 +37,7 @@ public class SharedPrefManager {
     public User getCurrentUser() {
         String userJson = sharedPreferences.getString(KEY_USER, null);
         if (userJson != null) {
-            return gson.fromJson(userJson, User.class);
+            return gson.fromJson(userJson, User.class); // ✅ linkedData will be deserialized automatically
         }
         return null;
     }

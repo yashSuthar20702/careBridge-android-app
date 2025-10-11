@@ -46,7 +46,7 @@ public class GuardianDashboardActivity extends AppCompatActivity {
         currentUser = (User) getIntent().getSerializableExtra("user");
 
         if (currentUser != null) {
-            tvGuardianName.setText(currentUser.getName());
+//            tvGuardianName.setText(currentUser.getName());
             tvGuardianRole.setText("Primary Guardian");
 
             // Set sample data
