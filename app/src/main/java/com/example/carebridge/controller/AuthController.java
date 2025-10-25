@@ -30,7 +30,7 @@ public class AuthController {
     private final SharedPrefManager sharedPrefManager;
     private final OkHttpClient client;
 
-    private static final String BASE_URL = "http://10.0.0.165/CareBridge/careBridge-web-app/careBridge-website/endpoints/auth/";
+    private static final String BASE_URL = "http://10.0.2.2/CareBridge/careBridge-web-app/careBridge-website/endpoints/auth/";
     private static final String LOGIN_URL = BASE_URL + "login.php";
 
     public AuthController(Context context) {
