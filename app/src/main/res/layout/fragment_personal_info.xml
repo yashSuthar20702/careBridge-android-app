@@ -8,51 +8,52 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
 
-        <!-- Shimmer Layout -->
+        <!-- Shimmer Placeholder -->
         <com.facebook.shimmer.ShimmerFrameLayout
             android:id="@+id/shimmerLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:shimmer_auto_start="true"
-            app:shimmer_duration="1000">
+            app:shimmer_duration="1200">
 
-            <androidx.cardview.widget.CardView
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                app:cardBackgroundColor="@color/white"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="5dp">
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="24dp"
+                app:cardElevation="12dp"
+                app:strokeColor="@color/accent_blue"
+                app:strokeWidth="1dp"
+                app:cardBackgroundColor="@color/white">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="16dp">
+                    android:padding="20dp">
 
-                    <!-- Shimmer placeholders -->
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="20dp"
-                        android:layout_marginBottom="8dp"
+                        android:layout_marginBottom="12dp"
                         android:background="@color/shimmer_placeholder" />
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="20dp"
-                        android:layout_marginBottom="8dp"
+                        android:layout_marginBottom="12dp"
                         android:background="@color/shimmer_placeholder" />
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="20dp"
-                        android:layout_marginBottom="8dp"
+                        android:layout_marginBottom="12dp"
                         android:background="@color/shimmer_placeholder" />
-
                 </LinearLayout>
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
         </com.facebook.shimmer.ShimmerFrameLayout>
 
         <!-- Actual Card Content -->
@@ -63,14 +64,16 @@
             android:orientation="vertical"
             android:visibility="gone">
 
-            <!-- Personal Info Section -->
-            <androidx.cardview.widget.CardView
+            <!-- Personal Info Card -->
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                app:cardBackgroundColor="@color/white"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="6dp">
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="24dp"
+                app:cardElevation="0dp"
+                app:strokeColor="@color/accent_blue"
+                app:strokeWidth="1dp"
+                app:cardBackgroundColor="@color/white">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -84,7 +87,7 @@
                         android:text="👤 Personal Info"
                         android:textSize="18sp"
                         android:textStyle="bold"
-                        android:textColor="@color/text_primary"
+                        android:textColor="@color/accent_blue"
                         android:layout_marginBottom="12dp"/>
 
                     <TextView
@@ -92,8 +95,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Full Name: "
-                        android:textSize="16sp"
                         android:textColor="@color/text_primary"
+                        android:textSize="16sp"
                         android:layout_marginBottom="6dp"/>
 
                     <TextView
@@ -101,8 +104,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Age: "
-                        android:textSize="16sp"
                         android:textColor="@color/text_primary"
+                        android:textSize="16sp"
                         android:layout_marginBottom="6dp"/>
 
                     <TextView
@@ -110,8 +113,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Gender: "
-                        android:textSize="16sp"
                         android:textColor="@color/text_primary"
+                        android:textSize="16sp"
                         android:layout_marginBottom="6dp"/>
 
                     <TextView
@@ -119,27 +122,21 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Blood Type: "
-                        android:textSize="16sp"
                         android:textColor="@color/text_primary"
-                        android:layout_marginTop="6dp"/>
+                        android:textSize="16sp"/>
                 </LinearLayout>
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
 
-            <!-- Divider -->
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/divider_gray"
-                android:layout_marginVertical="8dp"/>
-
-            <!-- Medical Info Section -->
-            <androidx.cardview.widget.CardView
+            <!-- Medical Info Card -->
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                app:cardBackgroundColor="@color/white"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="6dp">
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="24dp"
+                app:cardElevation="0dp"
+                app:strokeColor="@color/accent_green"
+                app:strokeWidth="1dp"
+                app:cardBackgroundColor="@color/white">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -153,7 +150,7 @@
                         android:text="💉 Medical Info"
                         android:textSize="18sp"
                         android:textStyle="bold"
-                        android:textColor="@color/text_primary"
+                        android:textColor="@color/accent_green"
                         android:layout_marginBottom="12dp"/>
 
                     <TextView
@@ -161,8 +158,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Height: "
-                        android:textSize="16sp"
                         android:textColor="@color/text_primary"
+                        android:textSize="16sp"
                         android:layout_marginBottom="6dp"/>
 
                     <TextView
@@ -170,8 +167,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Weight: "
-                        android:textSize="16sp"
                         android:textColor="@color/text_primary"
+                        android:textSize="16sp"
                         android:layout_marginBottom="6dp"/>
 
                     <TextView
@@ -179,8 +176,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Past Surgeries: "
-                        android:textSize="16sp"
                         android:textColor="@color/text_primary"
+                        android:textSize="16sp"
                         android:layout_marginBottom="6dp"/>
 
                     <TextView
@@ -188,8 +185,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Current Symptoms: "
-                        android:textSize="16sp"
                         android:textColor="@color/text_primary"
+                        android:textSize="16sp"
                         android:layout_marginBottom="6dp"/>
 
                     <TextView
@@ -197,8 +194,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Allergies: "
-                        android:textSize="16sp"
                         android:textColor="@color/text_primary"
+                        android:textSize="16sp"
                         android:layout_marginBottom="6dp"/>
 
                     <TextView
@@ -206,27 +203,21 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Conditions: "
-                        android:textSize="16sp"
                         android:textColor="@color/text_primary"
-                        android:layout_marginBottom="6dp"/>
+                        android:textSize="16sp"/>
                 </LinearLayout>
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
 
-            <!-- Divider -->
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/divider_gray"
-                android:layout_marginVertical="8dp"/>
-
-            <!-- Contact Info Section -->
-            <androidx.cardview.widget.CardView
+            <!-- Contact Info Card -->
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                app:cardBackgroundColor="@color/white"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="6dp">
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="24dp"
+                app:cardElevation="0dp"
+                app:strokeColor="@color/accent_purple"
+                app:strokeWidth="1dp"
+                app:cardBackgroundColor="@color/white">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -240,7 +231,7 @@
                         android:text="📞 Contact Info"
                         android:textSize="18sp"
                         android:textStyle="bold"
-                        android:textColor="@color/text_primary"
+                        android:textColor="@color/accent_purple"
                         android:layout_marginBottom="12dp"/>
 
                     <TextView
@@ -248,8 +239,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Address: "
-                        android:textSize="16sp"
                         android:textColor="@color/text_primary"
+                        android:textSize="16sp"
                         android:layout_marginBottom="6dp"/>
 
                     <TextView
@@ -257,8 +248,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Contact Number: "
-                        android:textSize="16sp"
                         android:textColor="@color/text_primary"
+                        android:textSize="16sp"
                         android:layout_marginBottom="6dp"/>
 
                     <TextView
@@ -266,8 +257,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Email: "
-                        android:textSize="16sp"
                         android:textColor="@color/text_primary"
+                        android:textSize="16sp"
                         android:layout_marginBottom="6dp"/>
 
                     <TextView
@@ -275,11 +266,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Status: "
-                        android:textSize="16sp"
                         android:textColor="@color/text_primary"
-                        android:layout_marginTop="6dp"/>
+                        android:textSize="16sp"/>
                 </LinearLayout>
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
 
         </LinearLayout>
     </LinearLayout>
