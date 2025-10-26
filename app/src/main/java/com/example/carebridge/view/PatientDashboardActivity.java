@@ -2,99 +2,102 @@ package com.example.carebridge.view;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.TextView;
-import android.widget.Button;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-
+import androidx.viewpager2.widget.ViewPager2;
 import com.example.carebridge.R;
+import com.example.carebridge.adapters.PatientDashboardPagerAdapter;
 import com.example.carebridge.controller.AuthController;
 import com.example.carebridge.model.User;
-import com.example.carebridge.model.PatientInfo;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import android.widget.TextView;
+import android.widget.Button;
 
 public class PatientDashboardActivity extends AppCompatActivity {
 
-    private static final String TAG = "PatientDashboard";
-
-    private TextView tvWelcome, tvPatientName, tvPatientId;
-    private TextView tvGuardianName, tvGuardianRelationship, tvGuardianPhone, tvGuardianEmail;
-    private TextView tvPatientAge, tvBloodType, tvAllergies, tvConditions;
+    private TextView tvPatientName, tvWelcome;
     private Button btnHeaderLogout;
-
-    private User currentUser;
+    private ViewPager2 viewPager;
+    private BottomNavigationView bottomNavigationView;
     private AuthController authController;
+    private User currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_patient_dashboard);
 
-        initializeViews();
+        // Initialize controllers
         authController = new AuthController(this);
-
-        // Get user from intent or session
         currentUser = (User) getIntent().getSerializableExtra("user");
         if (currentUser == null) currentUser = authController.getCurrentUser();
 
-        if (currentUser != null) populatePatientData();
-        else Log.e(TAG, "No user data found!");
-    }
-
-    private void initializeViews() {
+        // Bind views
         tvWelcome = findViewById(R.id.tvWelcome);
         tvPatientName = findViewById(R.id.tvPatientName);
-        tvPatientId = findViewById(R.id.tvPatientId);
-
         btnHeaderLogout = findViewById(R.id.btnHeaderLogout);
-        tvGuardianName = findViewById(R.id.tvGuardianName);
-        tvGuardianRelationship = findViewById(R.id.tvGuardianRelationship);
-        tvGuardianPhone = findViewById(R.id.tvGuardianPhone);
-        tvGuardianEmail = findViewById(R.id.tvGuardianEmail);
-        tvPatientAge = findViewById(R.id.tvPatientAge);
-        tvBloodType = findViewById(R.id.tvBloodType);
-        tvAllergies = findViewById(R.id.tvAllergies);
-        tvConditions = findViewById(R.id.tvConditions);
+        viewPager = findViewById(R.id.viewPager);
+        bottomNavigationView = findViewById(R.id.bottomNavigationView);
 
-        btnHeaderLogout.setOnClickListener(v -> new AlertDialog.Builder(this)
-                .setTitle("Logout")
-                .setMessage("Are you sure you want to logout?")
-                .setPositiveButton("Yes", (dialog, which) -> performLogout())
-                .setNegativeButton("No", null)
-                .show());
-    }
+        // Set patient name
+        if (currentUser != null && currentUser.getPatientInfo() != null) {
+            tvPatientName.setText(currentUser.getPatientInfo().getFull_name());
+        }
 
-    private void populatePatientData() {
-        PatientInfo info = currentUser.getPatientInfo();
+        // Setup ViewPager
+        viewPager.setAdapter(new PatientDashboardPagerAdapter(this));
 
-        // Safe defaults if info is null
-        String fullName = info != null ? info.getFullName() : "N/A";
-        String dob = info != null ? info.getDob() : "N/A";
-        String gender = info != null ? info.getGender() : "N/A";
-        String status = info != null ? info.getStatus() : "Active";
-        String contact = info != null ? info.getContactNumber() : "N/A";
-        String email = info != null ? info.getEmail() : "N/A";
+        // Disable swipe if needed (optional)
+        // viewPager.setUserInputEnabled(false);
 
-        tvWelcome.setText("Welcome Back,");
-        tvPatientName.setText(fullName);
-        tvPatientId.setText("ID: PAT-" + String.format("%03d", currentUser.getId()));
+        // Bottom Navigation → ViewPager
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            int itemId = item.getItemId();
 
-        tvPatientAge.setText(dob);
-        tvBloodType.setText(gender); // or bloodType if available
-        tvAllergies.setText("N/A"); // No API info
-        tvConditions.setText(status);
+            if (itemId == R.id.nav_home) {
+                viewPager.setCurrentItem(0);
+                return true;
+            } else if (itemId == R.id.nav_personal) {
+                viewPager.setCurrentItem(1);
+                return true;
+            } else if (itemId == R.id.nav_guardian) {
+                viewPager.setCurrentItem(2);
+                return true;
+            }
+            return false;
+        });
 
-        tvGuardianName.setText("N/A"); // No guardian info in API
-        tvGuardianRelationship.setText("N/A");
-        tvGuardianPhone.setText(contact);
-        tvGuardianEmail.setText(email);
-    }
+        // ViewPager → Bottom Navigation
+        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                switch (position) {
+                    case 0:
+                        bottomNavigationView.setSelectedItemId(R.id.nav_home);
+                        break;
+                    case 1:
+                        bottomNavigationView.setSelectedItemId(R.id.nav_personal);
+                        break;
+                    case 2:
+                        bottomNavigationView.setSelectedItemId(R.id.nav_guardian);
+                        break;
+                }
+            }
+        });
 
-    private void performLogout() {
-        authController.logout();
-        Intent intent = new Intent(this, LoginActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-        finish();
+        // Logout
+        btnHeaderLogout.setOnClickListener(v ->
+                new AlertDialog.Builder(this)
+                        .setTitle("Logout")
+                        .setMessage("Are you sure you want to logout?")
+                        .setPositiveButton("Yes", (dialog, which) -> {
+                            authController.logout();
+                            Intent intent = new Intent(this, LoginActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+                        })
+                        .setNegativeButton("No", null)
+                        .show());
     }
 }

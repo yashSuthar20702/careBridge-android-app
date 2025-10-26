@@ -91,17 +91,33 @@ public class AuthController {
 
                             // Parse linked_data (PatientInfo)
                             JSONObject linkedDataJson = userJson.optJSONObject("linked_data");
+                            String caseIdToSave;
                             if (linkedDataJson != null && linkedDataJson.length() > 0) {
                                 PatientInfo patientInfo = new Gson().fromJson(linkedDataJson.toString(), PatientInfo.class);
                                 user.setPatientInfo(patientInfo);
                                 Log.d(TAG, "[PATIENT INFO] " + patientInfo.toString());
+
+                                // Use linked_data.case_id if available, otherwise use referenceId
+                                caseIdToSave = (patientInfo.getCase_id() != null && !patientInfo.getCase_id().isEmpty())
+                                        ? patientInfo.getCase_id()
+                                        : user.getReferenceId();
+
                             } else {
                                 Log.w(TAG, "[PATIENT INFO] linked_data is empty or null");
-                                user.setPatientInfo(new PatientInfo()); // avoid null
+                                user.setPatientInfo(new PatientInfo());
+                                caseIdToSave = user.getReferenceId();
                             }
 
-                            // Save user session
-                            new Thread(() -> sharedPrefManager.saveUserSession(user)).start();
+                            // Save user session + caseId in SharedPreferences with logging
+                            final String finalCaseId = caseIdToSave;
+                            new Thread(() -> {
+                                sharedPrefManager.saveUserSession(user);
+                                sharedPrefManager.saveCaseId(finalCaseId);
+
+                                Log.d(TAG, "[SESSION] User session saved: " + user.getUsername());
+                                String savedCaseId = sharedPrefManager.getCaseId();
+                                Log.d(TAG, "[SESSION] Case ID saved in SharedPreferences: " + savedCaseId);
+                            }).start();
 
                             callback.onSuccess(user);
                         } else {
