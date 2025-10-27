@@ -1,107 +1,102 @@
 package com.example.carebridge.view;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager2.widget.ViewPager2;
+
 import com.example.carebridge.R;
+import com.example.carebridge.adapters.GuardianDashboardPagerAdapter;
 import com.example.carebridge.controller.AuthController;
 import com.example.carebridge.model.User;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class GuardianDashboardActivity extends AppCompatActivity {
 
-    private TextView tvWelcome, tvGuardianName, tvGuardianRole;
-    private TextView tvPatientsCount, tvAppointmentsCount;
-    private Button btnLogout;
-    private User currentUser;
+    private ViewPager2 viewPager;
+    private BottomNavigationView bottomNavigationView;
     private AuthController authController;
+    private User currentUser;
+
+    private TextView tvGuardianName;
+    private Button btnLogout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_guardian_dashboard);
-
-        initializeViews();
-        setupUserData();
-        setupClickListeners();
+        setContentView(R.layout.activity_guardian_dashboard_tabs);
 
         authController = new AuthController(this);
-    }
-
-    private void initializeViews() {
-        tvWelcome = findViewById(R.id.tvWelcome);
-        tvGuardianName = findViewById(R.id.tvGuardianName);
-        tvGuardianRole = findViewById(R.id.tvGuardianRole);
-        tvPatientsCount = findViewById(R.id.tvPatientsCount);
-        tvAppointmentsCount = findViewById(R.id.tvAppointmentsCount);
-        btnLogout = findViewById(R.id.btnLogout);
-    }
-
-    private void setupUserData() {
-        // Get the logged-in user from intent extras
         currentUser = (User) getIntent().getSerializableExtra("user");
+        if (currentUser == null) currentUser = authController.getCurrentUser();
 
-        if (currentUser != null) {
-//            tvGuardianName.setText(currentUser.getName());
-            tvGuardianRole.setText("Primary Guardian");
+        // ✅ Match correct IDs from XML
+        viewPager = findViewById(R.id.viewPagerGuardian);
+        bottomNavigationView = findViewById(R.id.bottomNavigationGuardian);
+        tvGuardianName = findViewById(R.id.tvGuardianName);
+        btnLogout = findViewById(R.id.btnHeaderLogout);
 
-            // Set sample data
-            tvPatientsCount.setText("2");
-            tvAppointmentsCount.setText("3");
+        // ✅ Set Guardian Name
+        if (currentUser != null && currentUser.getPatientInfo().getFull_name() != null) {
+            tvGuardianName.setText(currentUser.getPatientInfo().getFull_name());
         }
-    }
 
-    private void setupClickListeners() {
-        btnLogout.setOnClickListener(new View.OnClickListener() {
+        // ✅ Set Logout Click
+        btnLogout.setOnClickListener(v -> logout());
+
+        // ✅ ViewPager Setup
+        viewPager.setAdapter(new GuardianDashboardPagerAdapter(this));
+        viewPager.setUserInputEnabled(false);
+
+        // ✅ Bottom Navigation Setup
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            int id = item.getItemId();
+            if (id == R.id.nav_home) {
+                viewPager.setCurrentItem(0);
+                return true;
+            } else if (id == R.id.nav_personal) {
+                viewPager.setCurrentItem(1);
+                return true;
+            } else if (id == R.id.nav_patients) {
+                viewPager.setCurrentItem(2);
+                return true;
+            }
+            return false;
+        });
+
+        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
-            public void onClick(View v) {
-                showLogoutConfirmationDialog();
+            public void onPageSelected(int position) {
+                switch (position) {
+                    case 0:
+                        bottomNavigationView.setSelectedItemId(R.id.nav_home);
+                        break;
+                    case 1:
+                        bottomNavigationView.setSelectedItemId(R.id.nav_personal);
+                        break;
+                    case 2:
+                        bottomNavigationView.setSelectedItemId(R.id.nav_patients);
+                        break;
+                }
             }
         });
     }
 
-    private void showLogoutConfirmationDialog() {
+    private void logout() {
         new AlertDialog.Builder(this)
                 .setTitle("Logout")
                 .setMessage("Are you sure you want to logout?")
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        performLogout();
-                    }
+                .setPositiveButton("Yes", (dialog, which) -> {
+                    authController.logout();
+                    Intent intent = new Intent(this, LoginActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
                 })
                 .setNegativeButton("No", null)
-                .setIcon(R.drawable.ic_login)
                 .show();
     }
-
-    private void performLogout() {
-        authController.logout();
-
-        // Navigate back to login screen
-        Intent intent = new Intent(GuardianDashboardActivity.this, LoginActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-        finish();
-    }
-
-//    @Override
-//    public void onBackPressed() {
-//        // Show exit confirmation instead of going back
-//        new AlertDialog.Builder(this)
-//                .setTitle("Exit App")
-//                .setMessage("Are you sure you want to exit the app?")
-//                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        finishAffinity();
-//                    }
-//                })
-//                .setNegativeButton("No", null)
-//                .show();
-//    }
 }
