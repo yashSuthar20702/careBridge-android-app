@@ -6,23 +6,32 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.carebridge.R;
+import com.example.carebridge.adapters.PatientGuardianInformationAdapter;
 import com.example.carebridge.controller.PatientGuardianInfoController;
 import com.example.carebridge.model.PatientGuardianInfo;
+import com.facebook.shimmer.ShimmerFrameLayout;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PatientGuardianInfoFragment extends Fragment {
 
     private static final String TAG = "PatientGuardianInfoFragment";
 
-    private TextView tvGuardianName, tvGuardianRelationship, tvGuardianPhone, tvGuardianEmail;
+    private ShimmerFrameLayout shimmerLayout;
+    private TextView tvNoGuardianMessage;
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private RecyclerView recyclerView;
+    private PatientGuardianInformationAdapter adapter;
     private PatientGuardianInfoController controller;
 
     @Nullable
@@ -33,47 +42,61 @@ public class PatientGuardianInfoFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_patient_guardian_info, container, false);
 
-        tvGuardianName = view.findViewById(R.id.tvGuardianName);
-        tvGuardianRelationship = view.findViewById(R.id.tvGuardianRelationship);
-        tvGuardianPhone = view.findViewById(R.id.tvGuardianPhone);
-        tvGuardianEmail = view.findViewById(R.id.tvGuardianEmail);
+        shimmerLayout = view.findViewById(R.id.shimmerLayout);
+        tvNoGuardianMessage = view.findViewById(R.id.tvNoGuardianMessage);
+        swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
+        recyclerView = view.findViewById(R.id.recyclerViewGuardians);
 
         controller = new PatientGuardianInfoController(requireContext());
+
+        adapter = new PatientGuardianInformationAdapter(new ArrayList<>());
+        recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+        recyclerView.setAdapter(adapter);
+
+        swipeRefreshLayout.setOnRefreshListener(this::fetchGuardianData);
+
+        // Initial fetch
         fetchGuardianData();
 
         return view;
     }
 
     private void fetchGuardianData() {
+        if (!swipeRefreshLayout.isRefreshing()) {
+            shimmerLayout.setVisibility(View.VISIBLE);
+            shimmerLayout.startShimmer();
+        }
+
+        recyclerView.setVisibility(View.GONE);
+        tvNoGuardianMessage.setVisibility(View.GONE);
+
         controller.getCurrentGuardian(new PatientGuardianInfoController.PatientGuardianCallback() {
             @Override
             public void onSuccess(List<PatientGuardianInfo> guardianList) {
+                shimmerLayout.stopShimmer();
+                shimmerLayout.setVisibility(View.GONE);
+                swipeRefreshLayout.setRefreshing(false);
+
                 if (guardianList == null || guardianList.isEmpty()) {
-                    Toast.makeText(requireContext(), "No guardian info found", Toast.LENGTH_SHORT).show();
+                    tvNoGuardianMessage.setVisibility(View.VISIBLE);
+                    tvNoGuardianMessage.setText("No guardian is assigned right now. Please contact your doctor to assign a guardian.");
                     return;
                 }
 
-                // Assuming single guardian
-                PatientGuardianInfo guardian = guardianList.get(0);
-                displayGuardianInfo(guardian);
+                adapter.setData(guardianList);
+                recyclerView.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void onFailure(String message) {
-                Toast.makeText(requireContext(), "Failed: " + message, Toast.LENGTH_LONG).show();
+                shimmerLayout.stopShimmer();
+                shimmerLayout.setVisibility(View.GONE);
+                swipeRefreshLayout.setRefreshing(false);
+
+                tvNoGuardianMessage.setVisibility(View.VISIBLE);
+                tvNoGuardianMessage.setText("Failed to fetch guardian info. Please try again later.");
                 Log.e(TAG, "[API ERROR] " + message);
             }
         });
-    }
-
-    private void displayGuardianInfo(PatientGuardianInfo guardian) {
-        tvGuardianName.setText("Guardian: " + safeString(guardian.getFull_name()));
-        tvGuardianRelationship.setText("Relationship: " + safeString(guardian.getRole()));
-        tvGuardianPhone.setText("Phone: " + safeString(guardian.getPhone()));
-        tvGuardianEmail.setText("Email: " + safeString(guardian.getEmail()));
-    }
-
-    private String safeString(String value) {
-        return (value != null && !value.isEmpty()) ? value : "N/A";
     }
 }

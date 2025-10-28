@@ -1,6 +1,9 @@
 package com.example.carebridge.fragment;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,7 +22,6 @@ import com.example.carebridge.model.User;
 import com.example.carebridge.utils.SharedPrefManager;
 import com.facebook.shimmer.ShimmerFrameLayout;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
@@ -104,22 +106,28 @@ public class PersonalInfoFragment extends Fragment {
     }
 
     private void displayPatientInfo(PatientInfo patientInfo) {
-        tvFullName.setText("Full Name: " + safeString(patientInfo.getFull_name()));
-        tvPatientAge.setText("Age: " + calculateAge(patientInfo.getDob()));
-        tvGender.setText("Gender: " + safeString(patientInfo.getGender()));
-        tvBloodType.setText("Blood Type: " + safeString(patientInfo.getBlood_group()));
-        tvHeight.setText("Height: " + safeString(patientInfo.getHeight_cm()) + " cm");
-        tvWeight.setText("Weight: " + safeString(patientInfo.getWeight_kg()) + " kg");
-        tvAllergies.setText("Allergies: " + joinList(patientInfo.getAllergies()));
-        tvConditions.setText("Conditions: " + joinList(patientInfo.getMedical_conditions()));
-        tvPastSurgeries.setText("Past Surgeries: " + safeString(patientInfo.getPast_surgeries()));
-        tvCurrentSymptoms.setText("Current Symptoms: " + safeString(patientInfo.getCurrent_symptoms()));
-        tvAddress.setText("Address: " + safeString(patientInfo.getAddress()));
-        tvContactNumber.setText("Contact Number: " + safeString(patientInfo.getContact_number()));
-        tvEmail.setText("Email: " + safeString(patientInfo.getEmail()));
-        tvStatus.setText("Status: " + safeString(patientInfo.getStatus()));
+        setBoldLabel(tvFullName, "Full Name:", safeString(patientInfo.getFull_name()));
+        setBoldLabel(tvPatientAge, "Age:", calculateAge(patientInfo.getDob()) + "");
+        setBoldLabel(tvGender, "Gender:", safeString(patientInfo.getGender()));
+        setBoldLabel(tvBloodType, "Blood Type:", safeString(patientInfo.getBlood_group()));
+        setBoldLabel(tvHeight, "Height:", safeString(patientInfo.getHeight_cm()) + " cm");
+        setBoldLabel(tvWeight, "Weight:", safeString(patientInfo.getWeight_kg()) + " kg");
+        setBoldLabel(tvAllergies, "Allergies:", joinList(patientInfo.getAllergies()));
+        setBoldLabel(tvConditions, "Conditions:", joinList(patientInfo.getMedical_conditions()));
+        setBoldLabel(tvPastSurgeries, "Past Surgeries:", safeString(patientInfo.getPast_surgeries()));
+        setBoldLabel(tvCurrentSymptoms, "Current Symptoms:", safeString(patientInfo.getCurrent_symptoms()));
+        setBoldLabel(tvAddress, "Address:", safeString(patientInfo.getAddress()));
+        setBoldLabel(tvContactNumber, "Contact Number:", safeString(patientInfo.getContact_number()));
+        setBoldLabel(tvEmail, "Email:", safeString(patientInfo.getEmail()));
+        setBoldLabel(tvStatus, "Status:", safeString(patientInfo.getStatus()));
 
         requireView().findViewById(R.id.cardContent).setVisibility(View.VISIBLE);
+    }
+
+    private void setBoldLabel(TextView textView, String label, String value) {
+        SpannableString spannable = new SpannableString(label + " " + value);
+        spannable.setSpan(new StyleSpan(Typeface.BOLD), 0, label.length(), 0);
+        textView.setText(spannable);
     }
 
     private int calculateAge(String dob) {

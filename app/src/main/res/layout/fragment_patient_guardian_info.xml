@@ -1,64 +1,43 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/swipeRefreshLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="16dp"
-    android:background="@color/bg_patient_dashboard">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:background="@color/bg_patient_dashboard">
 
-        <androidx.cardview.widget.CardView
+        <com.facebook.shimmer.ShimmerFrameLayout
+            android:id="@+id/shimmerLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="5dp"
-            app:cardBackgroundColor="@color/white">
+            app:shimmer_auto_start="true"
+            app:shimmer_duration="1200">
+            <!-- You can keep placeholder card as before -->
+        </com.facebook.shimmer.ShimmerFrameLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
+        <TextView
+            android:id="@+id/tvNoGuardianMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="No guardian is assigned right now. Please contact your doctor to assign a guardian."
+            android:textColor="@color/text_secondary"
+            android:textSize="18sp"
+            android:gravity="center"
+            android:visibility="gone"
+            android:padding="20dp"
+            android:background="@drawable/bg_rounded_white"
+            android:layout_marginBottom="16dp" />
 
-                <TextView
-                    android:id="@+id/tvGuardianName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Guardian: Jane Doe"
-                    android:textSize="16sp"
-                    android:textColor="@color/text_primary"
-                    android:layout_marginBottom="8dp" />
-
-                <TextView
-                    android:id="@+id/tvGuardianRelationship"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Relationship: Mother"
-                    android:textSize="16sp"
-                    android:textColor="@color/text_primary"
-                    android:layout_marginBottom="8dp" />
-
-                <TextView
-                    android:id="@+id/tvGuardianPhone"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Phone: +1 234 567 890"
-                    android:textSize="16sp"
-                    android:textColor="@color/text_primary"
-                    android:layout_marginBottom="8dp" />
-
-                <TextView
-                    android:id="@+id/tvGuardianEmail"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Email: jane.doe@example.com"
-                    android:textSize="16sp"
-                    android:textColor="@color/text_primary" />
-
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewGuardians"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_marginBottom="16dp"/>
     </LinearLayout>
-</ScrollView>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
