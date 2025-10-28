@@ -1,263 +1,271 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/swipeRefreshLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:padding="16dp"
-    android:background="@color/bg_patient_dashboard">
+    android:layout_height="match_parent">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center_horizontal"
-        android:layout_marginBottom="16dp">
+        android:layout_height="match_parent"
+        android:padding="16dp"
+        android:background="@color/bg_patient_dashboard">
 
-        <!-- Shimmer Placeholder -->
-        <com.facebook.shimmer.ShimmerFrameLayout
-            android:id="@+id/shimmerLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:shimmer_auto_start="true"
-            app:shimmer_duration="1200">
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardCornerRadius="24dp"
-                app:cardElevation="12dp"
-                app:strokeColor="@color/accent_blue"
-                app:strokeWidth="1dp"
-                app:cardBackgroundColor="@color/white">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="20dp">
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="24dp"
-                        android:layout_marginBottom="14dp"
-                        android:background="@color/shimmer_placeholder" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="24dp"
-                        android:layout_marginBottom="14dp"
-                        android:background="@color/shimmer_placeholder" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="24dp"
-                        android:layout_marginBottom="14dp"
-                        android:background="@color/shimmer_placeholder" />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-        </com.facebook.shimmer.ShimmerFrameLayout>
-
-        <!-- Actual Card Content -->
         <LinearLayout
-            android:id="@+id/cardContent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:visibility="gone">
+            android:gravity="center_horizontal"
+            android:layout_marginBottom="16dp">
 
-            <!-- Personal Info Card -->
-            <com.google.android.material.card.MaterialCardView
+            <!-- Shimmer Placeholder -->
+            <com.facebook.shimmer.ShimmerFrameLayout
+                android:id="@+id/shimmerLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardCornerRadius="24dp"
-                app:cardElevation="4dp"
-                app:strokeColor="@color/accent_blue"
-                app:strokeWidth="1dp"
-                app:cardBackgroundColor="@color/white">
+                app:shimmer_auto_start="true"
+                app:shimmer_duration="1200">
 
-                <LinearLayout
+                <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="20dp">
+                    android:layout_marginBottom="16dp"
+                    app:cardCornerRadius="24dp"
+                    app:cardElevation="12dp"
+                    app:strokeColor="@color/accent_blue"
+                    app:strokeWidth="1dp"
+                    app:cardBackgroundColor="@color/white">
 
-                    <TextView
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="👤 Personal Info"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/accent_blue"
-                        android:layout_marginBottom="16dp"/>
+                        android:orientation="vertical"
+                        android:padding="20dp">
 
-                    <TextView
-                        android:id="@+id/tvFullName"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/text_primary"
-                        android:textSize="17sp"
-                        android:layout_marginBottom="8dp"/>
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="24dp"
+                            android:layout_marginBottom="14dp"
+                            android:background="@color/shimmer_placeholder" />
 
-                    <TextView
-                        android:id="@+id/tvPatientAge"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/text_primary"
-                        android:textSize="17sp"
-                        android:layout_marginBottom="8dp"/>
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="24dp"
+                            android:layout_marginBottom="14dp"
+                            android:background="@color/shimmer_placeholder" />
 
-                    <TextView
-                        android:id="@+id/tvGender"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/text_primary"
-                        android:textSize="17sp"
-                        android:layout_marginBottom="8dp"/>
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="24dp"
+                            android:layout_marginBottom="14dp"
+                            android:background="@color/shimmer_placeholder" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+            </com.facebook.shimmer.ShimmerFrameLayout>
 
-                    <TextView
-                        android:id="@+id/tvBloodType"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/text_primary"
-                        android:textSize="17sp"/>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Medical Info Card -->
-            <com.google.android.material.card.MaterialCardView
+            <!-- Actual Card Content -->
+            <LinearLayout
+                android:id="@+id/cardContent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardCornerRadius="24dp"
-                app:cardElevation="4dp"
-                app:strokeColor="@color/accent_green"
-                app:strokeWidth="1dp"
-                app:cardBackgroundColor="@color/white">
+                android:orientation="vertical"
+                android:visibility="gone">
 
-                <LinearLayout
+                <!-- Personal Info Card -->
+                <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="20dp">
+                    android:layout_marginBottom="16dp"
+                    app:cardCornerRadius="24dp"
+                    app:cardElevation="4dp"
+                    app:strokeColor="@color/accent_blue"
+                    app:strokeWidth="1dp"
+                    app:cardBackgroundColor="@color/white">
 
-                    <TextView
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="💉 Medical Info"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/accent_green"
-                        android:layout_marginBottom="16dp"/>
+                        android:orientation="vertical"
+                        android:padding="20dp">
 
-                    <TextView
-                        android:id="@+id/tvHeight"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/text_primary"
-                        android:textSize="17sp"
-                        android:layout_marginBottom="8dp"/>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="👤 Personal Info"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/accent_blue"
+                            android:layout_marginBottom="16dp"/>
 
-                    <TextView
-                        android:id="@+id/tvWeight"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/text_primary"
-                        android:textSize="17sp"
-                        android:layout_marginBottom="8dp"/>
+                        <TextView
+                            android:id="@+id/tvFullName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/text_primary"
+                            android:textSize="17sp"
+                            android:layout_marginBottom="10dp"/>
 
-                    <TextView
-                        android:id="@+id/tvPastSurgeries"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/text_primary"
-                        android:textSize="17sp"
-                        android:layout_marginBottom="8dp"/>
+                        <TextView
+                            android:id="@+id/tvPatientAge"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/text_primary"
+                            android:textSize="17sp"
+                            android:layout_marginBottom="10dp"/>
 
-                    <TextView
-                        android:id="@+id/tvCurrentSymptoms"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/text_primary"
-                        android:textSize="17sp"
-                        android:layout_marginBottom="8dp"/>
+                        <TextView
+                            android:id="@+id/tvGender"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/text_primary"
+                            android:textSize="17sp"
+                            android:layout_marginBottom="10dp"/>
 
-                    <TextView
-                        android:id="@+id/tvAllergies"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/text_primary"
-                        android:textSize="17sp"
-                        android:layout_marginBottom="8dp"/>
+                        <TextView
+                            android:id="@+id/tvBloodType"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/text_primary"
+                            android:textSize="17sp"/>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
 
-                    <TextView
-                        android:id="@+id/tvConditions"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/text_primary"
-                        android:textSize="17sp"/>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Contact Info Card -->
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardCornerRadius="24dp"
-                app:cardElevation="4dp"
-                app:strokeColor="@color/accent_purple"
-                app:strokeWidth="1dp"
-                app:cardBackgroundColor="@color/white">
-
-                <LinearLayout
+                <!-- Medical Info Card -->
+                <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="20dp">
+                    android:layout_marginBottom="16dp"
+                    app:cardCornerRadius="24dp"
+                    app:cardElevation="4dp"
+                    app:strokeColor="@color/accent_green"
+                    app:strokeWidth="1dp"
+                    app:cardBackgroundColor="@color/white">
 
-                    <TextView
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="📞 Contact Info"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
-                        android:textColor="@color/accent_purple"
-                        android:layout_marginBottom="16dp"/>
+                        android:orientation="vertical"
+                        android:padding="20dp">
 
-                    <TextView
-                        android:id="@+id/tvAddress"
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="💉 Medical Info"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/accent_green"
+                            android:layout_marginBottom="16dp"/>
+
+                        <TextView
+                            android:id="@+id/tvHeight"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/text_primary"
+                            android:textSize="17sp"
+                            android:layout_marginBottom="10dp"/>
+
+                        <TextView
+                            android:id="@+id/tvWeight"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/text_primary"
+                            android:textSize="17sp"
+                            android:layout_marginBottom="10dp"/>
+
+                        <TextView
+                            android:id="@+id/tvPastSurgeries"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/text_primary"
+                            android:textSize="17sp"
+                            android:layout_marginBottom="10dp"/>
+
+                        <TextView
+                            android:id="@+id/tvCurrentSymptoms"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/text_primary"
+                            android:textSize="17sp"
+                            android:layout_marginBottom="10dp"/>
+
+                        <TextView
+                            android:id="@+id/tvAllergies"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/text_primary"
+                            android:textSize="17sp"
+                            android:layout_marginBottom="10dp"/>
+
+                        <TextView
+                            android:id="@+id/tvConditions"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/text_primary"
+                            android:textSize="17sp"/>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Contact Info Card -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    app:cardCornerRadius="24dp"
+                    app:cardElevation="4dp"
+                    app:strokeColor="@color/accent_purple"
+                    app:strokeWidth="1dp"
+                    app:cardBackgroundColor="@color/white">
+
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/text_primary"
-                        android:textSize="17sp"
-                        android:layout_marginBottom="8dp"/>
+                        android:orientation="vertical"
+                        android:padding="20dp">
 
-                    <TextView
-                        android:id="@+id/tvContactNumber"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/text_primary"
-                        android:textSize="17sp"
-                        android:layout_marginBottom="8dp"/>
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="📞 Contact Info"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/accent_purple"
+                            android:layout_marginBottom="16dp"/>
 
-                    <TextView
-                        android:id="@+id/tvEmail"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/text_primary"
-                        android:textSize="17sp"
-                        android:layout_marginBottom="8dp"/>
+                        <TextView
+                            android:id="@+id/tvAddress"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/text_primary"
+                            android:textSize="17sp"
+                            android:layout_marginBottom="10dp"/>
 
-                    <TextView
-                        android:id="@+id/tvStatus"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/text_primary"
-                        android:textSize="17sp"/>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+                        <TextView
+                            android:id="@+id/tvContactNumber"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/text_primary"
+                            android:textSize="17sp"
+                            android:layout_marginBottom="10dp"/>
 
+                        <TextView
+                            android:id="@+id/tvEmail"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/text_primary"
+                            android:textSize="17sp"
+                            android:layout_marginBottom="10dp"/>
+
+                        <TextView
+                            android:id="@+id/tvStatus"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/text_primary"
+                            android:textSize="17sp"/>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
-</ScrollView>
+    </ScrollView>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

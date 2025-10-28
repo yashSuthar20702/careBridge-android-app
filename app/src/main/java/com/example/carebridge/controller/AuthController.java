@@ -37,7 +37,7 @@ public class AuthController {
         this.context = context;
         this.sharedPrefManager = new SharedPrefManager(context);
         this.client = new OkHttpClient();
-        Log.d(TAG, "AuthController initialized");
+        Log.d(TAG, "[INIT] AuthController initialized");
     }
 
     public interface LoginCallback {
@@ -86,7 +86,7 @@ public class AuthController {
                             user.setId(userJson.optInt("user_id"));
                             user.setUsername(userJson.optString("username"));
                             user.setRole(userJson.optString("role"));
-                            user.setReferenceId(userJson.optString("reference_id"));
+                            user.setReferenceId(userJson.optString("reference_id")); // Save reference_id
                             user.setCreatedAt(userJson.optString("created_at"));
 
                             // Parse linked_data (PatientInfo)
@@ -108,15 +108,16 @@ public class AuthController {
                                 caseIdToSave = user.getReferenceId();
                             }
 
-                            // Save user session + caseId in SharedPreferences with logging
+                            // Save user session + caseId + referenceId in SharedPreferences
                             final String finalCaseId = caseIdToSave;
                             new Thread(() -> {
                                 sharedPrefManager.saveUserSession(user);
                                 sharedPrefManager.saveCaseId(finalCaseId);
+                                sharedPrefManager.saveReferenceId(user.getReferenceId());
 
                                 Log.d(TAG, "[SESSION] User session saved: " + user.getUsername());
-                                String savedCaseId = sharedPrefManager.getCaseId();
-                                Log.d(TAG, "[SESSION] Case ID saved in SharedPreferences: " + savedCaseId);
+                                Log.d(TAG, "[SESSION] Case ID saved: " + sharedPrefManager.getCaseId());
+                                Log.d(TAG, "[SESSION] Reference ID saved: " + sharedPrefManager.getReferenceId());
                             }).start();
 
                             callback.onSuccess(user);

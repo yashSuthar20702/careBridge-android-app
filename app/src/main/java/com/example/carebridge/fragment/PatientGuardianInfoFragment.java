@@ -55,20 +55,25 @@ public class PatientGuardianInfoFragment extends Fragment {
 
         swipeRefreshLayout.setOnRefreshListener(this::fetchGuardianData);
 
-        // Initial fetch
+        // Show shimmer immediately
+        shimmerLayout.setVisibility(View.VISIBLE);
+        shimmerLayout.startShimmer();
+        recyclerView.setVisibility(View.GONE);
+        tvNoGuardianMessage.setVisibility(View.GONE);
+
         fetchGuardianData();
 
         return view;
     }
 
     private void fetchGuardianData() {
+        // Show shimmer if not refreshing
         if (!swipeRefreshLayout.isRefreshing()) {
             shimmerLayout.setVisibility(View.VISIBLE);
             shimmerLayout.startShimmer();
+            recyclerView.setVisibility(View.GONE);
+            tvNoGuardianMessage.setVisibility(View.GONE);
         }
-
-        recyclerView.setVisibility(View.GONE);
-        tvNoGuardianMessage.setVisibility(View.GONE);
 
         controller.getCurrentGuardian(new PatientGuardianInfoController.PatientGuardianCallback() {
             @Override
@@ -78,6 +83,7 @@ public class PatientGuardianInfoFragment extends Fragment {
                 swipeRefreshLayout.setRefreshing(false);
 
                 if (guardianList == null || guardianList.isEmpty()) {
+                    recyclerView.setVisibility(View.GONE);
                     tvNoGuardianMessage.setVisibility(View.VISIBLE);
                     tvNoGuardianMessage.setText("No guardian is assigned right now. Please contact your doctor to assign a guardian.");
                     return;
@@ -92,7 +98,7 @@ public class PatientGuardianInfoFragment extends Fragment {
                 shimmerLayout.stopShimmer();
                 shimmerLayout.setVisibility(View.GONE);
                 swipeRefreshLayout.setRefreshing(false);
-
+                recyclerView.setVisibility(View.GONE);
                 tvNoGuardianMessage.setVisibility(View.VISIBLE);
                 tvNoGuardianMessage.setText("Failed to fetch guardian info. Please try again later.");
                 Log.e(TAG, "[API ERROR] " + message);

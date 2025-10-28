@@ -14,6 +14,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.carebridge.R;
 import com.example.carebridge.controller.PatientController;
@@ -36,6 +37,7 @@ public class PersonalInfoFragment extends Fragment {
             tvContactNumber, tvEmail, tvStatus;
 
     private ShimmerFrameLayout shimmerLayout;
+    private SwipeRefreshLayout swipeRefreshLayout;
     private PatientController patientController;
     private SharedPrefManager sharedPrefManager;
 
@@ -54,7 +56,15 @@ public class PersonalInfoFragment extends Fragment {
         shimmerLayout.startShimmer();
         shimmerLayout.setVisibility(View.VISIBLE);
 
+        // Fetch patient data initially
         fetchPatientData();
+
+        // Add swipe to refresh listener
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            Log.d(TAG, "Swipe-to-refresh triggered");
+            fetchPatientData();
+        });
+
         return view;
     }
 
@@ -74,6 +84,7 @@ public class PersonalInfoFragment extends Fragment {
         tvEmail = view.findViewById(R.id.tvEmail);
         tvStatus = view.findViewById(R.id.tvStatus);
         shimmerLayout = view.findViewById(R.id.shimmerLayout);
+        swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
     }
 
     private void fetchPatientData() {
@@ -82,25 +93,39 @@ public class PersonalInfoFragment extends Fragment {
             Log.w(TAG, "[USER] No current user found");
         }
 
+        shimmerLayout.startShimmer();
+        shimmerLayout.setVisibility(View.VISIBLE);
+        swipeRefreshLayout.setRefreshing(true);
+
         patientController.getCurrentPatient(new PatientController.PatientCallback() {
             @Override
             public void onSuccess(PatientInfo patientInfo) {
-                shimmerLayout.stopShimmer();
-                shimmerLayout.setVisibility(View.GONE);
+                if (getActivity() == null) return;
 
-                if (patientInfo == null) {
-                    Toast.makeText(requireContext(), "No patient data found", Toast.LENGTH_SHORT).show();
-                    return;
-                }
+                getActivity().runOnUiThread(() -> {
+                    shimmerLayout.stopShimmer();
+                    shimmerLayout.setVisibility(View.GONE);
+                    swipeRefreshLayout.setRefreshing(false);
 
-                displayPatientInfo(patientInfo);
+                    if (patientInfo == null) {
+                        Toast.makeText(requireContext(), "No patient data found", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    displayPatientInfo(patientInfo);
+                });
             }
 
             @Override
             public void onFailure(String message) {
-                shimmerLayout.stopShimmer();
-                shimmerLayout.setVisibility(View.GONE);
-                Toast.makeText(requireContext(), "Failed to fetch patient info: " + message, Toast.LENGTH_LONG).show();
+                if (getActivity() == null) return;
+
+                getActivity().runOnUiThread(() -> {
+                    shimmerLayout.stopShimmer();
+                    shimmerLayout.setVisibility(View.GONE);
+                    swipeRefreshLayout.setRefreshing(false);
+                    Toast.makeText(requireContext(), "Failed to fetch patient info: " + message, Toast.LENGTH_LONG).show();
+                });
             }
         });
     }
