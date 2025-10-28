@@ -2,6 +2,7 @@ package com.example.carebridge.view;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -28,62 +29,87 @@ public class GuardianDashboardActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_guardian_dashboard_tabs);
+        setContentView(R.layout.activity_guardian_dashboard);
 
+        // ✅ Initialize AuthController and get user
         authController = new AuthController(this);
         currentUser = (User) getIntent().getSerializableExtra("user");
-        if (currentUser == null) currentUser = authController.getCurrentUser();
-
-        // ✅ Match correct IDs from XML
-        viewPager = findViewById(R.id.viewPagerGuardian);
-        bottomNavigationView = findViewById(R.id.bottomNavigationGuardian);
-        tvGuardianName = findViewById(R.id.tvGuardianName);
-        btnLogout = findViewById(R.id.btnHeaderLogout);
-
-        // ✅ Set Guardian Name
-        if (currentUser != null && currentUser.getPatientInfo().getFull_name() != null) {
-            tvGuardianName.setText(currentUser.getPatientInfo().getFull_name());
+        if (currentUser == null) {
+            currentUser = authController.getCurrentUser();
         }
 
-        // ✅ Set Logout Click
-        btnLogout.setOnClickListener(v -> logout());
+        // ✅ Match IDs from XML layout
+        tvGuardianName = findViewById(R.id.tvGuardianName);
+        btnLogout = findViewById(R.id.btnHeaderLogout);
+        viewPager = findViewById(R.id.viewPagerGuardian);
+        bottomNavigationView = findViewById(R.id.bottomNavigationGuardian);
 
-        // ✅ ViewPager Setup
-        viewPager.setAdapter(new GuardianDashboardPagerAdapter(this));
-        viewPager.setUserInputEnabled(false);
+        // ✅ Debug check for missing references
+        if (btnLogout == null) Log.e("GuardianDashboard", "⚠️ btnHeaderLogout not found!");
+        if (tvGuardianName == null) Log.e("GuardianDashboard", "⚠️ tvGuardianName not found!");
+        if (viewPager == null) Log.e("GuardianDashboard", "⚠️ viewPagerGuardian not found!");
+        if (bottomNavigationView == null) Log.e("GuardianDashboard", "⚠️ bottomNavigationGuardian not found!");
 
-        // ✅ Bottom Navigation Setup
-        bottomNavigationView.setOnItemSelectedListener(item -> {
-            int id = item.getItemId();
-            if (id == R.id.nav_home) {
-                viewPager.setCurrentItem(0);
-                return true;
-            } else if (id == R.id.nav_personal) {
-                viewPager.setCurrentItem(1);
-                return true;
-            } else if (id == R.id.nav_patients) {
-                viewPager.setCurrentItem(2);
-                return true;
+        // ✅ Display Guardian Name
+        try {
+            if (tvGuardianName != null && currentUser != null && currentUser.getPatientInfo().getFull_name() != null) {
+                tvGuardianName.setText(currentUser.getPatientInfo().getFull_name());
+            } else if (tvGuardianName != null) {
+                tvGuardianName.setText("Guardian");
             }
-            return false;
-        });
+        } catch (Exception e) {
+            Log.e("GuardianDashboard", "Error setting guardian name: " + e.getMessage());
+        }
 
-        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-            @Override
-            public void onPageSelected(int position) {
-                switch (position) {
-                    case 0:
-                        bottomNavigationView.setSelectedItemId(R.id.nav_home);
-                        break;
-                    case 1:
-                        bottomNavigationView.setSelectedItemId(R.id.nav_personal);
-                        break;
-                    case 2:
-                        bottomNavigationView.setSelectedItemId(R.id.nav_patients);
-                        break;
+        // ✅ Logout button
+        if (btnLogout != null) {
+            btnLogout.setOnClickListener(v -> logout());
+        }
+
+        // ✅ Setup ViewPager
+        if (viewPager != null) {
+            viewPager.setAdapter(new GuardianDashboardPagerAdapter(this));
+            viewPager.setUserInputEnabled(false);
+        }
+
+        // ✅ Setup Bottom Navigation
+        if (bottomNavigationView != null) {
+            bottomNavigationView.setOnItemSelectedListener(item -> {
+                int id = item.getItemId();
+                if (id == R.id.nav_home) {
+                    viewPager.setCurrentItem(0);
+                    return true;
+                } else if (id == R.id.nav_personal) {
+                    viewPager.setCurrentItem(1);
+                    return true;
+                } else if (id == R.id.nav_patients) {
+                    viewPager.setCurrentItem(2);
+                    return true;
                 }
-            }
-        });
+                return false;
+            });
+        }
+
+        // ✅ Keep bottom navigation in sync with ViewPager
+        if (viewPager != null) {
+            viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+                @Override
+                public void onPageSelected(int position) {
+                    if (bottomNavigationView == null) return;
+                    switch (position) {
+                        case 0:
+                            bottomNavigationView.setSelectedItemId(R.id.nav_home);
+                            break;
+                        case 1:
+                            bottomNavigationView.setSelectedItemId(R.id.nav_personal);
+                            break;
+                        case 2:
+                            bottomNavigationView.setSelectedItemId(R.id.nav_patients);
+                            break;
+                    }
+                }
+            });
+        }
     }
 
     private void logout() {

@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
+
 import com.example.carebridge.fragment.GuardianHomeFragment;
 import com.example.carebridge.fragment.GuardianPersonalFragment;
 import com.example.carebridge.fragment.GuardianPatientsFragment;
@@ -18,6 +19,8 @@ public class GuardianDashboardPagerAdapter extends FragmentStateAdapter {
     @Override
     public Fragment createFragment(int position) {
         switch (position) {
+            case 0:
+                return new GuardianHomeFragment();
             case 1:
                 return new GuardianPersonalFragment();
             case 2:
