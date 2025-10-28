@@ -31,26 +31,22 @@ public class GuardianDashboardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_guardian_dashboard);
 
-        // ✅ Initialize AuthController and get user
         authController = new AuthController(this);
         currentUser = (User) getIntent().getSerializableExtra("user");
         if (currentUser == null) {
             currentUser = authController.getCurrentUser();
         }
 
-        // ✅ Match IDs from XML layout
         tvGuardianName = findViewById(R.id.tvGuardianName);
         btnLogout = findViewById(R.id.btnHeaderLogout);
         viewPager = findViewById(R.id.viewPagerGuardian);
         bottomNavigationView = findViewById(R.id.bottomNavigationGuardian);
 
-        // ✅ Debug check for missing references
         if (btnLogout == null) Log.e("GuardianDashboard", "⚠️ btnHeaderLogout not found!");
         if (tvGuardianName == null) Log.e("GuardianDashboard", "⚠️ tvGuardianName not found!");
         if (viewPager == null) Log.e("GuardianDashboard", "⚠️ viewPagerGuardian not found!");
         if (bottomNavigationView == null) Log.e("GuardianDashboard", "⚠️ bottomNavigationGuardian not found!");
 
-        // ✅ Display Guardian Name
         try {
             if (tvGuardianName != null && currentUser != null && currentUser.getPatientInfo().getFull_name() != null) {
                 tvGuardianName.setText(currentUser.getPatientInfo().getFull_name());
@@ -61,18 +57,15 @@ public class GuardianDashboardActivity extends AppCompatActivity {
             Log.e("GuardianDashboard", "Error setting guardian name: " + e.getMessage());
         }
 
-        // ✅ Logout button
         if (btnLogout != null) {
             btnLogout.setOnClickListener(v -> logout());
         }
 
-        // ✅ Setup ViewPager
         if (viewPager != null) {
             viewPager.setAdapter(new GuardianDashboardPagerAdapter(this));
             viewPager.setUserInputEnabled(false);
         }
 
-        // ✅ Setup Bottom Navigation
         if (bottomNavigationView != null) {
             bottomNavigationView.setOnItemSelectedListener(item -> {
                 int id = item.getItemId();
@@ -90,7 +83,6 @@ public class GuardianDashboardActivity extends AppCompatActivity {
             });
         }
 
-        // ✅ Keep bottom navigation in sync with ViewPager
         if (viewPager != null) {
             viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
                 @Override

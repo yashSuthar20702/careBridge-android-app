@@ -5,7 +5,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.example.carebridge.fragment.GuardianInfoFragment;
+import com.example.carebridge.fragment.PatientGuardianInfoFragment;
 import com.example.carebridge.fragment.HomeFragment;
 import com.example.carebridge.fragment.PersonalInfoFragment;
 
@@ -24,7 +24,7 @@ public class PatientDashboardPagerAdapter extends FragmentStateAdapter {
             case 1:
                 return new PersonalInfoFragment();
             case 2:
-                return new GuardianInfoFragment();
+                return new PatientGuardianInfoFragment();
             default:
                 return new HomeFragment();
         }
