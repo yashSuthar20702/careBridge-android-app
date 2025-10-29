@@ -6,6 +6,7 @@ import android.os.Looper;
 import android.util.Log;
 
 import com.example.carebridge.model.PatientInfo;
+import com.example.carebridge.utils.ApiConstants;
 import com.example.carebridge.utils.SharedPrefManager;
 import com.google.gson.Gson;
 
@@ -26,9 +27,6 @@ public class PatientController {
     private final Context context;
     private final OkHttpClient client;
     private final SharedPrefManager sharedPrefManager;
-
-    // Base URL for Android emulator (10.0.2.2)
-    private static final String BASE_URL = "http://10.0.2.2/CareBridge/careBridge-web-app/careBridge-website/endpoints/patients/";
 
     public PatientController(Context context) {
         this.context = context;
@@ -52,9 +50,9 @@ public class PatientController {
             return;
         }
 
-        Log.d(TAG, "[API CALL] Using case ID: " + caseId); // <-- Print case ID here
+        Log.d(TAG, "[API CALL] Using case ID: " + caseId);
 
-        String url = BASE_URL + "getOne.php?case_id=" + caseId;
+        String url = ApiConstants.getPatientByCaseIdUrl(caseId);
         Log.d(TAG, "[API URL] " + url);
 
         Request request = new Request.Builder()
@@ -113,7 +111,7 @@ public class PatientController {
             return;
         }
 
-        Log.d(TAG, "[SESSION] Calling API with case ID: " + savedCaseId); // <-- Extra log for case ID
+        Log.d(TAG, "[SESSION] Calling API with case ID: " + savedCaseId);
 
         getPatientByCaseId(savedCaseId, callback);
     }

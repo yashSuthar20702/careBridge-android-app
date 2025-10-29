@@ -6,6 +6,7 @@ import android.os.Looper;
 import android.util.Log;
 
 import com.example.carebridge.model.PatientGuardianInfo;
+import com.example.carebridge.utils.ApiConstants;
 import com.example.carebridge.utils.SharedPrefManager;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -31,10 +32,6 @@ public class PatientGuardianInfoController {
     private final OkHttpClient client;
     private final SharedPrefManager sharedPrefManager;
 
-    // Emulator localhost base URL
-    private static final String BASE_URL =
-            "http://10.0.2.2/CareBridge/careBridge-web-app/careBridge-website/endpoints/patientguardianassignment/";
-
     public PatientGuardianInfoController(Context context) {
         this.context = context;
         this.client = new OkHttpClient();
@@ -52,7 +49,7 @@ public class PatientGuardianInfoController {
             return;
         }
 
-        String url = BASE_URL + "getByPatient.php?case_id=" + caseId;
+        String url = ApiConstants.getGuardianAssignmentByPatientUrl(caseId);
         Log.d(TAG, "[API URL] " + url);
 
         Request request = new Request.Builder()

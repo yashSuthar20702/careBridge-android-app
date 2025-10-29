@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.example.carebridge.model.User;
 import com.example.carebridge.model.PatientInfo;
+import com.example.carebridge.utils.ApiConstants;
 import com.example.carebridge.utils.SharedPrefManager;
 import com.google.gson.Gson;
 
@@ -30,8 +31,9 @@ public class AuthController {
     private final SharedPrefManager sharedPrefManager;
     private final OkHttpClient client;
 
-    private static final String BASE_URL = "http://10.0.2.2/CareBridge/careBridge-web-app/careBridge-website/endpoints/auth/";
-    private static final String LOGIN_URL = BASE_URL + "login.php";
+    // Use constants instead of hardcoded URLs
+    // private static final String BASE_URL = "http://10.0.2.2/CareBridge/careBridge-web-app/careBridge-website/endpoints/auth/";
+    // private static final String LOGIN_URL = BASE_URL + "login.php";
 
     public AuthController(Context context) {
         this.context = context;
@@ -58,7 +60,9 @@ public class AuthController {
         }
 
         RequestBody body = RequestBody.create(json.toString(), MediaType.get("application/json; charset=utf-8"));
-        Request request = new Request.Builder().url(LOGIN_URL).post(body).build();
+        Request request = new Request.Builder()
+                .url(ApiConstants.getLoginUrl())
+                .post(body).build();
 
         client.newCall(request).enqueue(new Callback() {
             final Handler mainHandler = new Handler(Looper.getMainLooper());
@@ -86,10 +90,9 @@ public class AuthController {
                             user.setId(userJson.optInt("user_id"));
                             user.setUsername(userJson.optString("username"));
                             user.setRole(userJson.optString("role"));
-                            user.setReferenceId(userJson.optString("reference_id")); // Save reference_id
+                            user.setReferenceId(userJson.optString("reference_id"));
                             user.setCreatedAt(userJson.optString("created_at"));
 
-                            // Parse linked_data (PatientInfo)
                             JSONObject linkedDataJson = userJson.optJSONObject("linked_data");
                             String caseIdToSave;
                             if (linkedDataJson != null && linkedDataJson.length() > 0) {
@@ -97,7 +100,6 @@ public class AuthController {
                                 user.setPatientInfo(patientInfo);
                                 Log.d(TAG, "[PATIENT INFO] " + patientInfo.toString());
 
-                                // Use linked_data.case_id if available, otherwise use referenceId
                                 caseIdToSave = (patientInfo.getCase_id() != null && !patientInfo.getCase_id().isEmpty())
                                         ? patientInfo.getCase_id()
                                         : user.getReferenceId();
@@ -108,7 +110,6 @@ public class AuthController {
                                 caseIdToSave = user.getReferenceId();
                             }
 
-                            // Save user session + caseId + referenceId in SharedPreferences
                             final String finalCaseId = caseIdToSave;
                             new Thread(() -> {
                                 sharedPrefManager.saveUserSession(user);
