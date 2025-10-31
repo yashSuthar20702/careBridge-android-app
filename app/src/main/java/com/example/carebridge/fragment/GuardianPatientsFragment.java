@@ -162,12 +162,12 @@ public class GuardianPatientsFragment extends Fragment {
                             tvStatus.setBackgroundResource(R.drawable.status_inactive_bg);
                         }
 
-                        ((TextView) cardView.findViewById(R.id.tvPatientAge)).setText(String.valueOf(patient.getAge()));
-                        ((TextView) cardView.findViewById(R.id.tvPatientGender)).setText(safe(patient.getGender()));
-                        ((TextView) cardView.findViewById(R.id.tvPatientContact)).setText(safe(patient.getContact_number()));
-                        ((TextView) cardView.findViewById(R.id.tvPatientEmail)).setText(safe(patient.getEmail()));
-                        ((TextView) cardView.findViewById(R.id.tvPatientAssignedDate)).setText(safe(patient.getAssigned_date()));
-                        ((TextView) cardView.findViewById(R.id.tvPatientNotes)).setText(safe(patient.getNotes()));
+                        ((TextView) cardView.findViewById(R.id.tvPatientAge)).setText(getString(R.string.white_space) + String.valueOf(patient.getAge()));
+                        ((TextView) cardView.findViewById(R.id.tvPatientGender)).setText(getString(R.string.white_space) + safe(patient.getGender()));
+                        ((TextView) cardView.findViewById(R.id.tvPatientContact)).setText(getString(R.string.white_space) + safe(patient.getContact_number()));
+                        ((TextView) cardView.findViewById(R.id.tvPatientEmail)).setText(getString(R.string.white_space) + safe(patient.getEmail()));
+                        ((TextView) cardView.findViewById(R.id.tvPatientAssignedDate)).setText(getString(R.string.white_space) + safe(patient.getAssigned_date()));
+                        ((TextView) cardView.findViewById(R.id.tvPatientNotes)).setText(getString(R.string.white_space) + safe(patient.getNotes()));
 
                         patientsListContainer.addView(cardView);
                     }

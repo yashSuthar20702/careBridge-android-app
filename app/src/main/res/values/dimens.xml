@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ==================== PADDING DIMENSIONS ==================== -->
+    <!-- Padding values for consistent spacing inside containers -->
+    <dimen name="padding_xlarge">48dp</dimen>
+    <dimen name="padding_large">24dp</dimen>
+    <dimen name="padding_medium">16dp</dimen>
+    <dimen name="padding_small">8dp</dimen>
+    <dimen name="padding_xsmall">4dp</dimen>
+
+    <!-- ==================== MARGIN DIMENSIONS ==================== -->
+    <!-- Margin values for consistent spacing between components -->
+    <dimen name="margin_xlarge">40dp</dimen>
+    <dimen name="margin_large">24dp</dimen>
+    <dimen name="margin_medium">16dp</dimen>
+    <dimen name="margin_small">8dp</dimen>
+    <dimen name="margin_xsmall">2dp</dimen>
+
+    <!-- ==================== TEXT SIZES ==================== -->
+    <!-- Typography scale for consistent text hierarchy across the app -->
+    <dimen name="text_size_xxlarge">32sp</dimen>
+    <dimen name="text_size_xlarge">26sp</dimen>
+    <dimen name="text_size_large">18sp</dimen>
+    <dimen name="text_size_medium">16sp</dimen>
+    <dimen name="text_size_small">14sp</dimen>
+    <dimen name="text_size_xsmall">13sp</dimen>
+
+    <!-- ==================== COMPONENT DIMENSIONS ==================== -->
+    <!-- Standard sizes for common UI components -->
+    <dimen name="logo_size_xlarge">200dp</dimen>
+    <dimen name="logo_size_large">100dp</dimen>
+    <dimen name="button_height_large">56dp</dimen>
+    <dimen name="button_height_standard">50dp</dimen>
+    <dimen name="animation_size_large">120dp</dimen>
+    <dimen name="shimmer_bar_height">24dp</dimen>
+
+    <!-- ==================== CORNER RADIUS VALUES ==================== -->
+    <!-- Border radius values for cards, buttons, and rounded components -->
+    <dimen name="corner_radius_xlarge">24dp</dimen>
+    <dimen name="corner_radius_large">16dp</dimen>
+    <dimen name="corner_radius_medium">12dp</dimen>
+    <dimen name="corner_radius_small">8dp</dimen>
+
+    <!-- ==================== ELEVATION VALUES ==================== -->
+    <!-- Shadow depths for Material Design elevation system -->
+    <dimen name="elevation_large">12dp</dimen>
+    <dimen name="elevation_medium">6dp</dimen>
+    <dimen name="elevation_small">2dp</dimen>
+
+    <!-- ==================== ICON SIZES ==================== -->
+    <!-- Standard icon dimensions for consistent visual hierarchy -->
+    <dimen name="icon_size_large">32dp</dimen>
+    <dimen name="icon_size_medium">24dp</dimen>
+    <dimen name="icon_size_small">16dp</dimen>
+
+    <!-- ==================== LAYOUT SPACING ==================== -->
+    <!-- General spacing values for layout composition -->
+    <dimen name="spacing_large">24dp</dimen>
+    <dimen name="spacing_medium">16dp</dimen>
+    <dimen name="spacing_small">8dp</dimen>
+    <dimen name="spacing_xsmall">4dp</dimen>
+
+    <!-- Additional dimension values -->
+    <dimen name="text_size_medium_large">17sp</dimen>
+    <dimen name="line_spacing_medium">4dp</dimen>
+    <dimen name="image_height_large">200dp</dimen>
+    <!-- Additional dimension values -->
+    <dimen name="placeholder_card_height">120dp</dimen>
+
+    <!-- Additional dimension values for medication card -->
+    <dimen name="time_circle_size">50dp</dimen>
+</resources>

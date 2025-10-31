@@ -3,6 +3,8 @@
     <string name="app_name">CareBridge</string>
     <string name="app_tagline">Your Bridge to Better Care</string>
 
+    <string name="white_space">" "</string>
+
     <!-- Common -->
     <string name="welcome_back">Welcome Back</string>
     <string name="sign_in">Sign In</string>
@@ -41,13 +43,13 @@
     <string name="upcoming_medications">Upcoming Medications</string>
 
     <!-- Labels -->
-    <string name="age_label">Age: %1$d years</string>
-    <string name="blood_type_label">Blood Type: %1$s</string>
-    <string name="allergies_label">Allergies: %1$s</string>
-    <string name="conditions_label">Conditions: %1$s</string>
-    <string name="relationship_label">Relationship: %1$s</string>
-    <string name="phone_label">Phone: %1$s</string>
-    <string name="email_label">Email: %1$s</string>
+    <string name="age_label">Age: </string>
+    <string name="blood_type_label">Blood Type: </string>
+    <string name="allergies_label">Allergies: </string>
+    <string name="conditions_label">Conditions: </string>
+    <string name="relationship_label">Relationship: </string>
+    <string name="phone_label">Phone: </string>
+    <string name="email_label">Email: </string>
 
     <!-- Logout -->
     <string name="logout">Logout</string>
@@ -67,5 +69,64 @@
     <string name="patient_blood_type_placeholder">Blood Type: O+</string>
     <string name="patient_allergies_placeholder">Allergies: Penicillin, Shellfish</string>
     <string name="patient_conditions_placeholder">Conditions: Hypertension, Diabetes</string>
+    <string name="hello_world">Hello World!</string>
+    <!-- Dashboard card titles -->
+    <string name="upcoming_medicines_title">Upcoming Medicines</string>
+    <string name="medicine_status_title">Medicine Status</string>
+    <string name="tips_tricks_title">Tips &amp; Tricks</string>
 
+    <!-- Dashboard card content -->
+    <string name="upcoming_medicines_content">John: 8:00 AM - Paracetamol\nSarah: 10:30 AM - Vitamin D</string>
+    <string name="medicine_status_content">John: ✅ Taken\nSarah: ⚠️ Missed</string>
+    <string name="tips_tricks_content">💡 Encourage patients to drink enough water.\n💡 Keep medicine boxes organized by time.\n💡 Track sleep and food intake regularly.</string>
+    <!-- Dashboard labels and titles -->
+    <string name="assigned_patients_label">Assigned Patients</string>
+    <string name="active_patients_label">Active Patients</string>
+    <string name="patients_list_title">Patients List</string>
+    <string name="zero_count">0</string>
+    <string name="warning_icon_description">Warning</string>
+    <string name="network_error_message">Failed to load patient data. Please check your connection and swipe down to retry.</string>
+
+    <!-- Wellness screen titles -->
+    <string name="upcoming_medications_title">Upcoming Medications</string>
+    <string name="health_tips_title">Health Tips &amp; Tricks</string>
+    <string name="mental_health_content_title">Mental Health Blogs &amp; Videos</string>
+    <string name="daily_wellness_title">Daily Wellness Challenges</string>
+
+    <!-- Content descriptions -->
+    <string name="video_thumbnail_description">Video thumbnail</string>
+    <string name="blog_thumbnail_description">Blog thumbnail</string>
+
+    <!-- Content text -->
+    <string name="health_tips_content">Stay hydrated and drink at least 2 liters of water daily. Walk for 30 minutes every day. Practice mindfulness or yoga for stress relief.</string>
+    <string name="meditation_video_title">Guided Meditation for Stress Relief</string>
+    <string name="meditation_video_description">Learn mindfulness techniques to reduce anxiety and improve mental health.</string>
+    <string name="positivity_blog_title">5 Ways to Boost Positivity</string>
+    <string name="positivity_blog_description">Simple daily habits that can improve your mood and overall mental wellness.</string>
+    <string name="daily_wellness_content">Morning stretch for 10 minutes. Eat a healthy breakfast. 1-hour digital detox.</string>
+
+    <!-- Guardian screen messages -->
+    <string name="guardian_load_error_message">Unable to load guardian info. Please check your connection and swipe down to retry.</string>
+    <string name="no_guardian_assigned_message">No guardian assigned yet. Contact your doctor.</string>
+
+    <!-- Patient info screen titles and messages -->
+    <string name="personal_info_title">👤 Personal Info</string>
+    <string name="medical_info_title">💉 Medical Info</string>
+    <string name="contact_info_title">📞 Contact Info</string>
+    <string name="network_error_retry_message">Network error. Please check your connection and swipe down to retry.</string>
+
+    <string name="call_guardian_button">Call Guardian</string>
+
+    <!-- Medication card placeholder text -->
+    <string name="medication_name_placeholder">Medication Name</string>
+    <string name="dosage_information_placeholder">Dosage information</string>
+    <string name="medication_time_placeholder">08:00 AM</string>
+
+    <!-- Patient card field labels -->
+
+    <string name="gender_label">Gender: </string>
+    <string name="contact_label">Contact: </string>
+
+    <string name="assigned_label">Assigned: </string>
+    <string name="notes_label">Notes: </string>
 </resources>

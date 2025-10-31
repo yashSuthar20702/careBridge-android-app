@@ -1,8 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:padding="16dp"
+    android:padding="@dimen/padding_medium"
     android:background="@color/bg_patient_dashboard">
 
     <LinearLayout
@@ -10,24 +11,24 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- Upcoming Medicines -->
+        <!-- Upcoming Medicines Card: Displays scheduled medications for patients -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="5dp"
+            android:layout_marginBottom="@dimen/margin_medium"
+            app:cardCornerRadius="@dimen/corner_radius_large"
+            app:cardElevation="@dimen/elevation_medium"
             app:cardBackgroundColor="@color/white">
 
             <LinearLayout
-                android:padding="16dp"
+                android:padding="@dimen/padding_medium"
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
                 <TextView
-                    android:text="Upcoming Medicines"
-                    android:textSize="18sp"
+                    android:text="@string/upcoming_medicines_title"
+                    android:textSize="@dimen/text_size_large"
                     android:textColor="@color/primary_blue"
                     android:textStyle="bold"
                     android:layout_height="wrap_content"
@@ -36,23 +37,23 @@
                 <TextView
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
-                    android:text="John: 8:00 AM - Paracetamol\nSarah: 10:30 AM - Vitamin D"
+                    android:text="@string/upcoming_medicines_content"
                     android:textColor="@color/text_secondary"
-                    android:layout_marginTop="8dp" />
+                    android:layout_marginTop="@dimen/margin_small" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- Medicine Status -->
+        <!-- Medicine Status Card: Shows medication adherence tracking -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="5dp"
+            android:layout_marginBottom="@dimen/margin_medium"
+            app:cardCornerRadius="@dimen/corner_radius_large"
+            app:cardElevation="@dimen/elevation_medium"
             app:cardBackgroundColor="@color/white">
 
             <LinearLayout
-                android:padding="16dp"
+                android:padding="@dimen/padding_medium"
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -60,30 +61,30 @@
                 <TextView
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
-                    android:text="Medicine Status"
-                    android:textSize="18sp"
+                    android:text="@string/medicine_status_title"
+                    android:textSize="@dimen/text_size_large"
                     android:textColor="@color/primary_blue"
                     android:textStyle="bold"/>
 
                 <TextView
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
-                    android:text="John: ✅ Taken\nSarah: ⚠️ Missed"
+                    android:text="@string/medicine_status_content"
                     android:textColor="@color/text_secondary"
-                    android:layout_marginTop="8dp" />
+                    android:layout_marginTop="@dimen/margin_small" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- Tips & Tricks -->
+        <!-- Tips & Tricks Card: Provides healthcare recommendations and best practices -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="5dp"
+            app:cardCornerRadius="@dimen/corner_radius_large"
+            app:cardElevation="@dimen/elevation_medium"
             app:cardBackgroundColor="@color/primary_blue_light">
 
             <LinearLayout
-                android:padding="16dp"
+                android:padding="@dimen/padding_medium"
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -91,17 +92,17 @@
                 <TextView
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
-                    android:text="Tips &amp; Tricks"
-                    android:textSize="18sp"
+                    android:text="@string/tips_tricks_title"
+                    android:textSize="@dimen/text_size_large"
                     android:textColor="@color/white"
                     android:textStyle="bold"/>
 
                 <TextView
                     android:layout_height="wrap_content"
                     android:layout_width="wrap_content"
-                    android:text="💡 Encourage patients to drink enough water.\n💡 Keep medicine boxes organized by time.\n💡 Track sleep and food intake regularly."
+                    android:text="@string/tips_tricks_content"
                     android:textColor="@color/white"
-                    android:layout_marginTop="8dp" />
+                    android:layout_marginTop="@dimen/margin_small" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 

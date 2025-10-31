@@ -4,10 +4,11 @@
     android:layout_height="match_parent"
     android:background="@drawable/bg_gradient_login">
 
+    <!-- App logo displayed centrally on gradient background -->
     <ImageView
         android:id="@+id/logoImage"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
+        android:layout_width="@dimen/logo_size_xlarge"
+        android:layout_height="@dimen/logo_size_xlarge"
         android:layout_centerInParent="true"
         android:src="@drawable/logo" />
 

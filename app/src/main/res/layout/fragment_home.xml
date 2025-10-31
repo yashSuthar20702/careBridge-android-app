@@ -1,8 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:padding="16dp"
+    android:padding="@dimen/padding_medium"
     android:background="@color/bg_patient_dashboard">
 
     <LinearLayout
@@ -11,200 +12,201 @@
         android:orientation="vertical"
         android:gravity="center_horizontal">
 
-        <!-- Medications Section -->
+        <!-- Medications Section: Displays upcoming medications in a recycler view -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            app:cardCornerRadius="24dp"
-            app:cardElevation="10dp"
+            android:layout_marginBottom="@dimen/margin_large"
+            app:cardCornerRadius="@dimen/corner_radius_xlarge"
+            app:cardElevation="@dimen/elevation_large"
             app:cardBackgroundColor="@color/white">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="24dp">
+                android:padding="@dimen/padding_large">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Upcoming Medications"
+                    android:text="@string/upcoming_medications_title"
                     android:textColor="@color/accent_blue"
-                    android:textSize="22sp"
+                    android:textSize="@dimen/text_size_xlarge"
                     android:textStyle="bold"
-                    android:layout_marginBottom="16dp" />
+                    android:layout_marginBottom="@dimen/margin_medium" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvMedications"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:clipToPadding="false"
-                    android:paddingBottom="8dp" />
+                    android:paddingBottom="@dimen/padding_small" />
 
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- Health Tips Section -->
+        <!-- Health Tips Section: Provides wellness recommendations and advice -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            app:cardCornerRadius="24dp"
-            app:cardElevation="10dp"
+            android:layout_marginBottom="@dimen/margin_large"
+            app:cardCornerRadius="@dimen/corner_radius_xlarge"
+            app:cardElevation="@dimen/elevation_large"
             app:cardBackgroundColor="@color/white">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="24dp">
+                android:padding="@dimen/padding_large">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Health Tips &amp; Tricks"
+                    android:text="@string/health_tips_title"
                     android:textColor="@color/accent_blue"
-                    android:textSize="22sp"
+                    android:textSize="@dimen/text_size_xlarge"
                     android:textStyle="bold"
-                    android:layout_marginBottom="16dp" />
+                    android:layout_marginBottom="@dimen/margin_medium" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Stay hydrated and drink at least 2 liters of water daily. Walk for 30 minutes every day. Practice mindfulness or yoga for stress relief."
+                    android:text="@string/health_tips_content"
                     android:textColor="@color/text_secondary"
-                    android:textSize="17sp"
-                    android:lineSpacingExtra="4dp" />
+                    android:textSize="@dimen/text_size_medium_large"
+                    android:lineSpacingExtra="@dimen/line_spacing_medium" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- Blogs & Videos Section -->
+        <!-- Blogs & Videos Section: Mental health educational content -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            app:cardCornerRadius="24dp"
-            app:cardElevation="10dp"
+            android:layout_marginBottom="@dimen/margin_large"
+            app:cardCornerRadius="@dimen/corner_radius_xlarge"
+            app:cardElevation="@dimen/elevation_large"
             app:cardBackgroundColor="@color/white">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="24dp">
+                android:padding="@dimen/padding_large">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Mental Health Blogs &amp; Videos"
+                    android:text="@string/mental_health_content_title"
                     android:textColor="@color/accent_blue"
-                    android:textSize="22sp"
+                    android:textSize="@dimen/text_size_xlarge"
                     android:textStyle="bold"
-                    android:layout_marginBottom="16dp" />
+                    android:layout_marginBottom="@dimen/margin_medium" />
 
-                <!-- Blog / Video Preview -->
+                <!-- Blog / Video Preview Item 1 -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:layout_marginBottom="16dp"
+                    android:layout_marginBottom="@dimen/margin_medium"
                     android:background="@drawable/bg_rounded_white"
-                    android:padding="16dp">
+                    android:padding="@dimen/padding_medium">
 
                     <ImageView
                         android:layout_width="match_parent"
-                        android:layout_height="200dp"
+                        android:layout_height="@dimen/image_height_large"
                         android:scaleType="centerCrop"
                         android:src="@drawable/ic_carebridge_logo"
-                        android:contentDescription="Video thumbnail"
-                        android:layout_marginBottom="12dp"
+                        android:contentDescription="@string/video_thumbnail_description"
+                        android:layout_marginBottom="@dimen/margin_small"
                         android:background="@color/shimmer_placeholder" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Guided Meditation for Stress Relief"
+                        android:text="@string/meditation_video_title"
                         android:textColor="@color/text_primary"
-                        android:textSize="18sp"
+                        android:textSize="@dimen/text_size_large"
                         android:textStyle="bold"
-                        android:layout_marginBottom="6dp" />
+                        android:layout_marginBottom="@dimen/margin_xsmall" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Learn mindfulness techniques to reduce anxiety and improve mental health."
+                        android:text="@string/meditation_video_description"
                         android:textColor="@color/text_secondary"
-                        android:textSize="16sp" />
+                        android:textSize="@dimen/text_size_medium" />
                 </LinearLayout>
 
+                <!-- Blog / Video Preview Item 2 -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
                     android:background="@drawable/bg_rounded_white"
-                    android:padding="16dp">
+                    android:padding="@dimen/padding_medium">
 
                     <ImageView
                         android:layout_width="match_parent"
-                        android:layout_height="200dp"
+                        android:layout_height="@dimen/image_height_large"
                         android:scaleType="centerCrop"
                         android:src="@drawable/ic_email"
-                        android:contentDescription="Blog thumbnail"
-                        android:layout_marginBottom="12dp"
+                        android:contentDescription="@string/blog_thumbnail_description"
+                        android:layout_marginBottom="@dimen/margin_small"
                         android:background="@color/shimmer_placeholder" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="5 Ways to Boost Positivity"
+                        android:text="@string/positivity_blog_title"
                         android:textColor="@color/text_primary"
-                        android:textSize="18sp"
+                        android:textSize="@dimen/text_size_large"
                         android:textStyle="bold"
-                        android:layout_marginBottom="6dp" />
+                        android:layout_marginBottom="@dimen/margin_xsmall" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Simple daily habits that can improve your mood and overall mental wellness."
+                        android:text="@string/positivity_blog_description"
                         android:textColor="@color/text_secondary"
-                        android:textSize="16sp" />
+                        android:textSize="@dimen/text_size_medium" />
                 </LinearLayout>
 
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <!-- Daily Challenges Section -->
+        <!-- Daily Challenges Section: Wellness activity suggestions -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            app:cardCornerRadius="24dp"
-            app:cardElevation="10dp"
+            android:layout_marginBottom="@dimen/margin_large"
+            app:cardCornerRadius="@dimen/corner_radius_xlarge"
+            app:cardElevation="@dimen/elevation_large"
             app:cardBackgroundColor="@color/white">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="24dp">
+                android:padding="@dimen/padding_large">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Daily Wellness Challenges"
+                    android:text="@string/daily_wellness_title"
                     android:textColor="@color/accent_blue"
-                    android:textSize="22sp"
+                    android:textSize="@dimen/text_size_xlarge"
                     android:textStyle="bold"
-                    android:layout_marginBottom="16dp" />
+                    android:layout_marginBottom="@dimen/margin_medium" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Morning stretch for 10 minutes. Eat a healthy breakfast. 1-hour digital detox."
+                    android:text="@string/daily_wellness_content"
                     android:textColor="@color/text_secondary"
-                    android:textSize="17sp"
-                    android:lineSpacingExtra="4dp" />
+                    android:textSize="@dimen/text_size_medium_large"
+                    android:lineSpacingExtra="@dimen/line_spacing_medium" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 

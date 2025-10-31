@@ -3,63 +3,69 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="8dp"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="2dp"
+    android:layout_marginBottom="@dimen/margin_small"
+    app:cardCornerRadius="@dimen/corner_radius_medium"
+    app:cardElevation="@dimen/elevation_small"
     app:cardBackgroundColor="@color/white">
 
+    <!-- Medication item container with horizontal layout for medication details -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="16dp"
+        android:padding="@dimen/padding_medium"
         android:gravity="center_vertical"
         android:background="?selectableItemBackground">
 
+        <!-- Medication icon for visual identification -->
         <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="@dimen/icon_size_small"
+            android:layout_height="@dimen/icon_size_small"
             android:src="@drawable/dummy_image"
             android:tint="@color/primary_blue"
-            android:layout_marginEnd="12dp" />
+            android:layout_marginEnd="@dimen/margin_small" />
 
+        <!-- Medication details container with flexible width -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical">
 
+            <!-- Medication name with primary emphasis -->
             <TextView
                 android:id="@+id/tvMedName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Medication Name"
+                android:text="@string/medication_name_placeholder"
                 android:textColor="@color/text_primary"
-                android:textSize="16sp"
+                android:textSize="@dimen/text_size_medium"
                 android:fontFamily="sans-serif-medium" />
 
+            <!-- Dosage information with secondary styling -->
             <TextView
                 android:id="@+id/tvMedDosage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Dosage information"
+                android:text="@string/dosage_information_placeholder"
                 android:textColor="@color/text_secondary"
-                android:textSize="14sp"
-                android:layout_marginTop="2dp" />
+                android:textSize="@dimen/text_size_small"
+                android:layout_marginTop="@dimen/margin_xsmall" />
 
         </LinearLayout>
 
+        <!-- Medication time display with circular background -->
         <TextView
             android:id="@+id/tvMedTime"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:text="08:00 AM"
+            android:layout_width="@dimen/time_circle_size"
+            android:layout_height="@dimen/time_circle_size"
+            android:text="@string/medication_time_placeholder"
             android:textColor="@color/primary_blue"
-            android:textSize="14sp"
+            android:textSize="@dimen/text_size_small"
             android:fontFamily="sans-serif-medium"
             android:background="@drawable/dummy_image"
-            android:paddingHorizontal="12dp"
-            android:paddingVertical="6dp" />
+            android:paddingHorizontal="@dimen/padding_small"
+            android:paddingVertical="@dimen/padding_xsmall" />
 
     </LinearLayout>
 

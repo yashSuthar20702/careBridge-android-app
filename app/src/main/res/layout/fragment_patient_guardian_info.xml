@@ -10,52 +10,52 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="@dimen/padding_medium">
 
-        <!-- Shimmer Loading Placeholder -->
+        <!-- Shimmer Loading Placeholder: Shows loading animation while fetching guardian data -->
         <com.facebook.shimmer.ShimmerFrameLayout
             android:id="@+id/shimmerLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:shimmer_auto_start="true"
             app:shimmer_duration="1000"
-            android:layout_marginBottom="16dp">
+            android:layout_marginBottom="@dimen/margin_medium">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <!-- Placeholder Card 1 -->
+                <!-- Placeholder Card 1: Loading state simulation for guardian card -->
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="120dp"
-                    android:layout_marginBottom="12dp"
+                    android:layout_height="@dimen/placeholder_card_height"
+                    android:layout_marginBottom="@dimen/margin_small"
                     android:background="@drawable/bg_rounded_white" />
 
-                <!-- Placeholder Card 2 -->
+                <!-- Placeholder Card 2: Loading state simulation for guardian card -->
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="120dp"
-                    android:layout_marginBottom="12dp"
+                    android:layout_height="@dimen/placeholder_card_height"
+                    android:layout_marginBottom="@dimen/margin_small"
                     android:background="@drawable/bg_rounded_white" />
 
-                <!-- Placeholder Card 3 -->
+                <!-- Placeholder Card 3: Loading state simulation for guardian card -->
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="120dp"
+                    android:layout_height="@dimen/placeholder_card_height"
                     android:background="@drawable/bg_rounded_white" />
             </LinearLayout>
         </com.facebook.shimmer.ShimmerFrameLayout>
 
-        <!-- Warning Card -->
+        <!-- Warning Card: Displays connection or data loading errors to the user -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardWarning"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="@dimen/margin_medium"
             android:visibility="gone"
-            app:cardCornerRadius="20dp"
+            app:cardCornerRadius="@dimen/corner_radius_xlarge"
             app:strokeWidth="1dp"
             app:cardBackgroundColor="@color/white">
 
@@ -63,15 +63,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:padding="16dp"
+                android:padding="@dimen/padding_medium"
                 android:gravity="center_vertical">
 
                 <ImageView
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
+                    android:layout_width="@dimen/icon_size_medium"
+                    android:layout_height="@dimen/icon_size_medium"
                     android:src="@drawable/ic_warning"
-                    android:layout_marginEnd="12dp"
-                    android:contentDescription="Warning"
+                    android:layout_marginEnd="@dimen/margin_small"
+                    android:contentDescription="@string/warning_icon_description"
                     app:tint="@color/warning_yellow" />
 
                 <TextView
@@ -79,32 +79,32 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Unable to load guardian info. Please check your connection and swipe down to retry."
+                    android:text="@string/guardian_load_error_message"
                     android:textColor="@color/text_primary"
-                    android:textSize="16sp" />
+                    android:textSize="@dimen/text_size_medium" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- No Guardian Message -->
+        <!-- No Guardian Message: Informs user when no guardian has been assigned -->
         <TextView
             android:id="@+id/tvNoGuardianMessage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="No guardian assigned yet. Contact your doctor."
+            android:text="@string/no_guardian_assigned_message"
             android:textColor="@color/text_secondary"
-            android:textSize="18sp"
+            android:textSize="@dimen/text_size_large"
             android:gravity="center"
             android:visibility="gone"
-            android:padding="20dp"
+            android:padding="@dimen/padding_large"
             android:background="@drawable/bg_rounded_white"
-            android:layout_marginBottom="16dp" />
+            android:layout_marginBottom="@dimen/margin_medium" />
 
-        <!-- Recycler View for Guardian Data -->
+        <!-- Recycler View for Guardian Data: Displays list of assigned guardians -->
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerViewGuardians"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:visibility="gone"
-            android:layout_marginBottom="16dp"/>
+            android:layout_marginBottom="@dimen/margin_medium"/>
     </LinearLayout>
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
