@@ -30,9 +30,10 @@ public class GuardianPersonalFragment extends Fragment {
     private ShimmerFrameLayout shimmerLayout;
     private SwipeRefreshLayout swipeRefreshLayout;
 
-    private GuardianController guardianController;
+    private View rootView;
+    private View cardWarning; // new warning card view
 
-    private View rootView; // hold fragment view reference
+    private GuardianController guardianController;
 
     @Nullable
     @Override
@@ -45,14 +46,11 @@ public class GuardianPersonalFragment extends Fragment {
 
         guardianController = new GuardianController(requireContext());
 
-        // Start shimmer initially
         shimmerLayout.setVisibility(View.VISIBLE);
         shimmerLayout.startShimmer();
 
-        // Swipe to refresh
         swipeRefreshLayout.setOnRefreshListener(this::fetchGuardianData);
 
-        // Fetch data after view is ready
         rootView.post(this::fetchGuardianData);
 
         return rootView;
@@ -61,6 +59,7 @@ public class GuardianPersonalFragment extends Fragment {
     private void bindViews(View view) {
         shimmerLayout = view.findViewById(R.id.shimmerLayout);
         swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
+        cardWarning = view.findViewById(R.id.cardWarning); // bind warning card
 
         // Personal Info
         tvName = view.findViewById(R.id.tvName);
@@ -81,19 +80,24 @@ public class GuardianPersonalFragment extends Fragment {
         shimmerLayout.setVisibility(View.VISIBLE);
         shimmerLayout.startShimmer();
         rootView.findViewById(R.id.cardContent).setVisibility(View.GONE);
+        cardWarning.setVisibility(View.GONE);
 
         guardianController.getCurrentGuardian(new GuardianController.GuardianCallback() {
             @Override
             public void onSuccess(GuardianInfo guardianInfo) {
-                if (!isAdded() || guardianInfo == null) return;
+                if (!isAdded()) return;
 
                 getActivity().runOnUiThread(() -> {
                     shimmerLayout.stopShimmer();
                     shimmerLayout.setVisibility(View.GONE);
                     swipeRefreshLayout.setRefreshing(false);
 
-                    displayGuardianInfo(guardianInfo);
-                    rootView.findViewById(R.id.cardContent).setVisibility(View.VISIBLE);
+                    if (guardianInfo == null) {
+                        showWarning("No guardian data found.");
+                    } else {
+                        displayGuardianInfo(guardianInfo);
+                        rootView.findViewById(R.id.cardContent).setVisibility(View.VISIBLE);
+                    }
                 });
             }
 
@@ -106,11 +110,20 @@ public class GuardianPersonalFragment extends Fragment {
                     shimmerLayout.setVisibility(View.GONE);
                     swipeRefreshLayout.setRefreshing(false);
 
-                    Toast.makeText(requireContext(), "Failed to fetch guardian info: " + message, Toast.LENGTH_LONG).show();
+                    showWarning("Failed to fetch data Please check your network and swipe down to retry.");
                     Log.e(TAG, message);
+                    Toast.makeText(requireContext(),
+                            "Failed to fetch guardian info: " + message,
+                            Toast.LENGTH_SHORT).show();
                 });
             }
         });
+    }
+
+    private void showWarning(String message) {
+        cardWarning.setVisibility(View.VISIBLE);
+        TextView tvWarningMessage = cardWarning.findViewById(R.id.tvWarningMessage);
+        tvWarningMessage.setText(message);
     }
 
     private void displayGuardianInfo(GuardianInfo guardianInfo) {

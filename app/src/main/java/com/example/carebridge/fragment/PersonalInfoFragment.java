@@ -22,6 +22,7 @@ import com.example.carebridge.model.PatientInfo;
 import com.example.carebridge.model.User;
 import com.example.carebridge.utils.SharedPrefManager;
 import com.facebook.shimmer.ShimmerFrameLayout;
+import com.google.android.material.card.MaterialCardView;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -34,10 +35,11 @@ public class PersonalInfoFragment extends Fragment {
     private TextView tvFullName, tvPatientAge, tvGender, tvBloodType,
             tvHeight, tvWeight, tvAllergies, tvConditions,
             tvPastSurgeries, tvCurrentSymptoms, tvAddress,
-            tvContactNumber, tvEmail, tvStatus;
+            tvContactNumber, tvEmail, tvStatus, tvWarningMessage;
 
     private ShimmerFrameLayout shimmerLayout;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private MaterialCardView cardWarning;
     private PatientController patientController;
     private SharedPrefManager sharedPrefManager;
 
@@ -56,10 +58,8 @@ public class PersonalInfoFragment extends Fragment {
         shimmerLayout.startShimmer();
         shimmerLayout.setVisibility(View.VISIBLE);
 
-        // Fetch patient data initially
         fetchPatientData();
 
-        // Add swipe to refresh listener
         swipeRefreshLayout.setOnRefreshListener(() -> {
             Log.d(TAG, "Swipe-to-refresh triggered");
             fetchPatientData();
@@ -85,17 +85,16 @@ public class PersonalInfoFragment extends Fragment {
         tvStatus = view.findViewById(R.id.tvStatus);
         shimmerLayout = view.findViewById(R.id.shimmerLayout);
         swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
+        cardWarning = view.findViewById(R.id.cardWarning);
+        tvWarningMessage = view.findViewById(R.id.tvWarningMessage);
     }
 
     private void fetchPatientData() {
         User currentUser = sharedPrefManager.getCurrentUser();
-        if (currentUser == null || currentUser.getPatientInfo() == null) {
-            Log.w(TAG, "[USER] No current user found");
-        }
-
         shimmerLayout.startShimmer();
         shimmerLayout.setVisibility(View.VISIBLE);
         swipeRefreshLayout.setRefreshing(true);
+        cardWarning.setVisibility(View.GONE);
 
         patientController.getCurrentPatient(new PatientController.PatientCallback() {
             @Override
@@ -108,10 +107,12 @@ public class PersonalInfoFragment extends Fragment {
                     swipeRefreshLayout.setRefreshing(false);
 
                     if (patientInfo == null) {
-                        Toast.makeText(requireContext(), "No patient data found", Toast.LENGTH_SHORT).show();
+                        cardWarning.setVisibility(View.VISIBLE);
+                        tvWarningMessage.setText("⚠️ No patient data found. Swipe down to retry.");
                         return;
                     }
 
+                    cardWarning.setVisibility(View.GONE);
                     displayPatientInfo(patientInfo);
                 });
             }
@@ -124,7 +125,10 @@ public class PersonalInfoFragment extends Fragment {
                     shimmerLayout.stopShimmer();
                     shimmerLayout.setVisibility(View.GONE);
                     swipeRefreshLayout.setRefreshing(false);
-                    Toast.makeText(requireContext(), "Failed to fetch patient info: " + message, Toast.LENGTH_LONG).show();
+                    requireView().findViewById(R.id.cardContent).setVisibility(View.GONE);
+
+                    cardWarning.setVisibility(View.VISIBLE);
+                    tvWarningMessage.setText("Failed to fetch patient info. Please check your internet connection and swipe down to retry.");
                 });
             }
         });

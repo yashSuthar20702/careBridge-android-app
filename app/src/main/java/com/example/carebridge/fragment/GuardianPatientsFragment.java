@@ -6,69 +6,130 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
-import androidx.core.content.ContextCompat;
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.core.content.ContextCompat;
 
-import com.facebook.shimmer.ShimmerFrameLayout;
-import com.google.android.material.card.MaterialCardView;
 import com.example.carebridge.R;
 import com.example.carebridge.controller.AssignedPatientController;
 import com.example.carebridge.model.AssignedPatientInfo;
 import com.example.carebridge.utils.SharedPrefManager;
+import com.facebook.shimmer.ShimmerFrameLayout;
+import com.google.android.material.card.MaterialCardView;
 
 import java.util.List;
 
 public class GuardianPatientsFragment extends Fragment {
-    private ShimmerFrameLayout shimmerFrameLayout;
-    private TextView tvAssignedCount, tvActiveCount;
-    private LinearLayout patientsListContainer;
-    private SwipeRefreshLayout swipeRefreshLayout;
 
+    private ShimmerFrameLayout shimmerFrameLayout;
+    private TextView tvAssignedCount, tvActiveCount, tvWarningMessage;
+    private LinearLayout patientsListContainer, mainContainer, summaryCards, patientsSection;
+    private MaterialCardView cardWarning;
+    private SwipeRefreshLayout swipeRefreshLayout;
     private int[] borderColors;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_guardian_patients, container, false);
 
+        // Initialize views
         shimmerFrameLayout = view.findViewById(R.id.shimmer);
         tvAssignedCount = view.findViewById(R.id.tvAssignedCount);
         tvActiveCount = view.findViewById(R.id.tvActiveCount);
         patientsListContainer = view.findViewById(R.id.patientsListContainer);
         swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
+        cardWarning = view.findViewById(R.id.cardWarning);
+        tvWarningMessage = view.findViewById(R.id.tvWarningMessage);
+        mainContainer = view.findViewById(R.id.mainContainer);
+        summaryCards = view.findViewById(R.id.summaryCards);
+        patientsSection = view.findViewById(R.id.patientsSection);
 
+        // Set color borders
         borderColors = new int[]{
                 ContextCompat.getColor(requireContext(), R.color.accent_blue),
                 ContextCompat.getColor(requireContext(), R.color.accent_purple),
                 ContextCompat.getColor(requireContext(), R.color.accent_orange)
         };
 
-        loadAssignedPatients();
+        // Pull-to-refresh setup
         swipeRefreshLayout.setOnRefreshListener(this::loadAssignedPatients);
+
+        // Start shimmer safely after view is created
+        shimmerFrameLayout.post(this::showLoading);
+
+        // Delay first data load to ensure Fragment is attached
+        view.post(this::loadAssignedPatients);
 
         return view;
     }
 
-    private void loadAssignedPatients() {
+    /** Show shimmer loader and hide everything else */
+    private void showLoading() {
+        if (!isAdded()) return;
         shimmerFrameLayout.setVisibility(View.VISIBLE);
         shimmerFrameLayout.startShimmer();
-        swipeRefreshLayout.setRefreshing(false);
+
+        summaryCards.setVisibility(View.GONE);
+        patientsSection.setVisibility(View.GONE);
+        cardWarning.setVisibility(View.GONE);
+    }
+
+    /** Show data section and hide shimmer/warning */
+    private void showData() {
+        if (!isAdded()) return;
+        shimmerFrameLayout.stopShimmer();
+        shimmerFrameLayout.setVisibility(View.GONE);
+
+        cardWarning.setVisibility(View.GONE);
+        summaryCards.setVisibility(View.VISIBLE);
+        patientsSection.setVisibility(View.VISIBLE);
+        patientsListContainer.setVisibility(View.VISIBLE);
+    }
+
+    /** Show warning card and hide all other sections */
+    private void showWarning(String message) {
+        if (!isAdded()) return;
+        shimmerFrameLayout.stopShimmer();
+        shimmerFrameLayout.setVisibility(View.GONE);
+
+        summaryCards.setVisibility(View.GONE);
+        patientsSection.setVisibility(View.GONE);
+        patientsListContainer.setVisibility(View.GONE);
+
+        cardWarning.setVisibility(View.VISIBLE);
+        tvWarningMessage.setText(message);
+    }
+
+    /** Load patient data from API */
+    private void loadAssignedPatients() {
+        if (!isAdded() || getActivity() == null) return;
 
         String guardianId = new SharedPrefManager(requireContext()).getReferenceId();
-
         AssignedPatientController controller = new AssignedPatientController();
+
         controller.getAssignedPatients(guardianId, new AssignedPatientController.AssignedPatientsCallback() {
             @Override
             public void onSuccess(List<AssignedPatientInfo> patients) {
+                if (!isAdded() || getActivity() == null) return;
+
                 requireActivity().runOnUiThread(() -> {
-                    shimmerFrameLayout.stopShimmer();
-                    shimmerFrameLayout.setVisibility(View.GONE);
+                    if (!isAdded()) return;
+
                     swipeRefreshLayout.setRefreshing(false);
 
+                    if (patients == null || patients.isEmpty()) {
+                        showWarning("No patients are currently assigned to you.");
+                        return;
+                    }
+
+                    showData();
+
                     tvAssignedCount.setText(String.valueOf(patients.size()));
+
                     int activeCount = 0;
                     for (AssignedPatientInfo p : patients) {
                         if ("Active".equalsIgnoreCase(p.getStatus())) activeCount++;
@@ -82,19 +143,17 @@ public class GuardianPatientsFragment extends Fragment {
                         AssignedPatientInfo patient = patients.get(i);
                         View cardView = LayoutInflater.from(context).inflate(R.layout.patient_card, patientsListContainer, false);
 
-                        // Set alternate border colors
                         MaterialCardView cardMaterial = cardView.findViewById(R.id.patientCard);
                         int borderColor = borderColors[i % borderColors.length];
                         cardMaterial.setStrokeColor(borderColor);
 
-                        // Only Name/Title: Bold and big!
                         TextView tvName = cardView.findViewById(R.id.tvPatientName);
                         tvName.setText(patient.getFull_name());
                         tvName.setTypeface(Typeface.DEFAULT_BOLD);
-                        tvName.setTextSize(22);  // Make it larger
+                        tvName.setTextSize(22);
 
-                        // No need to set font/bold for other info, XML handles it!
                         ((TextView) cardView.findViewById(R.id.tvPatientRole)).setText(patient.getRole());
+
                         TextView tvStatus = cardView.findViewById(R.id.tvPatientStatus);
                         tvStatus.setText(patient.getStatus());
                         if ("Active".equalsIgnoreCase(patient.getStatus())) {
@@ -117,16 +176,13 @@ public class GuardianPatientsFragment extends Fragment {
 
             @Override
             public void onFailure(String message) {
-                requireActivity().runOnUiThread(() -> {
-                    shimmerFrameLayout.stopShimmer();
-                    shimmerFrameLayout.setVisibility(View.GONE);
-                    swipeRefreshLayout.setRefreshing(false);
+                if (!isAdded() || getActivity() == null) return;
 
-                    patientsListContainer.removeAllViews();
-                    TextView errorView = new TextView(getContext());
-                    errorView.setText(message);
-                    errorView.setTextColor(getResources().getColor(R.color.error_red));
-                    patientsListContainer.addView(errorView);
+                requireActivity().runOnUiThread(() -> {
+                    if (!isAdded()) return;
+
+                    swipeRefreshLayout.setRefreshing(false);
+                    showWarning("Failed to load patient data. Please check your internet and swipe down to retry.");
                 });
             }
         });

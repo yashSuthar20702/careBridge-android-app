@@ -19,6 +19,7 @@ import com.example.carebridge.adapters.PatientGuardianInformationAdapter;
 import com.example.carebridge.controller.PatientGuardianInfoController;
 import com.example.carebridge.model.PatientGuardianInfo;
 import com.facebook.shimmer.ShimmerFrameLayout;
+import com.google.android.material.card.MaterialCardView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,9 +29,10 @@ public class PatientGuardianInfoFragment extends Fragment {
     private static final String TAG = "PatientGuardianInfoFragment";
 
     private ShimmerFrameLayout shimmerLayout;
-    private TextView tvNoGuardianMessage;
+    private TextView tvNoGuardianMessage, tvWarningMessage;
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
+    private MaterialCardView cardWarning;
     private PatientGuardianInformationAdapter adapter;
     private PatientGuardianInfoController controller;
 
@@ -44,8 +46,10 @@ public class PatientGuardianInfoFragment extends Fragment {
 
         shimmerLayout = view.findViewById(R.id.shimmerLayout);
         tvNoGuardianMessage = view.findViewById(R.id.tvNoGuardianMessage);
+        tvWarningMessage = view.findViewById(R.id.tvWarningMessage);
         swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
         recyclerView = view.findViewById(R.id.recyclerViewGuardians);
+        cardWarning = view.findViewById(R.id.cardWarning);
 
         controller = new PatientGuardianInfoController(requireContext());
 
@@ -55,52 +59,57 @@ public class PatientGuardianInfoFragment extends Fragment {
 
         swipeRefreshLayout.setOnRefreshListener(this::fetchGuardianData);
 
-        // Show shimmer immediately
-        shimmerLayout.setVisibility(View.VISIBLE);
-        shimmerLayout.startShimmer();
-        recyclerView.setVisibility(View.GONE);
-        tvNoGuardianMessage.setVisibility(View.GONE);
-
+        showLoadingState();
         fetchGuardianData();
 
         return view;
     }
 
+    private void showLoadingState() {
+        shimmerLayout.setVisibility(View.VISIBLE);
+        shimmerLayout.startShimmer();
+        recyclerView.setVisibility(View.GONE);
+        tvNoGuardianMessage.setVisibility(View.GONE);
+        cardWarning.setVisibility(View.GONE);
+    }
+
     private void fetchGuardianData() {
-        // Show shimmer if not refreshing
-        if (!swipeRefreshLayout.isRefreshing()) {
-            shimmerLayout.setVisibility(View.VISIBLE);
-            shimmerLayout.startShimmer();
-            recyclerView.setVisibility(View.GONE);
-            tvNoGuardianMessage.setVisibility(View.GONE);
-        }
+        if (!swipeRefreshLayout.isRefreshing()) showLoadingState();
 
         controller.getCurrentGuardian(new PatientGuardianInfoController.PatientGuardianCallback() {
             @Override
             public void onSuccess(List<PatientGuardianInfo> guardianList) {
+                if (!isAdded() || getView() == null) return;
+
                 shimmerLayout.stopShimmer();
                 shimmerLayout.setVisibility(View.GONE);
                 swipeRefreshLayout.setRefreshing(false);
+                cardWarning.setVisibility(View.GONE);
 
                 if (guardianList == null || guardianList.isEmpty()) {
                     recyclerView.setVisibility(View.GONE);
                     tvNoGuardianMessage.setVisibility(View.VISIBLE);
                     tvNoGuardianMessage.setText("No guardian is assigned right now. Please contact your doctor to assign a guardian.");
-                    return;
+                } else {
+                    adapter.setData(guardianList);
+                    recyclerView.setVisibility(View.VISIBLE);
+                    tvNoGuardianMessage.setVisibility(View.GONE);
                 }
-
-                adapter.setData(guardianList);
-                recyclerView.setVisibility(View.VISIBLE);
             }
 
             @Override
             public void onFailure(String message) {
+                if (!isAdded() || getView() == null) return;
+
                 shimmerLayout.stopShimmer();
                 shimmerLayout.setVisibility(View.GONE);
                 swipeRefreshLayout.setRefreshing(false);
                 recyclerView.setVisibility(View.GONE);
-                tvNoGuardianMessage.setVisibility(View.VISIBLE);
-                tvNoGuardianMessage.setText("Failed to fetch guardian info. Please try again later.");
+                tvNoGuardianMessage.setVisibility(View.GONE);
+
+                cardWarning.setVisibility(View.VISIBLE);
+                tvWarningMessage.setText("Failed to load guardian info. Please check your internet connection and swipe down to retry.");
+
                 Log.e(TAG, "[API ERROR] " + message);
             }
         });

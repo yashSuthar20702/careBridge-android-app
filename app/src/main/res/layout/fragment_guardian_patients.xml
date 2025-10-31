@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:gravity="center_horizontal">
 
-            <!-- Shimmer loader for cards -->
+            <!-- Shimmer loader -->
             <com.facebook.shimmer.ShimmerFrameLayout
                 android:id="@+id/shimmer"
                 android:layout_width="match_parent"
@@ -50,9 +50,9 @@
                         android:background="@color/shimmer_placeholder" />
                 </LinearLayout>
             </com.facebook.shimmer.ShimmerFrameLayout>
-
             <!-- 📊 Top Cards -->
             <LinearLayout
+                android:id="@+id/summaryCards"
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -61,6 +61,7 @@
 
                 <!-- Assigned Patients -->
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/cardAssignedPatients"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -100,6 +101,7 @@
 
                 <!-- Active Patients -->
                 <androidx.cardview.widget.CardView
+                    android:id="@+id/cardActivePatients"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -139,21 +141,64 @@
             </LinearLayout>
 
             <!-- 👥 Patients List -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Patients List"
-                android:textColor="@color/text_primary"
-                android:textStyle="bold"
-                android:textSize="18sp"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="4dp" />
-
             <LinearLayout
-                android:id="@+id/patientsListContainer"
+                android:id="@+id/patientsSection"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Patients List"
+                    android:textColor="@color/text_primary"
+                    android:textStyle="bold"
+                    android:textSize="18sp"
+                    android:layout_marginBottom="10dp" />
+
+                <LinearLayout
+                    android:id="@+id/patientsListContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"/>
+            </LinearLayout>
+
+            <!-- ⚠️ Warning Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardWarning"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"/>
+                android:layout_marginBottom="16dp"
+                android:visibility="gone"
+                app:cardCornerRadius="20dp"
+                app:cardBackgroundColor="@color/white"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="16dp"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:src="@drawable/ic_warning"
+                        android:layout_marginEnd="12dp"
+                        android:contentDescription="Warning"
+                        app:tint="@color/warning_yellow" />
+
+                    <TextView
+                        android:id="@+id/tvWarningMessage"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textColor="@color/text_primary"
+                        android:textSize="16sp"
+                        android:text="Failed to load patient data. Please check your connection and swipe down to retry." />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
     </ScrollView>
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

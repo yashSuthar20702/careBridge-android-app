@@ -64,6 +64,45 @@
                 </com.google.android.material.card.MaterialCardView>
             </com.facebook.shimmer.ShimmerFrameLayout>
 
+
+            <!-- Warning / Error Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardWarning"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:visibility="gone"
+                app:cardCornerRadius="20dp"
+                app:strokeWidth="1dp"
+                app:cardBackgroundColor="@color/white">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="16dp"
+                    android:gravity="center_vertical">
+
+                    <ImageView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:src="@drawable/ic_warning"
+                        android:contentDescription="Warning Icon"
+                        android:layout_marginEnd="12dp"
+                        app:tint="@color/warning_yellow" />
+
+                    <TextView
+                        android:id="@+id/tvWarningMessage"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Network error. Please check your connection and swipe down to retry."
+                        android:textColor="@color/text_primary"
+                        android:textSize="16sp" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+
             <!-- Actual Card Content -->
             <LinearLayout
                 android:id="@+id/cardContent"
@@ -98,32 +137,28 @@
                             android:textColor="@color/accent_blue"
                             android:layout_marginBottom="16dp"/>
 
-                        <TextView
-                            android:id="@+id/tvFullName"
+                        <TextView android:id="@+id/tvFullName"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:textColor="@color/text_primary"
                             android:textSize="17sp"
                             android:layout_marginBottom="10dp"/>
 
-                        <TextView
-                            android:id="@+id/tvPatientAge"
+                        <TextView android:id="@+id/tvPatientAge"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:textColor="@color/text_primary"
                             android:textSize="17sp"
                             android:layout_marginBottom="10dp"/>
 
-                        <TextView
-                            android:id="@+id/tvGender"
+                        <TextView android:id="@+id/tvGender"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:textColor="@color/text_primary"
                             android:textSize="17sp"
                             android:layout_marginBottom="10dp"/>
 
-                        <TextView
-                            android:id="@+id/tvBloodType"
+                        <TextView android:id="@+id/tvBloodType"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:textColor="@color/text_primary"
@@ -157,48 +192,42 @@
                             android:textColor="@color/accent_green"
                             android:layout_marginBottom="16dp"/>
 
-                        <TextView
-                            android:id="@+id/tvHeight"
+                        <TextView android:id="@+id/tvHeight"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:textColor="@color/text_primary"
                             android:textSize="17sp"
                             android:layout_marginBottom="10dp"/>
 
-                        <TextView
-                            android:id="@+id/tvWeight"
+                        <TextView android:id="@+id/tvWeight"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:textColor="@color/text_primary"
                             android:textSize="17sp"
                             android:layout_marginBottom="10dp"/>
 
-                        <TextView
-                            android:id="@+id/tvPastSurgeries"
+                        <TextView android:id="@+id/tvPastSurgeries"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:textColor="@color/text_primary"
                             android:textSize="17sp"
                             android:layout_marginBottom="10dp"/>
 
-                        <TextView
-                            android:id="@+id/tvCurrentSymptoms"
+                        <TextView android:id="@+id/tvCurrentSymptoms"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:textColor="@color/text_primary"
                             android:textSize="17sp"
                             android:layout_marginBottom="10dp"/>
 
-                        <TextView
-                            android:id="@+id/tvAllergies"
+                        <TextView android:id="@+id/tvAllergies"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:textColor="@color/text_primary"
                             android:textSize="17sp"
                             android:layout_marginBottom="10dp"/>
 
-                        <TextView
-                            android:id="@+id/tvConditions"
+                        <TextView android:id="@+id/tvConditions"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:textColor="@color/text_primary"
@@ -210,7 +239,6 @@
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
                     app:cardCornerRadius="24dp"
                     app:cardElevation="4dp"
                     app:strokeColor="@color/accent_purple"
@@ -232,39 +260,34 @@
                             android:textColor="@color/accent_purple"
                             android:layout_marginBottom="16dp"/>
 
-                        <TextView
-                            android:id="@+id/tvAddress"
+                        <TextView android:id="@+id/tvAddress"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:textColor="@color/text_primary"
                             android:textSize="17sp"
                             android:layout_marginBottom="10dp"/>
 
-                        <TextView
-                            android:id="@+id/tvContactNumber"
+                        <TextView android:id="@+id/tvContactNumber"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:textColor="@color/text_primary"
                             android:textSize="17sp"
                             android:layout_marginBottom="10dp"/>
 
-                        <TextView
-                            android:id="@+id/tvEmail"
+                        <TextView android:id="@+id/tvEmail"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:textColor="@color/text_primary"
                             android:textSize="17sp"
                             android:layout_marginBottom="10dp"/>
 
-                        <TextView
-                            android:id="@+id/tvStatus"
+                        <TextView android:id="@+id/tvStatus"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:textColor="@color/text_primary"
                             android:textSize="17sp"/>
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
-
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
