@@ -1,23 +1,25 @@
 // File: ApiConstants.java
 package com.example.carebridge.utils;
 
+/** API configuration utility providing centralized endpoint management and host configuration */
 public class ApiConstants {
 
-    // Flag to use localhost (simulator) or real device/server
+    // Development flag to toggle between local testing and production server
     public static final boolean USE_LOCALHOST = true;
 
-    // Localhost IP (emulator uses 10.0.2.2, real device typically uses your network/server address)
-    private static final String LOCALHOST_IP = "10.0.2.2";
-    private static final String DEVICE_SERVER_IP = "YOUR_REAL_SERVER_IP_OR_DOMAIN";
+    // Host configuration for different environments
+    private static final String LOCALHOST_IP = "10.0.2.2"; // Android emulator localhost
+    private static final String DEVICE_SERVER_IP = "YOUR_REAL_SERVER_IP_OR_DOMAIN"; // Production server
 
-    // Choose which host to use based on the flag!
+    // Dynamic host selection based on environment flag
     public static String getBaseHost() {
         return USE_LOCALHOST ? LOCALHOST_IP : DEVICE_SERVER_IP;
     }
 
-    // Centralized API root URLs
+    // API path configuration - centralized root endpoint
     private static final String API_ROOT = "/CareBridge/careBridge-web-app/careBridge-website/endpoints/";
 
+    // Base URL generators for different API modules
     public static String getAuthBaseUrl() {
         return "http://" + getBaseHost() + API_ROOT + "auth/";
     }
@@ -34,7 +36,7 @@ public class ApiConstants {
         return "http://" + getBaseHost() + API_ROOT + "patientguardianassignment/";
     }
 
-    // Centralized API end-points
+    // Specific API endpoint generators with parameter support
     public static String getLoginUrl() {
         return getAuthBaseUrl() + "login.php";
     }

@@ -129,4 +129,59 @@
 
     <string name="assigned_label">Assigned: </string>
     <string name="notes_label">Notes: </string>
+
+
+    <!-- Error and status messages -->
+    <string name="no_patients_assigned_message">No patients are currently assigned to you.</string>
+    <string name="patient_data_load_error">Failed to load patient data. Please check your internet and swipe down to retry.</string>
+    <string name="not_available_text">N/A</string>
+
+
+    <!-- Guardian personal info labels -->
+    <string name="full_name_label">Full Name:</string>
+    <string name="type_label">Type:</string>
+    <string name="occupation_label">Occupation:</string>
+    <string name="availability_label">Availability:</string>
+
+    <string name="address_label">Address:</string>
+
+    <!-- Error messages -->
+    <string name="no_guardian_data_found">No guardian data found.</string>
+    <string name="guardian_fetch_failed_prefix">Failed to fetch guardian info: </string>
+
+    <!-- Patient info labels -->
+
+    <string name="height_label">Height:</string>
+    <string name="weight_label">Weight:</string>
+    <string name="past_surgeries_label">Past Surgeries:</string>
+    <string name="current_symptoms_label">Current Symptoms:</string>
+    <string name="status_label">Status:</string>
+
+
+    <!-- Error messages -->
+    <string name="no_patient_data_found">⚠️ No patient data found. Swipe down to retry.</string>
+
+
+    <!-- Measurement units -->
+    <string name="cm_unit"> cm</string>
+    <string name="kg_unit"> kg</string>
+    <!-- Log messages -->
+    <string name="log_btn_logout_not_found">⚠️ btnHeaderLogout not found!</string>
+    <string name="log_tv_name_not_found">⚠️ tvGuardianName not found!</string>
+    <string name="log_viewpager_not_found">⚠️ viewPagerGuardian not found!</string>
+    <string name="log_bottom_nav_not_found">⚠️ bottomNavigationGuardian not found!</string>
+    <string name="log_error_setting_name">Error setting guardian name: </string>
+
+    <!-- UI text -->
+    <string name="guardian_fallback_name">Guardian</string>
+    <string name="logout_title">Logout</string>
+    <string name="yes_button">Yes</string>
+    <string name="no_button">No</string>
+
+    <!-- Role and intent keys -->
+    <string name="patient_role">Patient</string>
+    <string name="intent_user_key">user</string>
+
+    
+
 </resources>

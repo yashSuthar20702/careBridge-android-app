@@ -55,11 +55,13 @@ public class PersonalInfoFragment extends Fragment {
         sharedPrefManager = new SharedPrefManager(requireContext());
         patientController = new PatientController(requireContext());
 
+        // Start loading animation
         shimmerLayout.startShimmer();
         shimmerLayout.setVisibility(View.VISIBLE);
 
         fetchPatientData();
 
+        // Setup pull-to-refresh listener
         swipeRefreshLayout.setOnRefreshListener(() -> {
             Log.d(TAG, "Swipe-to-refresh triggered");
             fetchPatientData();
@@ -68,6 +70,7 @@ public class PersonalInfoFragment extends Fragment {
         return view;
     }
 
+    /** Initialize all view references */
     private void bindViews(View view) {
         tvFullName = view.findViewById(R.id.tvFullName);
         tvPatientAge = view.findViewById(R.id.tvPatientAge);
@@ -89,6 +92,7 @@ public class PersonalInfoFragment extends Fragment {
         tvWarningMessage = view.findViewById(R.id.tvWarningMessage);
     }
 
+    /** Fetch patient data from API */
     private void fetchPatientData() {
         User currentUser = sharedPrefManager.getCurrentUser();
         shimmerLayout.startShimmer();
@@ -108,7 +112,7 @@ public class PersonalInfoFragment extends Fragment {
 
                     if (patientInfo == null) {
                         cardWarning.setVisibility(View.VISIBLE);
-                        tvWarningMessage.setText("⚠️ No patient data found. Swipe down to retry.");
+                        tvWarningMessage.setText(getString(R.string.no_patient_data_found));
                         return;
                     }
 
@@ -128,37 +132,40 @@ public class PersonalInfoFragment extends Fragment {
                     requireView().findViewById(R.id.cardContent).setVisibility(View.GONE);
 
                     cardWarning.setVisibility(View.VISIBLE);
-                    tvWarningMessage.setText("Failed to fetch patient info. Please check your internet connection and swipe down to retry.");
+                    tvWarningMessage.setText(getString(R.string.patient_data_load_error));
                 });
             }
         });
     }
 
+    /** Populate UI with patient information */
     private void displayPatientInfo(PatientInfo patientInfo) {
-        setBoldLabel(tvFullName, "Full Name:", safeString(patientInfo.getFull_name()));
-        setBoldLabel(tvPatientAge, "Age:", calculateAge(patientInfo.getDob()) + "");
-        setBoldLabel(tvGender, "Gender:", safeString(patientInfo.getGender()));
-        setBoldLabel(tvBloodType, "Blood Type:", safeString(patientInfo.getBlood_group()));
-        setBoldLabel(tvHeight, "Height:", safeString(patientInfo.getHeight_cm()) + " cm");
-        setBoldLabel(tvWeight, "Weight:", safeString(patientInfo.getWeight_kg()) + " kg");
-        setBoldLabel(tvAllergies, "Allergies:", joinList(patientInfo.getAllergies()));
-        setBoldLabel(tvConditions, "Conditions:", joinList(patientInfo.getMedical_conditions()));
-        setBoldLabel(tvPastSurgeries, "Past Surgeries:", safeString(patientInfo.getPast_surgeries()));
-        setBoldLabel(tvCurrentSymptoms, "Current Symptoms:", safeString(patientInfo.getCurrent_symptoms()));
-        setBoldLabel(tvAddress, "Address:", safeString(patientInfo.getAddress()));
-        setBoldLabel(tvContactNumber, "Contact Number:", safeString(patientInfo.getContact_number()));
-        setBoldLabel(tvEmail, "Email:", safeString(patientInfo.getEmail()));
-        setBoldLabel(tvStatus, "Status:", safeString(patientInfo.getStatus()));
+        setBoldLabel(tvFullName, getString(R.string.full_name_label), safeString(patientInfo.getFull_name()));
+        setBoldLabel(tvPatientAge, getString(R.string.age_label), calculateAge(patientInfo.getDob()) + "");
+        setBoldLabel(tvGender, getString(R.string.gender_label), safeString(patientInfo.getGender()));
+        setBoldLabel(tvBloodType, getString(R.string.blood_type_label), safeString(patientInfo.getBlood_group()));
+        setBoldLabel(tvHeight, getString(R.string.height_label), safeString(patientInfo.getHeight_cm()) + getString(R.string.cm_unit));
+        setBoldLabel(tvWeight, getString(R.string.weight_label), safeString(patientInfo.getWeight_kg()) + getString(R.string.kg_unit));
+        setBoldLabel(tvAllergies, getString(R.string.allergies_label), joinList(patientInfo.getAllergies()));
+        setBoldLabel(tvConditions, getString(R.string.conditions_label), joinList(patientInfo.getMedical_conditions()));
+        setBoldLabel(tvPastSurgeries, getString(R.string.past_surgeries_label), safeString(patientInfo.getPast_surgeries()));
+        setBoldLabel(tvCurrentSymptoms, getString(R.string.current_symptoms_label), safeString(patientInfo.getCurrent_symptoms()));
+        setBoldLabel(tvAddress, getString(R.string.address_label), safeString(patientInfo.getAddress()));
+        setBoldLabel(tvContactNumber, getString(R.string.phone_label), safeString(patientInfo.getContact_number()));
+        setBoldLabel(tvEmail, getString(R.string.email_label), safeString(patientInfo.getEmail()));
+        setBoldLabel(tvStatus, getString(R.string.status_label), safeString(patientInfo.getStatus()));
 
         requireView().findViewById(R.id.cardContent).setVisibility(View.VISIBLE);
     }
 
+    /** Apply bold styling to label text */
     private void setBoldLabel(TextView textView, String label, String value) {
         SpannableString spannable = new SpannableString(label + " " + value);
         spannable.setSpan(new StyleSpan(Typeface.BOLD), 0, label.length(), 0);
         textView.setText(spannable);
     }
 
+    /** Calculate age from date of birth */
     private int calculateAge(String dob) {
         if (dob == null || dob.isEmpty()) return 0;
         try {
@@ -174,11 +181,13 @@ public class PersonalInfoFragment extends Fragment {
         }
     }
 
+    /** Handle null or empty string values */
     private String safeString(String value) {
-        return (value != null && !value.isEmpty()) ? value : "N/A";
+        return (value != null && !value.isEmpty()) ? value : getString(R.string.not_available_text);
     }
 
+    /** Convert list to comma-separated string */
     private String joinList(List<String> list) {
-        return (list != null && !list.isEmpty()) ? String.join(", ", list) : "N/A";
+        return (list != null && !list.isEmpty()) ? String.join(", ", list) : getString(R.string.not_available_text);
     }
 }

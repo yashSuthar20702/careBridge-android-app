@@ -7,9 +7,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.carebridge.R;
 import com.example.carebridge.utils.SharedPrefManager;
 
+/** Splash screen activity showing app branding while checking user authentication status */
 public class SplashActivity extends AppCompatActivity {
 
-    private static final int SPLASH_DELAY = 3000;
+    private static final int SPLASH_DELAY = 3000; // 3-second display time
     private SharedPrefManager sharedPrefManager;
 
     @Override
@@ -19,34 +20,38 @@ public class SplashActivity extends AppCompatActivity {
 
         sharedPrefManager = new SharedPrefManager(this);
 
+        // Delay splash screen before checking authentication status
         new Handler().postDelayed(() -> {
             checkUserSession();
         }, SPLASH_DELAY);
     }
 
+    /** Check if user has an active session and redirect accordingly */
     private void checkUserSession() {
         if (sharedPrefManager.isLoggedIn()) {
-            // User is logged in, go to appropriate dashboard
+            // User has active session, redirect to appropriate dashboard
             redirectToDashboard();
         } else {
-            // User is not logged in, go to login
+            // No active session, redirect to login screen
             startActivity(new Intent(SplashActivity.this, LoginActivity.class));
         }
-        finish();
+        finish(); // Close splash activity after redirection
     }
 
+    /** Redirect to patient or guardian dashboard based on user role */
     private void redirectToDashboard() {
         Intent intent;
         com.example.carebridge.model.User user = sharedPrefManager.getCurrentUser();
 
-        if (user != null && user.getRole().equals("Patient")) {
+        // Determine dashboard based on user role
+        if (user != null && user.getRole().equals(getString(R.string.patient_role))) {
             intent = new Intent(SplashActivity.this, PatientDashboardActivity.class);
         } else {
             intent = new Intent(SplashActivity.this, GuardianDashboardActivity.class);
         }
 
-        intent.putExtra("user", user);
+        intent.putExtra(getString(R.string.intent_user_key), user);
         startActivity(intent);
-        finish();
+        finish(); // Close splash activity
     }
 }

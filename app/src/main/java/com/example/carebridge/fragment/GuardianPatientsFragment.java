@@ -36,7 +36,7 @@ public class GuardianPatientsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_guardian_patients, container, false);
 
-        // Initialize views
+        // Initialize UI components
         shimmerFrameLayout = view.findViewById(R.id.shimmer);
         tvAssignedCount = view.findViewById(R.id.tvAssignedCount);
         tvActiveCount = view.findViewById(R.id.tvActiveCount);
@@ -48,26 +48,26 @@ public class GuardianPatientsFragment extends Fragment {
         summaryCards = view.findViewById(R.id.summaryCards);
         patientsSection = view.findViewById(R.id.patientsSection);
 
-        // Set color borders
+        // Setup border colors for patient cards
         borderColors = new int[]{
                 ContextCompat.getColor(requireContext(), R.color.accent_blue),
                 ContextCompat.getColor(requireContext(), R.color.accent_purple),
                 ContextCompat.getColor(requireContext(), R.color.accent_orange)
         };
 
-        // Pull-to-refresh setup
+        // Configure pull-to-refresh functionality
         swipeRefreshLayout.setOnRefreshListener(this::loadAssignedPatients);
 
-        // Start shimmer safely after view is created
+        // Start loading animation
         shimmerFrameLayout.post(this::showLoading);
 
-        // Delay first data load to ensure Fragment is attached
+        // Initial data load
         view.post(this::loadAssignedPatients);
 
         return view;
     }
 
-    /** Show shimmer loader and hide everything else */
+    /** Display loading state with shimmer animation */
     private void showLoading() {
         if (!isAdded()) return;
         shimmerFrameLayout.setVisibility(View.VISIBLE);
@@ -78,7 +78,7 @@ public class GuardianPatientsFragment extends Fragment {
         cardWarning.setVisibility(View.GONE);
     }
 
-    /** Show data section and hide shimmer/warning */
+    /** Show patient data and hide loading/warning states */
     private void showData() {
         if (!isAdded()) return;
         shimmerFrameLayout.stopShimmer();
@@ -90,7 +90,7 @@ public class GuardianPatientsFragment extends Fragment {
         patientsListContainer.setVisibility(View.VISIBLE);
     }
 
-    /** Show warning card and hide all other sections */
+    /** Display error message when data loading fails */
     private void showWarning(String message) {
         if (!isAdded()) return;
         shimmerFrameLayout.stopShimmer();
@@ -104,7 +104,7 @@ public class GuardianPatientsFragment extends Fragment {
         tvWarningMessage.setText(message);
     }
 
-    /** Load patient data from API */
+    /** Fetch assigned patients data from API */
     private void loadAssignedPatients() {
         if (!isAdded() || getActivity() == null) return;
 
@@ -122,7 +122,7 @@ public class GuardianPatientsFragment extends Fragment {
                     swipeRefreshLayout.setRefreshing(false);
 
                     if (patients == null || patients.isEmpty()) {
-                        showWarning("No patients are currently assigned to you.");
+                        showWarning(getString(R.string.no_patients_assigned_message));
                         return;
                     }
 
@@ -182,13 +182,14 @@ public class GuardianPatientsFragment extends Fragment {
                     if (!isAdded()) return;
 
                     swipeRefreshLayout.setRefreshing(false);
-                    showWarning("Failed to load patient data. Please check your internet and swipe down to retry.");
+                    showWarning(getString(R.string.patient_data_load_error));
                 });
             }
         });
     }
 
+    /** Handle null or empty string values safely */
     private String safe(String value) {
-        return (value == null || value.trim().isEmpty()) ? "N/A" : value;
+        return (value == null || value.trim().isEmpty()) ? getString(R.string.not_available_text) : value;
     }
 }

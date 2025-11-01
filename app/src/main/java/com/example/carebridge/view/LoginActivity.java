@@ -20,6 +20,7 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
+/** Login activity handling user authentication with animated UI and input validation */
 public class LoginActivity extends AppCompatActivity {
 
     private ScrollView scrollView;
@@ -42,12 +43,13 @@ public class LoginActivity extends AppCompatActivity {
 
         authController = new AuthController(this);
 
-        // If already logged in, redirect
+        // Redirect to dashboard if user is already authenticated
         if (authController.isLoggedIn()) {
             redirectToDashboard(authController.getCurrentUser());
         }
     }
 
+    /** Initialize all UI component references from layout */
     private void initializeViews() {
         scrollView = findViewById(R.id.scrollView);
         etUsername = findViewById(R.id.etUsername);
@@ -58,6 +60,7 @@ public class LoginActivity extends AppCompatActivity {
         successAnimation = findViewById(R.id.successAnimation);
     }
 
+    /** Setup entrance animations for login card */
     private void setupAnimations() {
         View loginCard = findViewById(R.id.loginCard);
         loginCard.setAlpha(0f);
@@ -65,12 +68,14 @@ public class LoginActivity extends AppCompatActivity {
         loginCard.animate().alpha(1f).translationY(0f).setDuration(800).start();
     }
 
+    /** Configure click listeners for login button and input fields */
     private void setupClickListeners() {
         btnLogin.setOnClickListener(v -> attemptLogin());
         etUsername.setOnFocusChangeListener((v, hasFocus) -> { if (hasFocus) scrollToView(etUsername); else validateUsername(); });
         etPassword.setOnFocusChangeListener((v, hasFocus) -> { if (hasFocus) scrollToView(etPassword); else validatePassword(); });
     }
 
+    /** Handle back button press to exit app */
     private void setupBackPressedHandler() {
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
@@ -78,6 +83,7 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    /** Auto-scroll when keyboard appears to keep fields visible */
     private void setupKeyboardScroll() {
         final View rootView = findViewById(android.R.id.content);
         rootView.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
@@ -92,10 +98,12 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    /** Smooth scroll to make specified view visible */
     private void scrollToView(View view) {
         scrollView.post(() -> scrollView.smoothScrollTo(0, view.getTop() - 100));
     }
 
+    /** Validate credentials and initiate login process */
     private void attemptLogin() {
         if (!validateInputs()) return;
 
@@ -115,14 +123,17 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    /** Validate both username and password inputs */
     private boolean validateInputs() { return validateUsername() & validatePassword(); }
 
+    /** Validate username field for empty input */
     private boolean validateUsername() {
         String username = etUsername.getText().toString().trim();
         if (username.isEmpty()) { tilUsername.setError(getString(R.string.error_username_required)); return false; }
         else { tilUsername.setError(null); return true; }
     }
 
+    /** Validate password field for empty input and minimum length */
     private boolean validatePassword() {
         String password = etPassword.getText().toString();
         if (password.isEmpty()) { tilPassword.setError(getString(R.string.error_password_required)); return false; }
@@ -130,13 +141,15 @@ public class LoginActivity extends AppCompatActivity {
         else { tilPassword.setError(null); return true; }
     }
 
+    /** Handle successful login by redirecting to appropriate dashboard */
     private void handleSuccessfulLogin(User user) { redirectToDashboard(user); }
 
+    /** Redirect to patient or guardian dashboard based on user role */
     private void redirectToDashboard(User user) {
-        Intent intent = "Patient".equals(user.getRole()) ?
+        Intent intent = getString(R.string.patient_role).equals(user.getRole()) ?
                 new Intent(this, PatientDashboardActivity.class) :
                 new Intent(this, GuardianDashboardActivity.class);
-        intent.putExtra("user", user);
+        intent.putExtra(getString(R.string.intent_user_key), user);
         startActivity(intent);
         finish();
     }

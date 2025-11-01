@@ -44,6 +44,7 @@ public class PatientGuardianInfoFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_patient_guardian_info, container, false);
 
+        // Initialize UI components
         shimmerLayout = view.findViewById(R.id.shimmerLayout);
         tvNoGuardianMessage = view.findViewById(R.id.tvNoGuardianMessage);
         tvWarningMessage = view.findViewById(R.id.tvWarningMessage);
@@ -53,10 +54,12 @@ public class PatientGuardianInfoFragment extends Fragment {
 
         controller = new PatientGuardianInfoController(requireContext());
 
+        // Setup RecyclerView with adapter
         adapter = new PatientGuardianInformationAdapter(new ArrayList<>());
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
         recyclerView.setAdapter(adapter);
 
+        // Configure pull-to-refresh
         swipeRefreshLayout.setOnRefreshListener(this::fetchGuardianData);
 
         showLoadingState();
@@ -65,6 +68,7 @@ public class PatientGuardianInfoFragment extends Fragment {
         return view;
     }
 
+    /** Display loading state with shimmer animation */
     private void showLoadingState() {
         shimmerLayout.setVisibility(View.VISIBLE);
         shimmerLayout.startShimmer();
@@ -73,6 +77,7 @@ public class PatientGuardianInfoFragment extends Fragment {
         cardWarning.setVisibility(View.GONE);
     }
 
+    /** Fetch guardian data from API */
     private void fetchGuardianData() {
         if (!swipeRefreshLayout.isRefreshing()) showLoadingState();
 
@@ -89,7 +94,7 @@ public class PatientGuardianInfoFragment extends Fragment {
                 if (guardianList == null || guardianList.isEmpty()) {
                     recyclerView.setVisibility(View.GONE);
                     tvNoGuardianMessage.setVisibility(View.VISIBLE);
-                    tvNoGuardianMessage.setText("No guardian is assigned right now. Please contact your doctor to assign a guardian.");
+                    tvNoGuardianMessage.setText(getString(R.string.no_guardian_assigned_message));
                 } else {
                     adapter.setData(guardianList);
                     recyclerView.setVisibility(View.VISIBLE);
@@ -108,7 +113,7 @@ public class PatientGuardianInfoFragment extends Fragment {
                 tvNoGuardianMessage.setVisibility(View.GONE);
 
                 cardWarning.setVisibility(View.VISIBLE);
-                tvWarningMessage.setText("Failed to load guardian info. Please check your internet connection and swipe down to retry.");
+                tvWarningMessage.setText(getString(R.string.guardian_load_error_message));
 
                 Log.e(TAG, "[API ERROR] " + message);
             }

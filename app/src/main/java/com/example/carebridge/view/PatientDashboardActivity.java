@@ -13,6 +13,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import android.widget.TextView;
 import android.widget.Button;
 
+/** Main dashboard activity for patient users with navigation and session management */
 public class PatientDashboardActivity extends AppCompatActivity {
 
     private TextView tvPatientName, tvWelcome;
@@ -27,30 +28,30 @@ public class PatientDashboardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_patient_dashboard);
 
-        // Initialize controllers
+        // Initialize authentication controller and retrieve current user
         authController = new AuthController(this);
-        currentUser = (User) getIntent().getSerializableExtra("user");
+        currentUser = (User) getIntent().getSerializableExtra(getString(R.string.intent_user_key));
         if (currentUser == null) currentUser = authController.getCurrentUser();
 
-        // Bind views
+        // Bind view components from layout
         tvWelcome = findViewById(R.id.tvWelcome);
         tvPatientName = findViewById(R.id.tvPatientName);
         btnHeaderLogout = findViewById(R.id.btnHeaderLogout);
         viewPager = findViewById(R.id.viewPager);
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
 
-        // Set patient name
+        // Display patient name from user data
         if (currentUser != null && currentUser.getPatientInfo() != null) {
             tvPatientName.setText(currentUser.getPatientInfo().getFull_name());
         }
 
-        // Setup ViewPager
+        // Setup ViewPager with patient dashboard fragments
         viewPager.setAdapter(new PatientDashboardPagerAdapter(this));
 
-        // Disable swipe if needed (optional)
+        // Optional: Disable swipe navigation between fragments
         // viewPager.setUserInputEnabled(false);
 
-        // Bottom Navigation → ViewPager
+        // Handle bottom navigation item selection
         bottomNavigationView.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();
 
@@ -67,7 +68,7 @@ public class PatientDashboardActivity extends AppCompatActivity {
             return false;
         });
 
-        // ViewPager → Bottom Navigation
+        // Sync ViewPager position with bottom navigation selection
         viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
@@ -86,18 +87,18 @@ public class PatientDashboardActivity extends AppCompatActivity {
             }
         });
 
-        // Logout
+        // Setup logout button with confirmation dialog
         btnHeaderLogout.setOnClickListener(v ->
                 new AlertDialog.Builder(this)
-                        .setTitle("Logout")
-                        .setMessage("Are you sure you want to logout?")
-                        .setPositiveButton("Yes", (dialog, which) -> {
+                        .setTitle(getString(R.string.logout_title))
+                        .setMessage(getString(R.string.logout_confirmation))
+                        .setPositiveButton(getString(R.string.yes_button), (dialog, which) -> {
                             authController.logout();
                             Intent intent = new Intent(this, LoginActivity.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
                         })
-                        .setNegativeButton("No", null)
+                        .setNegativeButton(getString(R.string.no_button), null)
                         .show());
     }
 }
