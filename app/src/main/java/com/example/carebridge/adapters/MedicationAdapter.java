@@ -8,11 +8,12 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.carebridge.R;
 import com.example.carebridge.model.Medication;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MedicationAdapter extends RecyclerView.Adapter<MedicationAdapter.MedicationViewHolder> {
 
-    private List<Medication> medicationList;
+    private List<Medication> medicationList = new ArrayList<>();
     private OnItemClickListener onItemClickListener;
 
     public interface OnItemClickListener {
@@ -20,11 +21,18 @@ public class MedicationAdapter extends RecyclerView.Adapter<MedicationAdapter.Me
     }
 
     public MedicationAdapter(List<Medication> medicationList) {
-        this.medicationList = medicationList;
+        if (medicationList != null) {
+            this.medicationList = medicationList;
+        }
     }
 
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.onItemClickListener = listener;
+    }
+
+    public void updateList(List<Medication> newList) {
+        this.medicationList = newList != null ? newList : new ArrayList<>();
+        notifyDataSetChanged();
     }
 
     @NonNull
@@ -43,35 +51,51 @@ public class MedicationAdapter extends RecyclerView.Adapter<MedicationAdapter.Me
 
     @Override
     public int getItemCount() {
-        return medicationList.size();
+        return medicationList != null ? medicationList.size() : 0;
     }
 
-    public class MedicationViewHolder extends RecyclerView.ViewHolder {
-        private TextView tvMedName, tvMedDosage, tvMedTime;
+    class MedicationViewHolder extends RecyclerView.ViewHolder {
 
-        public MedicationViewHolder(@NonNull View itemView) {
+        private final TextView tvMedName, tvMedDosage, tvMedTime, tvMedDuration, tvMedInstructions;
+
+        MedicationViewHolder(@NonNull View itemView) {
             super(itemView);
             tvMedName = itemView.findViewById(R.id.tvMedName);
             tvMedDosage = itemView.findViewById(R.id.tvMedDosage);
             tvMedTime = itemView.findViewById(R.id.tvMedTime);
+            tvMedDuration = itemView.findViewById(R.id.tvMedDuration);
+            tvMedInstructions = itemView.findViewById(R.id.tvMedInstructions);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (onItemClickListener != null) {
-                        int position = getAdapterPosition();
-                        if (position != RecyclerView.NO_POSITION) {
-                            onItemClickListener.onItemClick(medicationList.get(position));
-                        }
+            itemView.setOnClickListener(v -> {
+                if (onItemClickListener != null) {
+                    int position = getAdapterPosition();
+                    if (position != RecyclerView.NO_POSITION) {
+                        onItemClickListener.onItemClick(medicationList.get(position));
                     }
                 }
             });
         }
 
-        public void bind(Medication medication) {
-            tvMedName.setText(medication.getName());
-            tvMedDosage.setText(medication.getDosage());
-            tvMedTime.setText(medication.getTime());
+        void bind(Medication medication) {
+            // Medicine name
+            tvMedName.setText(medication.getMedicine_name());
+
+            // Dosage only (since no dosage_form in model)
+            tvMedDosage.setText("Dosage: " + medication.getDosage());
+
+            // Timing (Morning, Afternoon, etc.)
+            String timeSummary = medication.getTimeSummary();
+            tvMedTime.setText(timeSummary.isEmpty() ? "Timing: N/A" : "Take at: " + timeSummary);
+
+            // Duration
+            tvMedDuration.setText("For " + medication.getDuration_days() + " days");
+
+            // Extra instructions
+            String instructions = medication.getExtra_instructions() != null && !medication.getExtra_instructions().isEmpty()
+                    ? medication.getExtra_instructions()
+                    : "No additional instructions";
+            tvMedInstructions.setText("Instructions: " + instructions +
+                    (medication.getWith_food() == 1 ? " (With food)" : " (Without food)"));
         }
     }
 }

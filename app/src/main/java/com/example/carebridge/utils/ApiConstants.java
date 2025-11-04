@@ -1,4 +1,3 @@
-// File: ApiConstants.java
 package com.example.carebridge.utils;
 
 /** API configuration utility providing centralized endpoint management and host configuration */
@@ -36,6 +35,10 @@ public class ApiConstants {
         return "http://" + getBaseHost() + API_ROOT + "patientguardianassignment/";
     }
 
+    public static String getPrescriptionBaseUrl() {
+        return "http://" + getBaseHost() + API_ROOT + "prescription/";
+    }
+
     // Specific API endpoint generators with parameter support
     public static String getLoginUrl() {
         return getAuthBaseUrl() + "login.php";
@@ -57,4 +60,8 @@ public class ApiConstants {
         return getPatientGuardianAssignmentBaseUrl() + "getByGuardian.php?guardian_id=" + guardianId;
     }
 
+    // Prescription API endpoint
+    public static String getPrescriptionByCaseIdUrl(String caseId) {
+        return getPrescriptionBaseUrl() + "get.php?case_id=" + caseId;
+    }
 }
