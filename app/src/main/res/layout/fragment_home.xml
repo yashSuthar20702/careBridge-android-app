@@ -3,233 +3,283 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/swipeRefreshLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:padding="@dimen/padding_medium"
     android:background="@color/bg_patient_dashboard">
 
-    <LinearLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center_horizontal">
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
-        <!-- Medications Section: Displays upcoming medications in a recycler view -->
-        <androidx.cardview.widget.CardView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_large"
-            app:cardCornerRadius="@dimen/corner_radius_xlarge"
-            app:cardElevation="@dimen/elevation_large"
-            app:cardBackgroundColor="@color/white">
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:gravity="center_horizontal">
 
+            <!-- 🕒 DATE & TIME HEADER -->
             <LinearLayout
+                android:id="@+id/timeContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="@dimen/padding_large">
+                android:gravity="center"
+                android:paddingVertical="16dp"
+                android:background="@drawable/bg_gradient_header"
+                android:paddingHorizontal="20dp"
+                android:elevation="4dp"
+                android:layout_marginBottom="16dp"
+                android:clipToOutline="true">
 
                 <TextView
+                    android:id="@+id/tvCurrentDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/upcoming_medications_title"
-                    android:textColor="@color/accent_blue"
-                    android:textSize="@dimen/text_size_xlarge"
-                    android:textStyle="bold"
-                    android:layout_marginBottom="@dimen/margin_medium" />
+                    android:text="Wednesday, Nov 05 2025"
+                    android:textColor="@color/white"
+                    android:textSize="18sp"
+                    android:fontFamily="sans-serif-medium" />
 
                 <TextView
-                    android:id="@+id/tvNoMedicines"
-                    android:layout_width="match_parent"
+                    android:id="@+id/tvCurrentTime"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="No medicines assigned by doctor yet."
-                    android:textColor="@color/text_secondary"
-                    android:textStyle="italic"
-                    android:gravity="center"
-                    android:padding="12dp"
-                    android:visibility="gone"
-                    android:textSize="14sp"
-                    android:background="@color/bg_patient_dashboard"/>
-
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rvMedications"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:clipToPadding="false"
-                    android:paddingBottom="@dimen/padding_small" />
-
+                    android:text="11:42 AM"
+                    android:textColor="@color/white"
+                    android:textSize="36sp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="4dp" />
             </LinearLayout>
-        </androidx.cardview.widget.CardView>
 
-        <!-- Health Tips Section: Provides wellness recommendations and advice -->
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_large"
-            app:cardCornerRadius="@dimen/corner_radius_xlarge"
-            app:cardElevation="@dimen/elevation_large"
-            app:cardBackgroundColor="@color/white">
-
-            <LinearLayout
+            <!-- 💊 TODAY'S MEDICINES -->
+            <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="@dimen/padding_large">
+                app:cardCornerRadius="16dp"
+                app:cardElevation="6dp"
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="@color/white">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/health_tips_title"
-                    android:textColor="@color/accent_blue"
-                    android:textSize="@dimen/text_size_xlarge"
-                    android:textStyle="bold"
-                    android:layout_marginBottom="@dimen/margin_medium" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/health_tips_content"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="@dimen/text_size_medium_large"
-                    android:lineSpacingExtra="@dimen/line_spacing_medium" />
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
-
-        <!-- Blogs & Videos Section: Mental health educational content -->
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_large"
-            app:cardCornerRadius="@dimen/corner_radius_xlarge"
-            app:cardElevation="@dimen/elevation_large"
-            app:cardBackgroundColor="@color/white">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="@dimen/padding_large">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/mental_health_content_title"
-                    android:textColor="@color/accent_blue"
-                    android:textSize="@dimen/text_size_xlarge"
-                    android:textStyle="bold"
-                    android:layout_marginBottom="@dimen/margin_medium" />
-
-                <!-- Blog / Video Preview Item 1 -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:layout_marginBottom="@dimen/margin_medium"
-                    android:background="@drawable/bg_rounded_white"
-                    android:padding="@dimen/padding_medium">
-
-                    <ImageView
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/image_height_large"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/ic_carebridge_logo"
-                        android:contentDescription="@string/video_thumbnail_description"
-                        android:layout_marginBottom="@dimen/margin_small"
-                        android:background="@color/shimmer_placeholder" />
+                    android:padding="16dp">
 
                     <TextView
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/meditation_video_title"
-                        android:textColor="@color/text_primary"
-                        android:textSize="@dimen/text_size_large"
+                        android:text="Today's Medicines"
+                        android:textColor="@color/status_active"
+                        android:textSize="18sp"
                         android:textStyle="bold"
-                        android:layout_marginBottom="@dimen/margin_xsmall" />
+                        android:layout_marginBottom="12dp" />
 
-                    <TextView
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="@string/meditation_video_description"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="@dimen/text_size_medium" />
-                </LinearLayout>
+                        android:orientation="horizontal"
+                        android:weightSum="3"
+                        android:gravity="center">
 
-                <!-- Blog / Video Preview Item 2 -->
+                        <!-- Assigned -->
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical">
+                            <ImageView
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:src="@drawable/ic_pill"
+                                app:tint="@color/text_secondary"
+                                android:layout_marginBottom="4dp" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Assigned"
+                                android:textColor="@color/text_secondary"
+                                android:textSize="14sp" />
+                            <TextView
+                                android:id="@+id/tvTotalMedicines"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="6"
+                                android:textColor="@color/text_primary"
+                                android:textSize="22sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <!-- Taken -->
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical">
+                            <ImageView
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:src="@drawable/ic_check"
+                                app:tint="@color/status_active"
+                                android:layout_marginBottom="4dp" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Taken"
+                                android:textColor="@color/text_secondary"
+                                android:textSize="14sp" />
+                            <TextView
+                                android:id="@+id/tvTakenMedicines"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="3"
+                                android:textColor="@color/status_active"
+                                android:textSize="22sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <!-- Remaining -->
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical">
+                            <ImageView
+                                android:layout_width="32dp"
+                                android:layout_height="32dp"
+                                android:src="@drawable/ic_warning"
+                                app:tint="@color/error_red"
+                                android:layout_marginBottom="4dp" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Remaining"
+                                android:textColor="@color/text_secondary"
+                                android:textSize="14sp" />
+                            <TextView
+                                android:id="@+id/tvRemainingMedicines"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="3"
+                                android:textColor="@color/error_red"
+                                android:textSize="22sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- ⏰ UPCOMING MEDICATIONS -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="6dp"
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="@color/white">
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:background="@drawable/bg_rounded_white"
-                    android:padding="@dimen/padding_medium">
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Upcoming Medications"
+                        android:textColor="@color/status_active"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="8dp" />
+
+                    <TextView
+                        android:id="@+id/tvNoMedicines"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="No medicines scheduled for now."
+                        android:textColor="@color/text_secondary"
+                        android:gravity="center"
+                        android:padding="12dp"
+                        android:visibility="gone" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvMedications"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clipToPadding="false"
+                        android:paddingBottom="8dp" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- 🗺️ NEARBY CARE MAP -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="6dp"
+                android:layout_marginBottom="16dp"
+                app:cardBackgroundColor="@color/white">
+
+                <com.google.android.gms.maps.MapView
+                    android:id="@+id/mapView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+            </androidx.cardview.widget.CardView>
+
+            <!-- 🧠 WELLNESS SECTION -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Mental Wellness &amp; Tips"
+                android:textColor="@color/status_active"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:layout_marginBottom="8dp"
+                android:layout_gravity="start" />
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="6dp"
+                app:cardBackgroundColor="@color/white">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
 
                     <ImageView
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/image_height_large"
+                        android:layout_height="180dp"
                         android:scaleType="centerCrop"
-                        android:src="@drawable/ic_email"
-                        android:contentDescription="@string/blog_thumbnail_description"
-                        android:layout_marginBottom="@dimen/margin_small"
-                        android:background="@color/shimmer_placeholder" />
+                        android:src="@drawable/ic_health"
+                        android:layout_marginBottom="8dp" />
 
                     <TextView
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/positivity_blog_title"
+                        android:text="Daily Mindfulness Practice"
                         android:textColor="@color/text_primary"
-                        android:textSize="@dimen/text_size_large"
                         android:textStyle="bold"
-                        android:layout_marginBottom="@dimen/margin_xsmall" />
+                        android:textSize="16sp"
+                        android:layout_marginBottom="4dp" />
 
                     <TextView
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/positivity_blog_description"
+                        android:text="Start your day with a 5-min meditation to boost focus and reduce stress."
                         android:textColor="@color/text_secondary"
-                        android:textSize="@dimen/text_size_medium" />
+                        android:textSize="14sp" />
                 </LinearLayout>
+            </androidx.cardview.widget.CardView>
 
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
-
-        <!-- Daily Challenges Section: Wellness activity suggestions -->
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_large"
-            app:cardCornerRadius="@dimen/corner_radius_xlarge"
-            app:cardElevation="@dimen/elevation_large"
-            app:cardBackgroundColor="@color/white">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="@dimen/padding_large">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/daily_wellness_title"
-                    android:textColor="@color/accent_blue"
-                    android:textSize="@dimen/text_size_xlarge"
-                    android:textStyle="bold"
-                    android:layout_marginBottom="@dimen/margin_medium" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/daily_wellness_content"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="@dimen/text_size_medium_large"
-                    android:lineSpacingExtra="@dimen/line_spacing_medium" />
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
-
-    </LinearLayout>
-</ScrollView>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

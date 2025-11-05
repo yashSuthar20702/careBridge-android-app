@@ -1,6 +1,7 @@
 package com.example.carebridge.model;
 
 public class Medication {
+
     private int medicine_id;
     private String medicine_name;
     private String dosage;
@@ -11,6 +12,11 @@ public class Medication {
     private int with_food;
     private int duration_days;
     private String extra_instructions;
+
+    // 🔹 New field to track medicine taken status
+    private boolean isTaken = false;
+
+    // -------------------- Getters & Setters -------------------- //
 
     public int getMedicine_id() { return medicine_id; }
     public void setMedicine_id(int medicine_id) { this.medicine_id = medicine_id; }
@@ -42,13 +48,50 @@ public class Medication {
     public String getExtra_instructions() { return extra_instructions; }
     public void setExtra_instructions(String extra_instructions) { this.extra_instructions = extra_instructions; }
 
-    // Helper for readable timing text
+    // -------------------- Helper Methods -------------------- //
+
+    /**
+     * Returns a readable summary of medication times (e.g., "Morning, Evening").
+     */
     public String getTimeSummary() {
         StringBuilder time = new StringBuilder();
-        if (morning == 1) time.append("Morning ");
-        if (afternoon == 1) time.append("Afternoon ");
-        if (evening == 1) time.append("Evening ");
-        if (night == 1) time.append("Night ");
-        return time.toString().trim();
+        if (morning == 1) time.append("Morning, ");
+        if (afternoon == 1) time.append("Afternoon, ");
+        if (evening == 1) time.append("Evening, ");
+        if (night == 1) time.append("Night, ");
+
+        // Remove trailing comma and space
+        if (time.length() > 0)
+            time.setLength(time.length() - 2);
+
+        return time.toString();
+    }
+
+    /**
+     * Returns whether the medicine should be taken with or without food.
+     */
+    public String getFoodInstructionText() {
+        return with_food == 1 ? "Take with food" : "Take before food";
+    }
+
+    /**
+     * Returns true if the medicine has been marked as taken.
+     */
+    public boolean isTaken() {
+        return isTaken;
+    }
+
+    /**
+     * Marks medicine as taken or not.
+     */
+    public void setTaken(boolean taken) {
+        isTaken = taken;
+    }
+
+    /**
+     * Returns a short summary string for UI cards.
+     */
+    public String getSummaryText() {
+        return dosage + " • " + getTimeSummary() + " • " + getFoodInstructionText();
     }
 }
