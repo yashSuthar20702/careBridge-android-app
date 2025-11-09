@@ -15,12 +15,15 @@ public class MedicationAdapter extends RecyclerView.Adapter<MedicationAdapter.Me
 
     private List<Medication> medicationList = new ArrayList<>();
     private OnItemClickListener onItemClickListener;
+    private final boolean isBlue; // New flag
 
     public interface OnItemClickListener {
         void onItemClick(Medication medication);
     }
 
-    public MedicationAdapter(List<Medication> medicationList) {
+    // Updated constructor to accept isBlue flag
+    public MedicationAdapter(List<Medication> medicationList, boolean isBlue) {
+        this.isBlue = isBlue;
         if (medicationList != null) {
             this.medicationList = medicationList;
         }
@@ -38,8 +41,9 @@ public class MedicationAdapter extends RecyclerView.Adapter<MedicationAdapter.Me
     @NonNull
     @Override
     public MedicationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_medication, parent, false);
+        // Inflate different layout based on isBlue flag
+        int layoutId = isBlue ? R.layout.item_medication_blue : R.layout.item_medication;
+        View view = LayoutInflater.from(parent.getContext()).inflate(layoutId, parent, false);
         return new MedicationViewHolder(view);
     }
 
@@ -80,7 +84,7 @@ public class MedicationAdapter extends RecyclerView.Adapter<MedicationAdapter.Me
             // Medicine name
             tvMedName.setText(medication.getMedicine_name());
 
-            // Dosage only (since no dosage_form in model)
+            // Dosage
             tvMedDosage.setText("Dosage: " + medication.getDosage());
 
             // Timing (Morning, Afternoon, etc.)

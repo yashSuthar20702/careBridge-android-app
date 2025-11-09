@@ -27,6 +27,9 @@ public class PatientInfo implements Serializable {
     private String past_surgeries;
     private String current_symptoms;
 
+    private int totalMedicines = 0;
+    private int takenMedicines = 0;
+
     // List-based Medical Data
     private List<String> allergies;
     private List<String> medical_conditions;
@@ -136,4 +139,13 @@ public class PatientInfo implements Serializable {
 
     /** Set list of medical conditions */
     public void setMedical_conditions(List<String> medical_conditions) { this.medical_conditions = medical_conditions; }
+
+    public int getTotalMedicines() { return totalMedicines; }
+    public void setTotalMedicines(int totalMedicines) { this.totalMedicines = totalMedicines; }
+
+    public int getTakenMedicines() { return takenMedicines; }
+    public void setTakenMedicines(int takenMedicines) { this.takenMedicines = takenMedicines; }
+
+    public int getRemainingMedicines() { return totalMedicines - takenMedicines; }
+
 }

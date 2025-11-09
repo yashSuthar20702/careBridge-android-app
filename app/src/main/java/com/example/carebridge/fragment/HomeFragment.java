@@ -95,7 +95,7 @@ public class HomeFragment extends Fragment {
 
         // RecyclerView setup
         rvMedications.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new MedicationAdapter(medicationList);
+        adapter = new MedicationAdapter(medicationList, false);
         rvMedications.setAdapter(adapter);
 
         swipeRefreshLayout.setOnRefreshListener(this::refreshData);

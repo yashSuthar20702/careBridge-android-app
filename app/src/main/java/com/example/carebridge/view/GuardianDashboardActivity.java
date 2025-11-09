@@ -68,7 +68,7 @@ public class GuardianDashboardActivity extends AppCompatActivity {
 
         // ViewPager Setup
         viewPager.setAdapter(new GuardianDashboardPagerAdapter(this));
-        viewPager.setUserInputEnabled(true); //  swipe enabled
+        viewPager.setUserInputEnabled(false); //  swipe enabled
 
         // Bottom Nav navigation
         bottomNavigationView.setOnItemSelectedListener(item -> {

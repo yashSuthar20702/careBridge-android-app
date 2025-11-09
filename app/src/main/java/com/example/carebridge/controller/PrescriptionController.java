@@ -28,6 +28,7 @@ public class PrescriptionController {
     private final Context context;
     private final SharedPrefManager sharedPrefManager;
     private final OkHttpClient client;
+    private final Handler mainHandler = new Handler(Looper.getMainLooper());
 
     public PrescriptionController(Context context) {
         this.context = context;
@@ -40,16 +41,25 @@ public class PrescriptionController {
         void onFailure(String errorMessage);
     }
 
+    /** Fetch prescriptions for the saved case ID */
     public void fetchPrescriptions(PrescriptionCallback callback) {
         String caseId = sharedPrefManager.getCaseId();
+        fetchPrescriptionsInternal(caseId, callback);
+    }
 
+    /** Fetch prescriptions for a specific case ID */
+    public void fetchPrescriptionsWithCaseId(String caseId, PrescriptionCallback callback) {
+        fetchPrescriptionsInternal(caseId, callback);
+    }
+
+    /** Internal method to reduce code duplication */
+    private void fetchPrescriptionsInternal(String caseId, PrescriptionCallback callback) {
         if (caseId == null || caseId.isEmpty()) {
-            Log.e(TAG, "Case ID is null or empty. Cannot fetch prescriptions.");
+            Log.e(TAG, "Invalid case ID");
             callback.onFailure("Invalid case ID");
             return;
         }
 
-        // Use ApiConstants for dynamic URL
         String url = ApiConstants.getPrescriptionByCaseIdUrl(caseId);
         Log.d(TAG, "Fetching prescriptions for Case ID: " + caseId);
         Log.d(TAG, "Request URL: " + url);
@@ -57,8 +67,6 @@ public class PrescriptionController {
         Request request = new Request.Builder().url(url).build();
 
         client.newCall(request).enqueue(new Callback() {
-            final Handler mainHandler = new Handler(Looper.getMainLooper());
-
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.e(TAG, "Request failed: " + e.getMessage(), e);
@@ -67,50 +75,45 @@ public class PrescriptionController {
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
+                String res = response.body() != null ? response.body().string() : "";
                 Log.d(TAG, "HTTP Status Code: " + response.code());
+                Log.d(TAG, "Raw API Response: " + res);
 
                 if (!response.isSuccessful()) {
-                    Log.e(TAG, "Unsuccessful response: " + response.message());
                     mainHandler.post(() -> callback.onFailure("Server error: " + response.message()));
                     return;
                 }
 
-                String res = response.body() != null ? response.body().string() : "";
-                Log.d(TAG, "Raw API Response: " + res);
-
                 if (res.isEmpty()) {
-                    Log.e(TAG, "Empty response from API");
                     mainHandler.post(() -> callback.onFailure("Empty response from API"));
                     return;
                 }
 
-                mainHandler.post(() -> {
-                    try {
-                        Gson gson = new Gson();
-                        Type type = new TypeToken<List<Prescription>>() {}.getType();
-                        List<Prescription> prescriptions = gson.fromJson(res, type);
-
-                        if (prescriptions == null || prescriptions.isEmpty()) {
-                            Log.w(TAG, "No prescriptions found or parsing returned empty list.");
-                            callback.onFailure("No prescriptions found for this case ID");
-                        } else {
-                            Log.d(TAG, "Parsed " + prescriptions.size() + " prescriptions successfully.");
-                            for (Prescription p : prescriptions) {
-                                Log.d(TAG, "Prescription ID: " + p.getPrescription_id() +
-                                        ", Doctor: " + p.getDoctor_name() +
-                                        ", Created At: " + p.getCreated_at());
-                            }
-                            callback.onSuccess(prescriptions);
-                        }
-                    } catch (JsonSyntaxException e) {
-                        Log.e(TAG, "JSON parsing error: " + e.getMessage());
-                        callback.onFailure("Response format error (JSON)");
-                    } catch (Exception e) {
-                        Log.e(TAG, "Unexpected parsing error", e);
-                        callback.onFailure("Unexpected error while parsing response");
-                    }
-                });
+                mainHandler.post(() -> parsePrescriptions(res, callback));
             }
         });
+    }
+
+    /** Parse JSON response and notify callback */
+    private void parsePrescriptions(String json, PrescriptionCallback callback) {
+        try {
+            Gson gson = new Gson();
+            Type type = new TypeToken<List<Prescription>>() {}.getType();
+            List<Prescription> prescriptions = gson.fromJson(json, type);
+
+            if (prescriptions == null || prescriptions.isEmpty()) {
+                Log.w(TAG, "No prescriptions found");
+                callback.onFailure("No prescriptions found for this case ID");
+            } else {
+                Log.d(TAG, "Parsed " + prescriptions.size() + " prescriptions successfully");
+                callback.onSuccess(prescriptions);
+            }
+        } catch (JsonSyntaxException e) {
+            Log.e(TAG, "JSON parsing error", e);
+            callback.onFailure("Response format error (JSON)");
+        } catch (Exception e) {
+            Log.e(TAG, "Unexpected parsing error", e);
+            callback.onFailure("Unexpected error while parsing response");
+        }
     }
 }

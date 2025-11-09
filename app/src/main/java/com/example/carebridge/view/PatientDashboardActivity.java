@@ -48,6 +48,7 @@ public class PatientDashboardActivity extends AppCompatActivity {
         }
 
         viewPager.setAdapter(new PatientDashboardPagerAdapter(this));
+        viewPager.setUserInputEnabled(false); //  swipe enabled
 
         bottomNavigationView.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();

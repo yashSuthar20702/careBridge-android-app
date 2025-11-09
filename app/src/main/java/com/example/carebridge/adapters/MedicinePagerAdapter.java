@@ -1,0 +1,71 @@
+package com.example.carebridge.adapters;
+
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+import android.widget.ImageView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.carebridge.R;
+import com.example.carebridge.model.Medication;
+
+import java.util.List;
+
+public class MedicinePagerAdapter extends RecyclerView.Adapter<MedicinePagerAdapter.MedicineViewHolder> {
+
+    private final List<Medication> medicationList;
+
+    public MedicinePagerAdapter(List<Medication> medicationList) {
+        this.medicationList = medicationList;
+    }
+
+    @NonNull
+    @Override
+    public MedicineViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.item_medication_blue, parent, false);
+        return new MedicineViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull MedicineViewHolder holder, int position) {
+        Medication med = medicationList.get(position);
+        if (med == null) return;
+
+        holder.tvMedName.setText(med.getMedicine_name() != null ? med.getMedicine_name() : "N/A");
+        holder.tvMedDosage.setText(med.getDosage() != null ? med.getDosage() : "-");
+
+        String timeSummary = med.getTimeSummary();
+        holder.tvMedTime.setText(!timeSummary.isEmpty() ? timeSummary : "-");
+
+        holder.tvMedDuration.setText("For " + med.getDuration_days() + " day" + (med.getDuration_days() > 1 ? "s" : ""));
+
+        String instructions = med.getExtra_instructions() != null ? med.getExtra_instructions() : "";
+        holder.tvMedInstructions.setText(instructions + " (" + med.getFoodInstructionText() + ")");
+
+        holder.imgMedicineIcon.setImageResource(R.drawable.ic_pill);
+    }
+
+    @Override
+    public int getItemCount() {
+        return medicationList != null ? medicationList.size() : 0;
+    }
+
+    static class MedicineViewHolder extends RecyclerView.ViewHolder {
+        TextView tvMedName, tvMedDosage, tvMedTime, tvMedDuration, tvMedInstructions;
+        ImageView imgMedicineIcon;
+
+        public MedicineViewHolder(@NonNull View itemView) {
+            super(itemView);
+            tvMedName = itemView.findViewById(R.id.tvMedName);
+            tvMedDosage = itemView.findViewById(R.id.tvMedDosage);
+            tvMedTime = itemView.findViewById(R.id.tvMedTime);
+            tvMedDuration = itemView.findViewById(R.id.tvMedDuration);
+            tvMedInstructions = itemView.findViewById(R.id.tvMedInstructions);
+            imgMedicineIcon = itemView.findViewById(R.id.imgMedicineIcon);
+        }
+    }
+}
