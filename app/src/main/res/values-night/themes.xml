@@ -1,7 +1,39 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
+
+    <!-- Base Theme Dark -->
     <style name="Base.Theme.CareBridge" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+
+        <!-- Prevent header overlap with status bar -->
+        <item name="android:fitsSystemWindows">true</item>
+
+        <!-- System bar colors -->
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+
+        <!-- Icons light on dark background -->
+        <item name="android:windowLightStatusBar">false</item>
+
+        <!-- Primary / Accent Colors -->
+<!--        <item name="colorPrimary">@color/primary_blue_light</item>-->
+<!--        <item name="colorPrimaryContainer">@color/primary_blue_dark</item>-->
+<!--        <item name="colorSecondary">@color/status_active</item>-->
+<!--        <item name="colorSecondaryContainer">@color/status_active</item>-->
+
+        <!-- Text Colors -->
+        <item name="android:textColorPrimary">@color/white</item>
+        <item name="android:textColorSecondary">@color/text_light</item>
+
+        <!-- Backgrounds -->
+        <item name="android:windowBackground">@color/gray_light</item>
     </style>
+
+    <style name="Theme.CareBridge" parent="Base.Theme.CareBridge" />
+
+    <!-- Optional: Custom CardView style (no Material3 parent) -->
+    <style name="CardView.Dark">
+        <item name="cardBackgroundColor">@color/status_active_bg</item>
+        <item name="cardElevation">4dp</item>
+        <item name="cardCornerRadius">12dp</item>
+    </style>
+
 </resources>

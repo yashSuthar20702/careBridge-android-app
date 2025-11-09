@@ -2,6 +2,7 @@ package com.example.carebridge.fragment;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.Network;
@@ -13,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,6 +31,7 @@ import com.example.carebridge.adapters.MedicationAdapter;
 import com.example.carebridge.controller.PrescriptionController;
 import com.example.carebridge.model.Medication;
 import com.example.carebridge.model.Prescription;
+import com.example.carebridge.view.FullMapActivity;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -67,9 +70,10 @@ public class HomeFragment extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-        // 🔹 Initialize UI components
+        //  Init UI Components
         rvMedications = view.findViewById(R.id.rvMedications);
         tvNoMedicines = view.findViewById(R.id.tvNoMedicines);
         swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
@@ -79,19 +83,27 @@ public class HomeFragment extends Fragment {
         tvCurrentDate = view.findViewById(R.id.tvCurrentDate);
         tvCurrentTime = view.findViewById(R.id.tvCurrentTime);
 
-        // Check Internet connection
+        //  BUTTON to open full map
+        Button btnOpenFullMap = view.findViewById(R.id.btnOpenFullMap);
+        btnOpenFullMap.setOnClickListener(v -> openFullMap());
+
+        //  Initialize MapView FIRST
+        mapView = view.findViewById(R.id.mapView);
+        mapView.onCreate(savedInstanceState);
+
+        //  Clicking the small map also opens full map
+        mapView.setOnClickListener(v -> openFullMap());
+
+        //  Internet Check
         if (!isInternetAvailable()) {
-            Log.w(TAG, "Internet not available");
             new AlertDialog.Builder(requireContext())
                     .setTitle("No Internet Connection")
                     .setMessage("Please enable internet to load maps and data.")
                     .setPositiveButton("OK", null)
                     .show();
-        } else {
-            Log.i(TAG, "Internet is available");
         }
 
-        // RecyclerView setup
+        //  RecyclerView Setup
         rvMedications.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new MedicationAdapter(medicationList);
         rvMedications.setAdapter(adapter);
@@ -101,103 +113,95 @@ public class HomeFragment extends Fragment {
         startClock();
         loadPrescriptionData();
 
-        // Initialize Google Map
-        mapView = view.findViewById(R.id.mapView);
-        mapView.onCreate(savedInstanceState);
+        //  Maps Initialization
         try {
             MapsInitializer.initialize(requireContext());
         } catch (Exception e) {
             Log.e(TAG, "MapsInitializer failed", e);
         }
+
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity());
 
-        mapView.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(GoogleMap map) {
-                googleMap = map;
-                enableUserLocation();
-            }
+        mapView.getMapAsync(map -> {
+            googleMap = map;
+            enableUserLocation();
         });
 
         return view;
     }
 
+    //  Internet Check
     private boolean isInternetAvailable() {
         ConnectivityManager cm = (ConnectivityManager) requireContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (cm != null) {
-            Network network = cm.getActiveNetwork();
-            if (network != null) {
-                NetworkCapabilities capabilities = cm.getNetworkCapabilities(network);
-                boolean isConnected = capabilities != null &&
-                        (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
-                                || capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)
-                                || capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET));
-                Log.d(TAG, "Network check: " + isConnected);
-                return isConnected;
-            } else {
-                Log.d(TAG, "No active network");
-            }
-        } else {
-            Log.d(TAG, "ConnectivityManager is null");
-        }
-        return false;
+        if (cm == null) return false;
+
+        Network network = cm.getActiveNetwork();
+        if (network == null) return false;
+
+        NetworkCapabilities capabilities = cm.getNetworkCapabilities(network);
+        return capabilities != null &&
+                (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
+                        || capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)
+                        || capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET));
     }
 
+    //  Open Full Map Screen
+    private void openFullMap() {
+        startActivity(new Intent(requireContext(), FullMapActivity.class));
+    }
+
+    //  Enable My Location on Small Map
     private void enableUserLocation() {
-        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
             ActivityCompat.requestPermissions(requireActivity(),
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_PERMISSION_REQUEST);
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    LOCATION_PERMISSION_REQUEST);
             return;
         }
 
-        if (googleMap != null) {
-            googleMap.setMyLocationEnabled(true);
+        googleMap.setMyLocationEnabled(true);
 
-            fusedLocationClient.getLastLocation().addOnSuccessListener(location -> {
-                if (location != null) {
-                    LatLng userLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-                    googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLatLng, 14));
-                    googleMap.addMarker(new MarkerOptions().position(userLatLng).title("You are here"));
-                    Log.i(TAG, "User location: " + location.getLatitude() + ", " + location.getLongitude());
-                } else {
-                    Log.w(TAG, "Location is null");
-                }
-            }).addOnFailureListener(e -> {
-                Toast.makeText(getContext(), "Failed to get location", Toast.LENGTH_SHORT).show();
-                Log.e(TAG, "Failed to get location", e);
-            });
-        }
+        fusedLocationClient.getLastLocation().addOnSuccessListener(location -> {
+            if (location != null) {
+                LatLng userLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLatLng, 14));
+                googleMap.addMarker(new MarkerOptions().position(userLatLng).title("You are here"));
+            }
+        });
     }
 
     private void refreshData() { loadPrescriptionData(); }
 
     private void loadPrescriptionData() {
         swipeRefreshLayout.setRefreshing(true);
+
         PrescriptionController controller = new PrescriptionController(requireContext());
         controller.fetchPrescriptions(new PrescriptionController.PrescriptionCallback() {
+
             @Override
             public void onSuccess(List<Prescription> prescriptions) {
                 medicationList.clear();
+
                 for (Prescription p : prescriptions) {
                     if (p.getMedicines() != null) {
                         medicationList.addAll(p.getMedicines());
                     }
                 }
+
                 updateSummaryCounts();
                 showNoMedicineView(medicationList.isEmpty());
                 adapter.notifyDataSetChanged();
                 swipeRefreshLayout.setRefreshing(false);
-                Log.i(TAG, "Prescriptions loaded successfully");
             }
 
             @Override
             public void onFailure(String errorMessage) {
                 showNoMedicineView(true);
                 tvNoMedicines.setText("No medicines assigned by doctor yet.");
-                Toast.makeText(getContext(), "Error: " + errorMessage, Toast.LENGTH_SHORT).show();
                 swipeRefreshLayout.setRefreshing(false);
-                Log.e(TAG, "Failed to load prescriptions: " + errorMessage);
+                Toast.makeText(getContext(), "Error: " + errorMessage, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -205,15 +209,16 @@ public class HomeFragment extends Fragment {
     private void updateSummaryCounts() {
         int total = medicationList.size();
         int taken = 0;
-        int remaining = 0;
+
         for (Medication med : medicationList) {
             if (med.isTaken()) taken++;
-            else remaining++;
         }
+
+        int remaining = total - taken;
+
         tvTotalMedicines.setText(String.valueOf(total));
         tvTakenMedicines.setText(String.valueOf(taken));
         tvRemainingMedicines.setText(String.valueOf(remaining));
-        Log.d(TAG, "Summary updated: total=" + total + ", taken=" + taken + ", remaining=" + remaining);
     }
 
     private void showNoMedicineView(boolean show) {
@@ -222,32 +227,32 @@ public class HomeFragment extends Fragment {
     }
 
     private void startClock() {
-        timeRunnable = new Runnable() {
-            @Override
-            public void run() {
-                SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE, MMM dd yyyy", Locale.getDefault());
-                SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a", Locale.getDefault());
-                tvCurrentDate.setText(dateFormat.format(new Date()));
-                tvCurrentTime.setText(timeFormat.format(new Date()));
-                timeHandler.postDelayed(this, 60 * 1000);
-            }
+        timeRunnable = () -> {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE, MMM dd yyyy", Locale.getDefault());
+            SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a", Locale.getDefault());
+
+            tvCurrentDate.setText(dateFormat.format(new Date()));
+            tvCurrentTime.setText(timeFormat.format(new Date()));
+
+            timeHandler.postDelayed(timeRunnable, 60 * 1000);
         };
         timeHandler.post(timeRunnable);
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        timeHandler.removeCallbacks(timeRunnable);
-        mapView.onDestroy();
-    }
-
+    //  MapView Lifecycle
     @Override public void onStart() { super.onStart(); mapView.onStart(); }
     @Override public void onResume() { super.onResume(); mapView.onResume(); }
     @Override public void onPause() { super.onPause(); mapView.onPause(); }
     @Override public void onStop() { super.onStop(); mapView.onStop(); }
+    @Override public void onDestroyView() {
+        super.onDestroyView();
+        timeHandler.removeCallbacks(timeRunnable);
+        mapView.onDestroy();
+    }
     @Override public void onLowMemory() { super.onLowMemory(); mapView.onLowMemory(); }
-    @Override public void onSaveInstanceState(@NonNull Bundle outState) {
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         mapView.onSaveInstanceState(outState);
     }

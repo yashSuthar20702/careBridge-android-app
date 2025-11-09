@@ -4,11 +4,11 @@ package com.example.carebridge.utils;
 public class ApiConstants {
 
     // Development flag to toggle between local testing and production server
-    public static final boolean USE_LOCALHOST = true;
+    public static final boolean USE_LOCALHOST = false;
 
     // Host configuration for different environments
     private static final String LOCALHOST_IP = "10.0.2.2"; // Android emulator localhost
-    private static final String DEVICE_SERVER_IP = "YOUR_REAL_SERVER_IP_OR_DOMAIN"; // Production server
+    private static final String DEVICE_SERVER_IP = "10.0.0.165"; // Production server
 
     // Dynamic host selection based on environment flag
     public static String getBaseHost() {

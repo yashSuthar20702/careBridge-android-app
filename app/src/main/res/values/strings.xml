@@ -182,6 +182,8 @@
     <string name="patient_role">Patient</string>
     <string name="intent_user_key">user</string>
 
-    
+    <string name="medicine_icon_description">Medicine icon</string>
+    <string name="no_medicines_message">No medicines assigned by the doctor yet</string>
+
 
 </resources>

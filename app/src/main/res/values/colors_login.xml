@@ -1,0 +1,30 @@
+<resources>
+    <!-- Login Screen Colors (Fixed, do not change in dark/light mode) -->
+
+    <!-- Primary / Accent -->
+    <color name="login_primary_blue">#2563EB</color>
+    <color name="login_primary_blue_dark">#1E40AF</color>
+    <color name="login_primary_blue_light">#60A5FA</color>
+
+    <!-- Backgrounds -->
+    <color name="login_bg_card">#FFFFFF</color>
+    <color name="login_bg_gradient_overlay">#80FFFFFF</color> <!-- Semi-transparent white for overlays -->
+
+    <!-- Text Colors -->
+    <color name="login_text_primary">#1F2937</color> <!-- Dark text -->
+    <color name="login_text_secondary">#4B5563</color> <!-- Medium text -->
+    <color name="login_text_light">#6B7280</color> <!-- Light text -->
+    <color name="login_text_white">#FFFFFF</color> <!-- For logo/title/button -->
+
+    <!-- Icons / Borders -->
+    <color name="login_icon_tint">#2563EB</color>
+    <color name="login_border">#D1D5DB</color>
+
+    <!-- Status / Accent Colors -->
+    <color name="login_success_green">#10B981</color>
+    <color name="login_error_red">#EF4444</color>
+    <color name="login_warning_yellow">#F59E0B</color>
+
+    <!-- Shadows -->
+    <color name="login_shadow_gray">#DDDDDD</color>
+</resources>

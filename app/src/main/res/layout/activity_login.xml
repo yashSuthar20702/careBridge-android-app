@@ -10,7 +10,6 @@
     android:paddingTop="@dimen/padding_xlarge"
     android:paddingBottom="@dimen/padding_xlarge">
 
-    <!-- Main login container with centered horizontal alignment -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -18,7 +17,7 @@
         android:gravity="center_horizontal"
         android:paddingHorizontal="@dimen/padding_large">
 
-        <!-- App branding section with logo and title -->
+        <!-- Logo -->
         <ImageView
             android:id="@+id/imgLogo"
             android:layout_width="@dimen/logo_size_large"
@@ -29,7 +28,7 @@
             android:background="@drawable/bg_logo_shadow"
             android:padding="@dimen/padding_large" />
 
-        <!-- Primary app title display -->
+        <!-- App Title -->
         <TextView
             android:id="@+id/tvAppName"
             android:layout_width="wrap_content"
@@ -37,29 +36,29 @@
             android:text="@string/app_name"
             android:textSize="@dimen/text_size_xxlarge"
             android:textStyle="bold"
-            android:textColor="@color/white"
+            android:textColor="@color/login_text_white"
             android:letterSpacing="0.02"
             android:layout_marginBottom="@dimen/margin_small" />
 
-        <!-- Secondary tagline for brand messaging -->
+        <!-- Tagline -->
         <TextView
             android:id="@+id/tvAppTagline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/app_tagline"
             android:textSize="@dimen/text_size_small"
-            android:textColor="@color/white"
+            android:textColor="@color/login_text_white"
             android:alpha="0.85"
             android:layout_marginBottom="@dimen/margin_xlarge" />
 
-        <!-- Login form container card with elevated design -->
+        <!-- Login Card -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/loginCard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:cardCornerRadius="@dimen/corner_radius_xlarge"
             app:cardElevation="@dimen/elevation_large"
-            app:cardBackgroundColor="@color/white"
+            app:cardBackgroundColor="@color/login_bg_card"
             android:layout_marginBottom="@dimen/margin_large">
 
             <LinearLayout
@@ -68,26 +67,26 @@
                 android:orientation="vertical"
                 android:padding="@dimen/padding_large">
 
-                <!-- Welcome header section -->
+                <!-- Welcome -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/welcome_back"
-                    android:textColor="@color/text_primary"
+                    android:textColor="@color/login_text_primary"
                     android:textSize="@dimen/text_size_xlarge"
                     android:textStyle="bold"
                     android:layout_marginBottom="@dimen/margin_small" />
 
-                <!-- Login instructions subtitle -->
+                <!-- Login Subtitle -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/login_subtitle"
-                    android:textColor="@color/text_secondary"
+                    android:textColor="@color/login_text_secondary"
                     android:textSize="@dimen/text_size_xsmall"
                     android:layout_marginBottom="@dimen/margin_large" />
 
-                <!-- Username input field with person icon -->
+                <!-- Username Input -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/tilUsername"
                     style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
@@ -96,12 +95,8 @@
                     android:layout_marginBottom="@dimen/margin_medium"
                     android:hint="@string/username"
                     app:startIconDrawable="@drawable/ic_person"
-                    app:startIconTint="@color/primary_blue"
-                    app:endIconTint="@color/primary_blue"
-                    app:boxCornerRadiusTopStart="@dimen/corner_radius_medium"
-                    app:boxCornerRadiusTopEnd="@dimen/corner_radius_medium"
-                    app:boxCornerRadiusBottomStart="@dimen/corner_radius_medium"
-                    app:boxCornerRadiusBottomEnd="@dimen/corner_radius_medium">
+                    app:startIconTint="@color/login_icon_tint"
+                    app:endIconTint="@color/login_icon_tint">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etUsername"
@@ -109,12 +104,11 @@
                         android:layout_height="wrap_content"
                         android:inputType="textEmailAddress"
                         android:imeOptions="actionNext"
-                        android:textColor="@color/text_primary"
+                        android:textColor="@color/login_text_primary"
                         android:textSize="@dimen/text_size_medium" />
-
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Password input field with toggle visibility -->
+                <!-- Password Input -->
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/tilPassword"
                     style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
@@ -123,13 +117,9 @@
                     android:layout_marginBottom="@dimen/margin_large"
                     android:hint="@string/password"
                     app:startIconDrawable="@drawable/ic_password"
-                    app:startIconTint="@color/primary_blue"
+                    app:startIconTint="@color/login_icon_tint"
                     app:endIconMode="password_toggle"
-                    app:endIconTint="@color/primary_blue"
-                    app:boxCornerRadiusTopStart="@dimen/corner_radius_medium"
-                    app:boxCornerRadiusTopEnd="@dimen/corner_radius_medium"
-                    app:boxCornerRadiusBottomStart="@dimen/corner_radius_medium"
-                    app:boxCornerRadiusBottomEnd="@dimen/corner_radius_medium">
+                    app:endIconTint="@color/login_icon_tint">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etPassword"
@@ -137,30 +127,28 @@
                         android:layout_height="wrap_content"
                         android:inputType="textPassword"
                         android:imeOptions="actionDone"
-                        android:textColor="@color/text_primary"
+                        android:textColor="@color/login_text_primary"
                         android:textSize="@dimen/text_size_medium" />
-
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Primary login action button -->
+                <!-- Login Button -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnLogin"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/button_height_large"
                     android:text="@string/sign_in"
-                    android:textColor="@color/white"
+                    android:textColor="@color/login_text_white"
                     android:textSize="@dimen/text_size_medium"
                     android:textStyle="bold"
                     app:cornerRadius="@dimen/corner_radius_large"
-                    android:backgroundTint="@color/primary_blue"
+                    android:backgroundTint="@color/login_primary_blue"
                     android:icon="@drawable/ic_login"
                     app:iconGravity="textStart"
                     app:iconPadding="@dimen/padding_small" />
-
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Success animation feedback for login completion -->
+        <!-- Success Animation -->
         <com.airbnb.lottie.LottieAnimationView
             android:id="@+id/successAnimation"
             android:layout_width="@dimen/animation_size_large"

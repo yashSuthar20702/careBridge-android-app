@@ -1,0 +1,93 @@
+package com.example.carebridge.adapters;
+
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.carebridge.R;
+import com.example.carebridge.model.NearbyPlace;
+import com.google.android.gms.maps.GoogleMap;
+
+import java.util.List;
+
+public class NearbyPlacesAdapter extends RecyclerView.Adapter<NearbyPlacesAdapter.ViewHolder> {
+
+    private List<NearbyPlace> list;
+    private Context context;
+    private GoogleMap googleMap;
+
+    public NearbyPlacesAdapter(Context ctx, List<NearbyPlace> list, GoogleMap map) {
+        this.context = ctx;
+        this.list = list;
+        this.googleMap = map;
+    }
+
+    // ✅ Allow map to be attached AFTER RecyclerView is created
+    public void setMapReference(GoogleMap map) {
+        this.googleMap = map;
+    }
+
+    @NonNull
+    @Override
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(context).inflate(R.layout.item_place, parent, false);
+        return new ViewHolder(v);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        NearbyPlace place = list.get(position);
+
+        holder.name.setText(place.name);
+        holder.distance.setText(place.distance);
+
+        // ✅ Zoom to marker when clicked
+        holder.itemView.setOnClickListener(v -> {
+            if (googleMap != null) {
+                googleMap.animateCamera(
+                        com.google.android.gms.maps.CameraUpdateFactory.newLatLngZoom(
+                                place.latLng, 17
+                        )
+                );
+            }
+        });
+
+        // ✅ Open Google Maps navigation
+        holder.btnNavigate.setOnClickListener(v -> {
+            String uri = "google.navigation:q=" +
+                    place.latLng.latitude + "," + place.latLng.longitude;
+
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
+            intent.setPackage("com.google.android.apps.maps");
+
+            context.startActivity(intent);
+        });
+    }
+
+    @Override
+    public int getItemCount() {
+        return list.size();
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+
+        TextView name, distance;
+        Button btnNavigate;
+
+        public ViewHolder(View v) {
+            super(v);
+
+            name = v.findViewById(R.id.tvPlaceName);
+            distance = v.findViewById(R.id.tvPlaceDistance);
+            btnNavigate = v.findViewById(R.id.btnNavigate);
+        }
+    }
+}

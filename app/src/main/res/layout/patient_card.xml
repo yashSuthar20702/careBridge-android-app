@@ -2,31 +2,31 @@
 <com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/patientCard"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:id="@+id/patientCard"
+    android:layout_marginBottom="@dimen/margin_xsmall"
     app:cardCornerRadius="@dimen/corner_radius_medium"
     app:cardBackgroundColor="@color/white"
     app:strokeColor="@color/accent_blue"
     app:strokeWidth="2dp"
-    android:layout_marginBottom="@dimen/margin_xsmall"
+    app:cardElevation="4dp"
     app:cardUseCompatPadding="true">
 
-    <!-- Patient card container with detailed information layout -->
+    <!-- Patient card container -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="@dimen/padding_medium">
 
-        <!-- Top: Name & Status Row - Primary patient identification -->
+        <!-- Name & Status Row -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical">
 
-            <!-- Patient name with flexible width allocation -->
             <TextView
                 android:id="@+id/tvPatientName"
                 android:layout_width="0dp"
@@ -37,7 +37,6 @@
                 android:textAllCaps="false"
                 android:layout_marginBottom="@dimen/margin_xsmall"/>
 
-            <!-- Patient status badge with visual indicator -->
             <TextView
                 android:id="@+id/tvPatientStatus"
                 android:layout_width="wrap_content"
@@ -45,12 +44,12 @@
                 android:padding="@dimen/padding_small"
                 android:textSize="@dimen/text_size_small"
                 android:textStyle="bold"
-                android:background="@drawable/bg_status_active"
+                android:backgroundTint="@color/accent_blue"
                 android:textColor="@color/white"
                 android:layout_gravity="top"/>
         </LinearLayout>
 
-        <!-- Patient role or type description -->
+        <!-- Patient role/type -->
         <TextView
             android:id="@+id/tvPatientRole"
             android:layout_width="wrap_content"
@@ -60,140 +59,149 @@
             android:textSize="@dimen/text_size_medium"
             android:layout_marginBottom="@dimen/margin_xsmall"/>
 
-        <!-- Divider line separating header from details -->
+        <!-- Divider -->
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="@color/shimmer_placeholder"
             android:layout_marginVertical="@dimen/margin_small"/>
 
-        <!-- Age information row with label and value -->
+        <!-- Info Rows -->
         <LinearLayout
-            android:orientation="horizontal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_xsmall">
-            <TextView
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:text="@string/age_label"
-                android:textStyle="bold"
-                android:textSize="@dimen/text_size_medium_large"
-                android:textColor="@color/text_primary"/>
-            <TextView
-                android:id="@+id/tvPatientAge"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/text_size_medium_large"
-                android:textColor="@color/text_secondary"/>
-        </LinearLayout>
+            android:orientation="vertical"
+            android:divider="?attr/dividerVertical"
+            android:showDividers="middle">
 
-        <!-- Gender information row with label and value -->
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_xsmall">
-            <TextView
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:text="@string/gender_label"
-                android:textStyle="bold"
-                android:textSize="@dimen/text_size_medium_large"
-                android:textColor="@color/text_primary"/>
-            <TextView
-                android:id="@+id/tvPatientGender"
+            <!-- Age -->
+            <LinearLayout
+                android:orientation="horizontal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/text_size_medium_large"
-                android:textColor="@color/text_secondary"/>
-        </LinearLayout>
+                android:layout_marginBottom="@dimen/margin_xsmall">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/age_label"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/text_size_medium_large"
+                    android:textColor="@color/text_primary"/>
+                <TextView
+                    android:id="@+id/tvPatientAge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_size_medium_large"
+                    android:textColor="@color/text_secondary"/>
+            </LinearLayout>
 
-        <!-- Contact information row with label and value -->
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_xsmall">
-            <TextView
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:text="@string/contact_label"
-                android:textStyle="bold"
-                android:textSize="@dimen/text_size_medium_large"
-                android:textColor="@color/text_primary"/>
-            <TextView
-                android:id="@+id/tvPatientContact"
+            <!-- Gender -->
+            <LinearLayout
+                android:orientation="horizontal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/text_size_medium_large"
-                android:textColor="@color/text_secondary"/>
-        </LinearLayout>
+                android:layout_marginBottom="@dimen/margin_xsmall">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/gender_label"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/text_size_medium_large"
+                    android:textColor="@color/text_primary"/>
+                <TextView
+                    android:id="@+id/tvPatientGender"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_size_medium_large"
+                    android:textColor="@color/text_secondary"/>
+            </LinearLayout>
 
-        <!-- Email information row with label and value -->
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_xsmall">
-            <TextView
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:text="@string/email_label"
-                android:textStyle="bold"
-                android:textSize="@dimen/text_size_medium_large"
-                android:textColor="@color/text_primary"/>
-            <TextView
-                android:id="@+id/tvPatientEmail"
+            <!-- Contact -->
+            <LinearLayout
+                android:orientation="horizontal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/text_size_medium_large"
-                android:textColor="@color/text_secondary"/>
-        </LinearLayout>
+                android:layout_marginBottom="@dimen/margin_xsmall">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/contact_label"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/text_size_medium_large"
+                    android:textColor="@color/text_primary"/>
+                <TextView
+                    android:id="@+id/tvPatientContact"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_size_medium_large"
+                    android:textColor="@color/text_secondary"/>
+            </LinearLayout>
 
-        <!-- Assigned date information with special styling -->
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_xsmall">
-            <TextView
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:text="@string/assigned_label"
-                android:textStyle="bold"
-                android:textSize="@dimen/text_size_medium_large"
-                android:textColor="@color/text_primary"/>
-            <TextView
-                android:id="@+id/tvPatientAssignedDate"
+            <!-- Email -->
+            <LinearLayout
+                android:orientation="horizontal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/text_size_medium_large"
-                android:textColor="@color/accent_purple"
-                android:textStyle="italic"/>
-        </LinearLayout>
+                android:layout_marginBottom="@dimen/margin_xsmall">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/email_label"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/text_size_medium_large"
+                    android:textColor="@color/text_primary"/>
+                <TextView
+                    android:id="@+id/tvPatientEmail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_size_medium_large"
+                    android:textColor="@color/text_secondary"/>
+            </LinearLayout>
 
-        <!-- Additional notes or comments about the patient -->
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/margin_xsmall">
-            <TextView
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"
-                android:text="@string/notes_label"
-                android:textStyle="bold"
-                android:textSize="@dimen/text_size_medium_large"
-                android:textColor="@color/text_primary"/>
-            <TextView
-                android:id="@+id/tvPatientNotes"
+            <!-- Assigned Date -->
+            <LinearLayout
+                android:orientation="horizontal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/text_size_medium_large"
-                android:textColor="@color/text_secondary"
-                android:textStyle="italic"/>
-        </LinearLayout>
+                android:layout_marginBottom="@dimen/margin_xsmall">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/assigned_label"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/text_size_medium_large"
+                    android:textColor="@color/text_primary"/>
+                <TextView
+                    android:id="@+id/tvPatientAssignedDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_size_medium_large"
+                    android:textColor="@color/accent_purple"
+                    android:textStyle="italic"/>
+            </LinearLayout>
 
+            <!-- Notes -->
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/margin_xsmall">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/notes_label"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/text_size_medium_large"
+                    android:textColor="@color/text_primary"/>
+                <TextView
+                    android:id="@+id/tvPatientNotes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/text_size_medium_large"
+                    android:textColor="@color/text_secondary"
+                    android:textStyle="italic"/>
+            </LinearLayout>
+
+        </LinearLayout>
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>
