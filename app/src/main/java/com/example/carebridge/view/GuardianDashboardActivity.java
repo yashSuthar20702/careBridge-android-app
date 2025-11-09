@@ -3,6 +3,8 @@ package com.example.carebridge.view;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -15,8 +17,8 @@ import com.example.carebridge.adapters.GuardianDashboardPagerAdapter;
 import com.example.carebridge.controller.AuthController;
 import com.example.carebridge.model.User;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.button.MaterialButton;
 
-/** Main dashboard activity for guardian users with navigation and session management */
 public class GuardianDashboardActivity extends AppCompatActivity {
 
     private ViewPager2 viewPager;
@@ -32,99 +34,108 @@ public class GuardianDashboardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_guardian_dashboard);
 
-        // Initialize authentication controller and retrieve current user
         authController = new AuthController(this);
         currentUser = (User) getIntent().getSerializableExtra("user");
-        if (currentUser == null) {
-            currentUser = authController.getCurrentUser();
-        }
+        if (currentUser == null) currentUser = authController.getCurrentUser();
 
-        // Bind view components from layout
         tvGuardianName = findViewById(R.id.tvGuardianName);
         btnLogout = findViewById(R.id.btnHeaderLogout);
         viewPager = findViewById(R.id.viewPagerGuardian);
         bottomNavigationView = findViewById(R.id.bottomNavigationGuardian);
 
-        // Debug logging for view binding issues
-        if (btnLogout == null) Log.e("GuardianDashboard", getString(R.string.log_btn_logout_not_found));
-        if (tvGuardianName == null) Log.e("GuardianDashboard", getString(R.string.log_tv_name_not_found));
-        if (viewPager == null) Log.e("GuardianDashboard", getString(R.string.log_viewpager_not_found));
-        if (bottomNavigationView == null) Log.e("GuardianDashboard", getString(R.string.log_bottom_nav_not_found));
+        // Debug check
+        if (btnLogout == null) Log.e("GuardianDashboard", "Logout button not found");
+        if (tvGuardianName == null) Log.e("GuardianDashboard", "Guardian name textview not found");
+        if (viewPager == null) Log.e("GuardianDashboard", "ViewPager not found");
+        if (bottomNavigationView == null) Log.e("GuardianDashboard", "BottomNav not found");
 
-        // Set guardian name with fallback for missing data
+        // Set guardian name
         try {
-            if (tvGuardianName != null && currentUser != null && currentUser.getPatientInfo().getFull_name() != null) {
+            if (currentUser != null &&
+                    currentUser.getPatientInfo() != null &&
+                    currentUser.getPatientInfo().getFull_name() != null) {
+
                 tvGuardianName.setText(currentUser.getPatientInfo().getFull_name());
-            } else if (tvGuardianName != null) {
+            } else {
                 tvGuardianName.setText(getString(R.string.guardian_fallback_name));
             }
         } catch (Exception e) {
-            Log.e("GuardianDashboard", getString(R.string.log_error_setting_name) + e.getMessage());
+            Log.e("GuardianDashboard", "Error setting name: " + e.getMessage());
         }
 
-        // Setup logout button click listener
-        if (btnLogout != null) {
-            btnLogout.setOnClickListener(v -> logout());
-        }
+        // Logout
+        btnLogout.setOnClickListener(v -> openLogoutDialog());
 
-        // Configure ViewPager for fragment navigation
-        if (viewPager != null) {
-            viewPager.setAdapter(new GuardianDashboardPagerAdapter(this));
-            viewPager.setUserInputEnabled(true); // Disable swipe navigation
-        }
+        // ViewPager Setup
+        viewPager.setAdapter(new GuardianDashboardPagerAdapter(this));
+        viewPager.setUserInputEnabled(true); //  swipe enabled
 
-        // Setup bottom navigation item selection
-        if (bottomNavigationView != null) {
-            bottomNavigationView.setOnItemSelectedListener(item -> {
-                int id = item.getItemId();
-                if (id == R.id.nav_home) {
-                    viewPager.setCurrentItem(0);
-                    return true;
-                } else if (id == R.id.nav_personal) {
-                    viewPager.setCurrentItem(1);
-                    return true;
-                } else if (id == R.id.nav_patients) {
-                    viewPager.setCurrentItem(2);
-                    return true;
+        // Bottom Nav navigation
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            int id = item.getItemId();
+            if (id == R.id.nav_home) {
+                viewPager.setCurrentItem(0);
+                return true;
+            } else if (id == R.id.nav_personal) {
+                viewPager.setCurrentItem(1);
+                return true;
+            } else if (id == R.id.nav_patients) {
+                viewPager.setCurrentItem(2);
+                return true;
+            }
+            return false;
+        });
+
+        // Sync ViewPager with BottomNav
+        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                switch (position) {
+                    case 0:
+                        bottomNavigationView.setSelectedItemId(R.id.nav_home);
+                        break;
+                    case 1:
+                        bottomNavigationView.setSelectedItemId(R.id.nav_personal);
+                        break;
+                    case 2:
+                        bottomNavigationView.setSelectedItemId(R.id.nav_patients);
+                        break;
                 }
-                return false;
-            });
-        }
-
-        // Sync ViewPager position with bottom navigation
-        if (viewPager != null) {
-            viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-                @Override
-                public void onPageSelected(int position) {
-                    if (bottomNavigationView == null) return;
-                    switch (position) {
-                        case 0:
-                            bottomNavigationView.setSelectedItemId(R.id.nav_home);
-                            break;
-                        case 1:
-                            bottomNavigationView.setSelectedItemId(R.id.nav_personal);
-                            break;
-                        case 2:
-                            bottomNavigationView.setSelectedItemId(R.id.nav_patients);
-                            break;
-                    }
-                }
-            });
-        }
+            }
+        });
     }
 
-    /** Handle user logout with confirmation dialog */
-    private void logout() {
-        new AlertDialog.Builder(this)
-                .setTitle(getString(R.string.logout_title))
-                .setMessage(getString(R.string.logout_confirmation))
-                .setPositiveButton(getString(R.string.yes_button), (dialog, which) -> {
-                    authController.logout();
-                    Intent intent = new Intent(this, LoginActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(intent);
-                })
-                .setNegativeButton(getString(R.string.no_button), null)
-                .show();
+    /**  Custom Logout Dialog (Blue Accent) */
+    private void openLogoutDialog() {
+        View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_logout, null);
+
+        MaterialButton btnCancel = dialogView.findViewById(R.id.btnCancel);
+        MaterialButton btnLogout = dialogView.findViewById(R.id.btnLogout);
+
+        //  Guardian → Accent Blue
+        btnLogout.setBackgroundTintList(
+                getColorStateList(R.color.accent_blue)
+        );
+
+        AlertDialog dialog = new AlertDialog.Builder(this, R.style.CustomDialogStyle)
+                .setView(dialogView)
+                .setCancelable(true)
+                .create();
+
+        if (dialog.getWindow() != null) {
+            dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        }
+
+        btnCancel.setOnClickListener(v -> dialog.dismiss());
+
+        btnLogout.setOnClickListener(v -> {
+            dialog.dismiss();
+            authController.logout();
+            Intent intent = new Intent(this, LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+        });
+
+        dialog.show();
     }
 }
