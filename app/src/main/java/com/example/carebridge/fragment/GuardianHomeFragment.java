@@ -33,6 +33,7 @@ import com.example.carebridge.model.PatientInfo;
 import com.example.carebridge.model.Prescription;
 import com.example.carebridge.utils.SharedPrefManager;
 import com.example.carebridge.view.FullMapActivity;
+import com.example.carebridge.view.FullMapActivityBlue;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -232,7 +233,7 @@ public class GuardianHomeFragment extends Fragment {
         timeHandler.post(timeRunnable);
     }
 
-    private void openFullMap() { startActivity(new Intent(requireContext(), FullMapActivity.class)); }
+    private void openFullMap() { startActivity(new Intent(requireContext(), FullMapActivityBlue.class)); }
 
     private void enableUserLocation() {
         if (ActivityCompat.checkSelfPermission(requireContext(),

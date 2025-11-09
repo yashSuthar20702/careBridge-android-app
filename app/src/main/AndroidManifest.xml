@@ -62,6 +62,9 @@
         <activity
             android:name=".view.FullMapActivity"
             android:exported="false" />
+        <activity
+            android:name=".view.FullMapActivityBlue"
+            android:exported="false" />
 
     </application>
 
