@@ -70,7 +70,7 @@ public class GuardianDashboardActivity extends AppCompatActivity {
         // Configure ViewPager for fragment navigation
         if (viewPager != null) {
             viewPager.setAdapter(new GuardianDashboardPagerAdapter(this));
-            viewPager.setUserInputEnabled(false); // Disable swipe navigation
+            viewPager.setUserInputEnabled(true); // Disable swipe navigation
         }
 
         // Setup bottom navigation item selection
