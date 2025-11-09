@@ -16,6 +16,9 @@
     <dimen name="margin_small">8dp</dimen>
     <dimen name="margin_xsmall">2dp</dimen>
 
+
+    <dimen name="spacing_16dp">16dp</dimen>
+
     <!-- ==================== TEXT SIZES ==================== -->
     <!-- Typography scale for consistent text hierarchy across the app -->
     <dimen name="text_size_xxlarge">32sp</dimen>

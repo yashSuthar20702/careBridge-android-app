@@ -1,10 +1,7 @@
 package com.example.carebridge.adapters;
 
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.net.Uri;
-import android.text.SpannableString;
-import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,12 +35,13 @@ public class PatientGuardianInformationAdapter extends RecyclerView.Adapter<Pati
     public void onBindViewHolder(@NonNull GuardianViewHolder holder, int position) {
         PatientGuardianInfo guardian = guardianList.get(position);
 
-        setBoldLabel(holder.tvGuardianName, "", safeString(guardian.getFull_name()));
-        setBoldLabel(holder.tvGuardianRelationship, "Relationship:", safeString(guardian.getRole()));
-        setBoldLabel(holder.tvGuardianPhone, "Phone:", safeString(guardian.getPhone()));
-        setBoldLabel(holder.tvGuardianEmail, "Email:", safeString(guardian.getEmail()));
+        //  Set values directly — no labels
+        holder.tvGuardianName.setText(safeString(guardian.getFull_name()));
+        holder.tvGuardianRelationship.setText(safeString(guardian.getRole()));
+        holder.tvGuardianPhone.setText(safeString(guardian.getPhone()));
+        holder.tvGuardianEmail.setText(safeString(guardian.getEmail()));
 
-        // Set Call Button
+        //  Call Button
         holder.btnCallGuardian.setText("Call " + safeString(guardian.getFull_name()));
         holder.btnCallGuardian.setOnClickListener(v -> {
             String phone = guardian.getPhone();
@@ -65,12 +63,7 @@ public class PatientGuardianInformationAdapter extends RecyclerView.Adapter<Pati
         notifyDataSetChanged();
     }
 
-    private void setBoldLabel(TextView textView, String label, String value) {
-        SpannableString spannable = new SpannableString(label + " " + value);
-        spannable.setSpan(new StyleSpan(Typeface.BOLD), 0, label.length(), 0);
-        textView.setText(spannable);
-    }
-
+    //  Simplified safe string
     private String safeString(String value) {
         return (value != null && !value.isEmpty()) ? value : "N/A";
     }

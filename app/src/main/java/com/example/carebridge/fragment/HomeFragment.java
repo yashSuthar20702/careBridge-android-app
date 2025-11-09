@@ -16,10 +16,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -38,9 +36,10 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
-import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.material.card.MaterialCardView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -54,10 +53,11 @@ public class HomeFragment extends Fragment {
 
     private RecyclerView rvMedications;
     private TextView tvNoMedicines, tvTotalMedicines, tvTakenMedicines, tvRemainingMedicines;
-    private TextView tvCurrentDate, tvCurrentTime;
+    private TextView tvCurrentDate, tvCurrentTime, tvWarningMessage;
     private SwipeRefreshLayout swipeRefreshLayout;
     private MedicationAdapter adapter;
     private final List<Medication> medicationList = new ArrayList<>();
+    private MaterialCardView cardWarning;
 
     private Handler timeHandler = new Handler(Looper.getMainLooper());
     private Runnable timeRunnable;
@@ -70,40 +70,30 @@ public class HomeFragment extends Fragment {
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-        //  Init UI Components
+        // Init UI components
         rvMedications = view.findViewById(R.id.rvMedications);
         tvNoMedicines = view.findViewById(R.id.tvNoMedicines);
-        swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
         tvTotalMedicines = view.findViewById(R.id.tvTotalMedicines);
         tvTakenMedicines = view.findViewById(R.id.tvTakenMedicines);
         tvRemainingMedicines = view.findViewById(R.id.tvRemainingMedicines);
         tvCurrentDate = view.findViewById(R.id.tvCurrentDate);
         tvCurrentTime = view.findViewById(R.id.tvCurrentTime);
+        swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
+        cardWarning = view.findViewById(R.id.cardWarning);
+        tvWarningMessage = view.findViewById(R.id.tvWarningMessage);
 
-        //  BUTTON to open full map
+        // Open full map button
         Button btnOpenFullMap = view.findViewById(R.id.btnOpenFullMap);
         btnOpenFullMap.setOnClickListener(v -> openFullMap());
 
-        //  Initialize MapView FIRST
+        // Initialize MapView
         mapView = view.findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
-
-        //  Clicking the small map also opens full map
         mapView.setOnClickListener(v -> openFullMap());
 
-        //  Internet Check
-        if (!isInternetAvailable()) {
-            new AlertDialog.Builder(requireContext())
-                    .setTitle("No Internet Connection")
-                    .setMessage("Please enable internet to load maps and data.")
-                    .setPositiveButton("OK", null)
-                    .show();
-        }
-
-        //  RecyclerView Setup
+        // RecyclerView setup
         rvMedications.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new MedicationAdapter(medicationList);
         rvMedications.setAdapter(adapter);
@@ -113,31 +103,39 @@ public class HomeFragment extends Fragment {
         startClock();
         loadPrescriptionData();
 
-        //  Maps Initialization
-        try {
-            MapsInitializer.initialize(requireContext());
-        } catch (Exception e) {
-            Log.e(TAG, "MapsInitializer failed", e);
-        }
+        // Maps initialization
+        try { MapsInitializer.initialize(requireContext()); }
+        catch (Exception e) { Log.e(TAG, "MapsInitializer failed", e); }
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity());
 
         mapView.getMapAsync(map -> {
             googleMap = map;
+            int currentNightMode = getResources().getConfiguration().uiMode
+                    & android.content.res.Configuration.UI_MODE_NIGHT_MASK;
+            int styleRes = (currentNightMode == android.content.res.Configuration.UI_MODE_NIGHT_YES)
+                    ? R.raw.map_style_dark : R.raw.map_style_light;
+
+            try {
+                boolean success = googleMap.setMapStyle(
+                        MapStyleOptions.loadRawResourceStyle(requireContext(), styleRes)
+                );
+                if (!success) Log.e(TAG, "Failed to parse map style.");
+            } catch (Exception e) {
+                Log.e(TAG, "Cannot find map style. Error: ", e);
+            }
+
             enableUserLocation();
         });
 
         return view;
     }
 
-    //  Internet Check
     private boolean isInternetAvailable() {
         ConnectivityManager cm = (ConnectivityManager) requireContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         if (cm == null) return false;
-
         Network network = cm.getActiveNetwork();
         if (network == null) return false;
-
         NetworkCapabilities capabilities = cm.getNetworkCapabilities(network);
         return capabilities != null &&
                 (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
@@ -145,26 +143,23 @@ public class HomeFragment extends Fragment {
                         || capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET));
     }
 
-    //  Open Full Map Screen
     private void openFullMap() {
         startActivity(new Intent(requireContext(), FullMapActivity.class));
     }
 
-    //  Enable My Location on Small Map
     private void enableUserLocation() {
         if (ActivityCompat.checkSelfPermission(requireContext(),
                 Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
             ActivityCompat.requestPermissions(requireActivity(),
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     LOCATION_PERMISSION_REQUEST);
             return;
         }
 
-        googleMap.setMyLocationEnabled(true);
+        if (googleMap != null) googleMap.setMyLocationEnabled(true);
 
         fusedLocationClient.getLastLocation().addOnSuccessListener(location -> {
-            if (location != null) {
+            if (location != null && googleMap != null) {
                 LatLng userLatLng = new LatLng(location.getLatitude(), location.getLongitude());
                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLatLng, 14));
                 googleMap.addMarker(new MarkerOptions().position(userLatLng).title("You are here"));
@@ -176,10 +171,17 @@ public class HomeFragment extends Fragment {
 
     private void loadPrescriptionData() {
         swipeRefreshLayout.setRefreshing(true);
+        cardWarning.setVisibility(View.GONE);
+
+        if (!isInternetAvailable()) {
+            showWarning("No internet connection. Data cannot be loaded.");
+            showNoMedicineView(true);
+            swipeRefreshLayout.setRefreshing(false);
+            return;
+        }
 
         PrescriptionController controller = new PrescriptionController(requireContext());
         controller.fetchPrescriptions(new PrescriptionController.PrescriptionCallback() {
-
             @Override
             public void onSuccess(List<Prescription> prescriptions) {
                 medicationList.clear();
@@ -190,18 +192,27 @@ public class HomeFragment extends Fragment {
                     }
                 }
 
+                // Hide warning card on success
+                cardWarning.setVisibility(View.GONE);
                 updateSummaryCounts();
-                showNoMedicineView(medicationList.isEmpty());
+
+                if (medicationList.isEmpty()) {
+                    showNoMedicineView(true);
+                } else {
+                    showNoMedicineView(false);
+                }
+
                 adapter.notifyDataSetChanged();
                 swipeRefreshLayout.setRefreshing(false);
             }
 
             @Override
             public void onFailure(String errorMessage) {
+                medicationList.clear();
+                updateSummaryCounts();
                 showNoMedicineView(true);
-                tvNoMedicines.setText("No medicines assigned by doctor yet.");
+                showWarning(getString(R.string.network_error_retry_message));
                 swipeRefreshLayout.setRefreshing(false);
-                Toast.makeText(getContext(), "Error: " + errorMessage, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -209,11 +220,7 @@ public class HomeFragment extends Fragment {
     private void updateSummaryCounts() {
         int total = medicationList.size();
         int taken = 0;
-
-        for (Medication med : medicationList) {
-            if (med.isTaken()) taken++;
-        }
-
+        for (Medication med : medicationList) if (med.isTaken()) taken++;
         int remaining = total - taken;
 
         tvTotalMedicines.setText(String.valueOf(total));
@@ -226,20 +233,27 @@ public class HomeFragment extends Fragment {
         rvMedications.setVisibility(show ? View.GONE : View.VISIBLE);
     }
 
+    private void showWarning(String message) {
+        tvWarningMessage.setText(message);
+        cardWarning.setVisibility(View.VISIBLE);
+    }
+
     private void startClock() {
-        timeRunnable = () -> {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE, MMM dd yyyy", Locale.getDefault());
-            SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a", Locale.getDefault());
-
-            tvCurrentDate.setText(dateFormat.format(new Date()));
-            tvCurrentTime.setText(timeFormat.format(new Date()));
-
-            timeHandler.postDelayed(timeRunnable, 60 * 1000);
+        timeRunnable = new Runnable() {
+            @Override
+            public void run() {
+                Date now = new Date();
+                SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE, MMM dd yyyy", Locale.getDefault());
+                SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a", Locale.getDefault());
+                tvCurrentDate.setText(dateFormat.format(now));
+                tvCurrentTime.setText(timeFormat.format(now));
+                timeHandler.postDelayed(this, 1000);
+            }
         };
         timeHandler.post(timeRunnable);
     }
 
-    //  MapView Lifecycle
+    // MapView Lifecycle
     @Override public void onStart() { super.onStart(); mapView.onStart(); }
     @Override public void onResume() { super.onResume(); mapView.onResume(); }
     @Override public void onPause() { super.onPause(); mapView.onPause(); }
@@ -250,9 +264,7 @@ public class HomeFragment extends Fragment {
         mapView.onDestroy();
     }
     @Override public void onLowMemory() { super.onLowMemory(); mapView.onLowMemory(); }
-
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
+    @Override public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         mapView.onSaveInstanceState(outState);
     }

@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -17,7 +16,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.carebridge.R;
 import com.example.carebridge.adapters.NearbyPlacesAdapter;
-import com.example.carebridge.view.NearbyPlacesApi;
 import com.example.carebridge.model.NearbyPlace;
 import com.example.carebridge.model.NearbySearchResponse;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -61,8 +59,6 @@ public class FullMapActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_full_map);
 
-        Log.d(TAG, "Activity started");
-
         mapView = findViewById(R.id.fullMapView);
         mapView.onCreate(savedInstanceState);
 
@@ -81,14 +77,30 @@ public class FullMapActivity extends AppCompatActivity {
 
         try {
             MapsInitializer.initialize(this);
-            Log.d(TAG, "MapsInitializer success");
         } catch (Exception e) {
             Log.e(TAG, "MapsInitializer error", e);
         }
 
         mapView.getMapAsync(map -> {
             googleMap = map;
-            Log.d(TAG, "GoogleMap ready");
+
+            // Apply device theme map style
+            int currentNightMode = getResources().getConfiguration().uiMode
+                    & android.content.res.Configuration.UI_MODE_NIGHT_MASK;
+
+            int styleRes = currentNightMode == android.content.res.Configuration.UI_MODE_NIGHT_YES
+                    ? R.raw.map_style_dark
+                    : R.raw.map_style_light;
+
+            try {
+                boolean success = googleMap.setMapStyle(
+                        com.google.android.gms.maps.model.MapStyleOptions.loadRawResourceStyle(this, styleRes)
+                );
+                if (!success) Log.e(TAG, "Failed to parse map style.");
+            } catch (Exception e) {
+                Log.e(TAG, "Cannot find map style. Error: ", e);
+            }
+
             adapter.setMapReference(googleMap);
             enableUserLocation();
         });
@@ -112,11 +124,7 @@ public class FullMapActivity extends AppCompatActivity {
     }
 
     private void enableUserLocation() {
-        Log.d(TAG, "Checking permission...");
-
-        if (ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(
                     this,
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
@@ -128,12 +136,7 @@ public class FullMapActivity extends AppCompatActivity {
         googleMap.setMyLocationEnabled(true);
 
         fusedLocationClient.getLastLocation().addOnSuccessListener(location -> {
-            if (location == null) {
-                Log.e(TAG, "Location is NULL");
-                return;
-            }
-
-            Log.d(TAG, "User location: " + location.getLatitude() + ", " + location.getLongitude());
+            if (location == null) return;
 
             LatLng user = new LatLng(location.getLatitude(), location.getLongitude());
             googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(user, 15));
@@ -144,13 +147,11 @@ public class FullMapActivity extends AppCompatActivity {
     }
 
     private void fetchNearbyPlaces(Location userLocation) {
-        Log.d(TAG, "Fetching REAL nearby places via NearbySearch API...");
-
         String loc = userLocation.getLatitude() + "," + userLocation.getLongitude();
 
         Call<NearbySearchResponse> call = api.getNearbyPlaces(
                 loc,
-                2000,               // 2km radius
+                10000,
                 "hospital|pharmacy",
                 getString(R.string.google_maps_key)
         );
@@ -159,10 +160,7 @@ public class FullMapActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<NearbySearchResponse> call, Response<NearbySearchResponse> response) {
 
-                if (!response.isSuccessful()) {
-                    Log.e(TAG, "API Error: " + response.code());
-                    return;
-                }
+                if (!response.isSuccessful()) return;
 
                 nearbyPlacesList.clear();
                 googleMap.clear();
@@ -174,16 +172,9 @@ public class FullMapActivity extends AppCompatActivity {
                 );
 
                 NearbySearchResponse data = response.body();
-
-                if (data == null || data.results == null) {
-                    Log.e(TAG, "Empty response");
-                    return;
-                }
-
-                Log.d(TAG, "✅ Places found: " + data.results.size());
+                if (data == null || data.results == null) return;
 
                 for (NearbySearchResponse.Result r : data.results) {
-
                     double lat = r.geometry.location.lat;
                     double lng = r.geometry.location.lng;
 
@@ -192,8 +183,24 @@ public class FullMapActivity extends AppCompatActivity {
                             .title(r.name)
                     );
 
+                    // Calculate distance
+                    float[] results = new float[1];
+                    Location.distanceBetween(
+                            userLocation.getLatitude(),
+                            userLocation.getLongitude(),
+                            lat,
+                            lng,
+                            results
+                    );
+
+                    float distanceInMeters = results[0];
+                    String distanceText = distanceInMeters >= 1000
+                            ? String.format("%.1f km away", distanceInMeters / 1000)
+                            : String.format("%.0f m away", distanceInMeters);
+
+                    // Add NearbyPlace with distance and address
                     nearbyPlacesList.add(
-                            new NearbyPlace(r.name, new LatLng(lat, lng), r.vicinity)
+                            new NearbyPlace(r.name, new LatLng(lat, lng), distanceText, r.vicinity)
                     );
                 }
 

@@ -30,7 +30,7 @@ public class NearbyPlacesAdapter extends RecyclerView.Adapter<NearbyPlacesAdapte
         this.googleMap = map;
     }
 
-    // ✅ Allow map to be attached AFTER RecyclerView is created
+    // Allow attaching the map reference later
     public void setMapReference(GoogleMap map) {
         this.googleMap = map;
     }
@@ -47,9 +47,10 @@ public class NearbyPlacesAdapter extends RecyclerView.Adapter<NearbyPlacesAdapte
         NearbyPlace place = list.get(position);
 
         holder.name.setText(place.name);
+        holder.address.setText(place.address);
         holder.distance.setText(place.distance);
 
-        // ✅ Zoom to marker when clicked
+        // Zoom to marker when item clicked
         holder.itemView.setOnClickListener(v -> {
             if (googleMap != null) {
                 googleMap.animateCamera(
@@ -60,7 +61,7 @@ public class NearbyPlacesAdapter extends RecyclerView.Adapter<NearbyPlacesAdapte
             }
         });
 
-        // ✅ Open Google Maps navigation
+        // Open Google Maps navigation
         holder.btnNavigate.setOnClickListener(v -> {
             String uri = "google.navigation:q=" +
                     place.latLng.latitude + "," + place.latLng.longitude;
@@ -79,13 +80,14 @@ public class NearbyPlacesAdapter extends RecyclerView.Adapter<NearbyPlacesAdapte
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView name, distance;
+        TextView name, address, distance;
         Button btnNavigate;
 
         public ViewHolder(View v) {
             super(v);
 
             name = v.findViewById(R.id.tvPlaceName);
+            address = v.findViewById(R.id.tvPlaceAddress);
             distance = v.findViewById(R.id.tvPlaceDistance);
             btnNavigate = v.findViewById(R.id.btnNavigate);
         }

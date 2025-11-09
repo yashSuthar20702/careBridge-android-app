@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="@dimen/padding_medium"
-    android:background="@color/bg_patient_dashboard">
+    android:background="@color/background_light">
 
     <LinearLayout
         android:layout_width="match_parent"

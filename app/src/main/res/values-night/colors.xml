@@ -11,6 +11,8 @@
     <color name="input_background">#1E293B</color> <!-- Slightly lighter for inputs -->
     <color name="semi_transparent_white">#33FFFFFF</color> <!-- Low opacity for overlay cards -->
 
+    <color name="cardview_border">#4CAF50</color>
+
     <!-- Text Colors -->
     <color name="text_primary">#F3F4F6</color> <!-- Light gray / near white -->
     <color name="text_secondary">#D1D5DB</color> <!-- Medium gray -->

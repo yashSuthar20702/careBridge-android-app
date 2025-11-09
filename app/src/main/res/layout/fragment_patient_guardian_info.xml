@@ -4,7 +4,7 @@
     android:id="@+id/swipeRefreshLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_patient_dashboard">
+    android:background="@color/background_light">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -57,7 +57,7 @@
             android:visibility="gone"
             app:cardCornerRadius="@dimen/corner_radius_xlarge"
             app:strokeWidth="1dp"
-            app:cardBackgroundColor="@color/white">
+            app:cardBackgroundColor="@color/input_background">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -96,7 +96,7 @@
             android:gravity="center"
             android:visibility="gone"
             android:padding="@dimen/padding_large"
-            android:background="@drawable/bg_rounded_white"
+            android:background="@color/input_background"
             android:layout_marginBottom="@dimen/margin_medium" />
 
         <!-- Recycler View for Guardian Data: Displays list of assigned guardians -->

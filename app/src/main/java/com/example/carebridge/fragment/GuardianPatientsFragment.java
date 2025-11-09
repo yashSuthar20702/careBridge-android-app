@@ -203,11 +203,12 @@ public class GuardianPatientsFragment extends Fragment {
             tvStatus.setText(patient.getStatus());
 
             // Apply active/inactive status style
-            tvStatus.setBackgroundResource(
-                    "Active".equalsIgnoreCase(patient.getStatus()) ?
-                            R.drawable.bg_status_active :
-                            R.drawable.status_inactive_bg
-            );
+            if ("Active".equalsIgnoreCase(patient.getStatus())) {
+                tvStatus.setBackgroundResource(R.drawable.bg_status_active);
+            } else {
+                tvStatus.setBackgroundResource(R.drawable.bg_status_inactive);
+            }
+
 
             // Fill remaining info fields safely
             ((TextView) cardView.findViewById(R.id.tvPatientAge))

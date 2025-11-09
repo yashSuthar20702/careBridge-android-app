@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="@dimen/padding_medium"
-        android:background="@color/bg_patient_dashboard">
+        android:background="@color/background_light">
 
         <LinearLayout
             android:id="@+id/mainContainer"
@@ -112,7 +112,7 @@
                     android:layout_marginStart="@dimen/margin_small"
                     app:cardCornerRadius="@dimen/corner_radius_large"
                     app:cardElevation="@dimen/elevation_medium"
-                    app:cardBackgroundColor="@color/primary_blue">
+                    app:cardBackgroundColor="@color/accent_blue">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -175,7 +175,7 @@
                 android:layout_marginBottom="@dimen/margin_medium"
                 android:visibility="gone"
                 app:cardCornerRadius="@dimen/corner_radius_xlarge"
-                app:cardBackgroundColor="@color/white"
+                app:cardBackgroundColor="@color/input_background"
                 app:strokeWidth="1dp">
 
                 <LinearLayout

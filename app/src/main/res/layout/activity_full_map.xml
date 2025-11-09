@@ -12,7 +12,7 @@
     <!-- Header -->
     <LinearLayout
         android:orientation="horizontal"
-        android:background="@color/white"
+        android:background="@color/input_background"
         android:padding="12dp"
         android:elevation="10dp"
         android:layout_width="match_parent"
@@ -22,17 +22,19 @@
 
         <ImageView
             android:id="@+id/btnBack"
-            android:layout_width="28dp"
-            android:layout_height="28dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center_vertical"
             android:src="@drawable/ic_back_arrow"
-            android:padding="4dp" />
+            android:scaleType="centerInside"
+            android:contentDescription="Back" />
 
         <TextView
             android:layout_marginStart="12dp"
             android:text="Nearby Hospitals &amp; Medical Stores"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:textColor="@color/quantum_black_100"
+            android:textColor="@color/text_primary"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
     </LinearLayout>
@@ -41,7 +43,7 @@
     <LinearLayout
         android:id="@+id/bottomListContainer"
         android:orientation="vertical"
-        android:background="@drawable/bg_card_rounded"
+        android:background="@color/gray_light"
         android:padding="16dp"
         android:elevation="10dp"
         android:layout_width="match_parent"
@@ -51,7 +53,7 @@
         <TextView
             android:id="@+id/tvNearbyTitle"
             android:text="Nearby Places"
-            android:textColor="@color/quantum_black_100"
+            android:textColor="@color/text_primary"
             android:textSize="18sp"
             android:textStyle="bold"
             android:layout_width="wrap_content"

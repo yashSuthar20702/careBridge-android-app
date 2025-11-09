@@ -197,6 +197,42 @@
                         android:textStyle="bold"
                         android:layout_marginBottom="8dp" />
 
+                    <!-- Warning Card for No Data / Connection Lost -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/cardWarning"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:visibility="gone"
+                        app:cardCornerRadius="12dp"
+                        app:strokeWidth="1dp"
+                        app:cardBackgroundColor="@color/input_background">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:padding="12dp"
+                            android:gravity="center_vertical">
+
+                            <ImageView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:src="@drawable/ic_warning"
+                                android:layout_marginEnd="8dp"
+                                app:tint="@color/warning_yellow" />
+
+                            <TextView
+                                android:id="@+id/tvWarningMessage"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:text="No data loaded. Check your connection."
+                                android:textColor="@color/text_primary"
+                                android:textSize="16sp"/>
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
                     <TextView
                         android:id="@+id/tvNoMedicines"
                         android:layout_width="match_parent"
@@ -223,7 +259,7 @@
                 app:cardCornerRadius="16dp"
                 app:cardElevation="6dp"
                 android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="@color/white">
+                app:cardBackgroundColor="@color/input_background">
 
                 <FrameLayout
                     android:layout_width="match_parent"
@@ -247,7 +283,6 @@
                 </FrameLayout>
 
             </androidx.cardview.widget.CardView>
-
 
             <!-- 🧠 WELLNESS SECTION -->
             <TextView

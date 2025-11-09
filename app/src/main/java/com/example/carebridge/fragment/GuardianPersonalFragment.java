@@ -1,9 +1,6 @@
 package com.example.carebridge.fragment;
 
-import android.graphics.Typeface;
 import android.os.Bundle;
-import android.text.SpannableString;
-import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +24,7 @@ public class GuardianPersonalFragment extends Fragment {
 
     private TextView tvName, tvType, tvOccupation, tvAvailability, tvNotes;
     private TextView tvPhone, tvEmail, tvAddress;
+
     private ShimmerFrameLayout shimmerLayout;
     private SwipeRefreshLayout swipeRefreshLayout;
 
@@ -58,24 +56,24 @@ public class GuardianPersonalFragment extends Fragment {
 
     /** Initialize all view references */
     private void bindViews(View view) {
-        shimmerLayout = view.findViewById(R.id.shimmerLayout);
+        shimmerLayout   = view.findViewById(R.id.shimmerLayout);
         swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
-        cardWarning = view.findViewById(R.id.cardWarning);
+        cardWarning     = view.findViewById(R.id.cardWarning);
 
-        // Personal Info fields
-        tvName = view.findViewById(R.id.tvName);
-        tvType = view.findViewById(R.id.tvType);
-        tvOccupation = view.findViewById(R.id.tvOccupation);
-        tvAvailability = view.findViewById(R.id.tvAvailability);
-        tvNotes = view.findViewById(R.id.tvNotes);
+        // Personal Info
+        tvName          = view.findViewById(R.id.tvName);
+        tvType          = view.findViewById(R.id.tvType);
+        tvOccupation    = view.findViewById(R.id.tvOccupation);
+        tvAvailability  = view.findViewById(R.id.tvAvailability);
+        tvNotes         = view.findViewById(R.id.tvNotes);
 
-        // Contact Info fields
-        tvPhone = view.findViewById(R.id.tvPhone);
-        tvEmail = view.findViewById(R.id.tvEmail);
-        tvAddress = view.findViewById(R.id.tvAddress);
+        // Contact Info
+        tvPhone         = view.findViewById(R.id.tvPhone);
+        tvEmail         = view.findViewById(R.id.tvEmail);
+        tvAddress       = view.findViewById(R.id.tvAddress);
     }
 
-    /** Fetch guardian data from API with loading states */
+    /** Fetch guardian data */
     private void fetchGuardianData() {
         if (rootView == null) return;
 
@@ -89,7 +87,7 @@ public class GuardianPersonalFragment extends Fragment {
             public void onSuccess(GuardianInfo guardianInfo) {
                 if (!isAdded()) return;
 
-                getActivity().runOnUiThread(() -> {
+                requireActivity().runOnUiThread(() -> {
                     shimmerLayout.stopShimmer();
                     shimmerLayout.setVisibility(View.GONE);
                     swipeRefreshLayout.setRefreshing(false);
@@ -107,7 +105,7 @@ public class GuardianPersonalFragment extends Fragment {
             public void onFailure(String message) {
                 if (!isAdded()) return;
 
-                getActivity().runOnUiThread(() -> {
+                requireActivity().runOnUiThread(() -> {
                     shimmerLayout.stopShimmer();
                     shimmerLayout.setVisibility(View.GONE);
                     swipeRefreshLayout.setRefreshing(false);
@@ -122,35 +120,30 @@ public class GuardianPersonalFragment extends Fragment {
         });
     }
 
-    /** Display warning message for errors */
+    /** Show warning card */
     private void showWarning(String message) {
         cardWarning.setVisibility(View.VISIBLE);
-        TextView tvWarningMessage = cardWarning.findViewById(R.id.tvWarningMessage);
-        tvWarningMessage.setText(message);
+        TextView msg = cardWarning.findViewById(R.id.tvWarningMessage);
+        msg.setText(message);
     }
 
-    /** Populate UI with guardian information */
+    /** Populate UI: ALL LABELS REMOVED */
     private void displayGuardianInfo(GuardianInfo guardianInfo) {
-        setBoldLabel(tvName, getString(R.string.full_name_label), safeString(guardianInfo.getFull_name()));
-        setBoldLabel(tvType, getString(R.string.type_label), safeString(guardianInfo.getType()));
-        setBoldLabel(tvOccupation, getString(R.string.occupation_label), safeString(guardianInfo.getOccupation()));
-        setBoldLabel(tvAvailability, getString(R.string.availability_label), safeString(guardianInfo.getAvailability()));
-        setBoldLabel(tvNotes, getString(R.string.notes_label), safeString(guardianInfo.getNotes()));
+        tvName.setText(safeString(guardianInfo.getFull_name()));
+        tvType.setText(safeString(guardianInfo.getType()));
+        tvOccupation.setText(safeString(guardianInfo.getOccupation()));
+        tvAvailability.setText(safeString(guardianInfo.getAvailability()));
+        tvNotes.setText(safeString(guardianInfo.getNotes()));
 
-        setBoldLabel(tvPhone, getString(R.string.phone_label), safeString(guardianInfo.getPhone()));
-        setBoldLabel(tvEmail, getString(R.string.email_label), safeString(guardianInfo.getEmail()));
-        setBoldLabel(tvAddress, getString(R.string.address_label), safeString(guardianInfo.getAddress()));
+        tvPhone.setText(safeString(guardianInfo.getPhone()));
+        tvEmail.setText(safeString(guardianInfo.getEmail()));
+        tvAddress.setText(safeString(guardianInfo.getAddress()));
     }
 
-    /** Apply bold styling to label text */
-    private void setBoldLabel(TextView textView, String label, String value) {
-        SpannableString spannable = new SpannableString(label + " " + value);
-        spannable.setSpan(new StyleSpan(Typeface.BOLD), 0, label.length(), 0);
-        textView.setText(spannable);
-    }
-
-    /** Handle null or empty string values */
+    /** Safe string utility */
     private String safeString(String value) {
-        return (value != null && !value.isEmpty()) ? value : getString(R.string.not_available_text);
+        return (value != null && !value.trim().isEmpty())
+                ? value
+                : getString(R.string.not_available_text);
     }
 }

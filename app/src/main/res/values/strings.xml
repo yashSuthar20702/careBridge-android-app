@@ -110,9 +110,9 @@
     <string name="no_guardian_assigned_message">No guardian assigned yet. Contact your doctor.</string>
 
     <!-- Patient info screen titles and messages -->
-    <string name="personal_info_title">👤 Personal Info</string>
-    <string name="medical_info_title">💉 Medical Info</string>
-    <string name="contact_info_title">📞 Contact Info</string>
+    <string name="personal_info_title">Personal Info</string>
+    <string name="medical_info_title">Medical Info</string>
+    <string name="contact_info_title">Contact Info</string>
     <string name="network_error_retry_message">Network error. Please check your connection and swipe down to retry.</string>
 
     <string name="call_guardian_button">Call Guardian</string>

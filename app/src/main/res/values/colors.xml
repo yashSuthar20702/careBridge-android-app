@@ -11,6 +11,8 @@
     <color name="input_background">#F8FAFC</color>
     <color name="semi_transparent_white">#80FFFFFF</color> <!-- Slight transparency for cards -->
 
+    <color name="cardview_border">#000000</color>
+
     <!-- Text Colors -->
     <color name="text_primary">#1F2937</color> <!-- Dark gray -->
     <color name="text_secondary">#4B5563</color> <!-- Medium gray -->
