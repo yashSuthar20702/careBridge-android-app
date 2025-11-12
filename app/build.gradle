@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
+    id 'com.google.gms.google-services'
 }
 
 android {
@@ -70,8 +71,13 @@ dependencies {
 
     // CardView (Material2 compatibility if needed)
     implementation 'androidx.cardview:cardview:1.0.0'
-
     implementation 'com.tbuonomo:dotsindicator:4.3'
+
+    //Firebase
+    // Firebase
+    implementation platform('com.google.firebase:firebase-bom:34.5.0')
+    implementation 'com.google.firebase:firebase-analytics'
+    implementation 'com.google.firebase:firebase-messaging'
 
 
 }
