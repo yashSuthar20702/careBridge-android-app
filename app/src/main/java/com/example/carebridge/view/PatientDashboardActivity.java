@@ -1,14 +1,20 @@
 package com.example.carebridge.view;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.carebridge.R;
@@ -21,12 +27,24 @@ import com.google.android.material.button.MaterialButton;
 /** Main dashboard activity for patient users with navigation and session management */
 public class PatientDashboardActivity extends AppCompatActivity {
 
+    private static final String TAG = "PatientDashboard";
+
     private TextView tvPatientName, tvWelcome;
     private MaterialButton btnHeaderLogout;
     private ViewPager2 viewPager;
     private BottomNavigationView bottomNavigationView;
     private AuthController authController;
     private User currentUser;
+
+    // ✅ Permission launcher for Android 13+
+    private final ActivityResultLauncher<String> requestNotificationPermission =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (isGranted) {
+                    Log.d(TAG, "✅ Notification permission granted");
+                } else {
+                    Log.w(TAG, "⚠️ Notification permission denied");
+                }
+            });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,12 +61,11 @@ public class PatientDashboardActivity extends AppCompatActivity {
         viewPager = findViewById(R.id.viewPager);
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
 
-        if (currentUser != null && currentUser.getPatientInfo() != null) {
+        if (currentUser != null && currentUser.getPatientInfo() != null)
             tvPatientName.setText(currentUser.getPatientInfo().getFull_name());
-        }
 
         viewPager.setAdapter(new PatientDashboardPagerAdapter(this));
-        viewPager.setUserInputEnabled(false); //  swipe enabled
+        viewPager.setUserInputEnabled(false);
 
         bottomNavigationView.setOnItemSelectedListener(item -> {
             int itemId = item.getItemId();
@@ -68,7 +85,6 @@ public class PatientDashboardActivity extends AppCompatActivity {
         viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
-                super.onPageSelected(position);
                 switch (position) {
                     case 0: bottomNavigationView.setSelectedItemId(R.id.nav_home); break;
                     case 1: bottomNavigationView.setSelectedItemId(R.id.nav_personal); break;
@@ -77,32 +93,40 @@ public class PatientDashboardActivity extends AppCompatActivity {
             }
         });
 
-        // Custom logout dialog
         btnHeaderLogout.setOnClickListener(v -> showLogoutDialog());
+
+        // ✅ Ask notification permission after login success
+        requestNotificationPermissionIfNeeded();
+    }
+
+    private void requestNotificationPermissionIfNeeded() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+                    != PackageManager.PERMISSION_GRANTED) {
+                Log.d(TAG, "🔔 Requesting notification permission");
+                requestNotificationPermission.launch(Manifest.permission.POST_NOTIFICATIONS);
+            } else {
+                Log.d(TAG, "✅ Notification permission already granted");
+            }
+        }
     }
 
     private void showLogoutDialog() {
         View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_logout, null);
-
         MaterialButton btnCancel = dialogView.findViewById(R.id.btnCancel);
         MaterialButton btnLogout = dialogView.findViewById(R.id.btnLogout);
 
-        //  Guardian → Accent Blue
-        btnLogout.setBackgroundTintList(
-                getColorStateList(R.color.status_active)
-        );
+        btnLogout.setBackgroundTintList(getColorStateList(R.color.status_active));
 
         AlertDialog dialog = new AlertDialog.Builder(this, R.style.CustomDialogStyle)
                 .setView(dialogView)
                 .setCancelable(true)
                 .create();
 
-        if (dialog.getWindow() != null) {
+        if (dialog.getWindow() != null)
             dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        }
 
         btnCancel.setOnClickListener(v -> dialog.dismiss());
-
         btnLogout.setOnClickListener(v -> {
             dialog.dismiss();
             authController.logout();
