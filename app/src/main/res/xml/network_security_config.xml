@@ -11,5 +11,9 @@
         <!-- Fallbacks for local testing -->
         <domain includeSubdomains="true">localhost</domain>
         <domain includeSubdomains="true">127.0.0.1</domain>
+
+
+        <domain includeSubdomains="true">172.20.10.3</domain>
+        <domain includeSubdomains="true">10.144.99.26</domain>
     </domain-config>
 </network-security-config>

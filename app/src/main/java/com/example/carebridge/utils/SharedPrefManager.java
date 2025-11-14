@@ -7,19 +7,18 @@ import com.example.carebridge.model.User;
 import com.google.gson.Gson;
 
 public class SharedPrefManager {
+
     private static final String PREF_NAME = "CareBridgePref";
     private static final String KEY_IS_LOGGED_IN = "isLoggedIn";
     private static final String KEY_USER = "user";
     private static final String KEY_CASE_ID = "case_id";
     private static final String KEY_REFERENCE_ID = "reference_id";
 
-    private SharedPreferences sharedPreferences;
-    private SharedPreferences.Editor editor;
-    private Context context;
-    private Gson gson;
+    private final SharedPreferences sharedPreferences;
+    private final SharedPreferences.Editor editor;
+    private final Gson gson;
 
     public SharedPrefManager(Context context) {
-        this.context = context;
         sharedPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
         gson = new Gson();
@@ -27,16 +26,13 @@ public class SharedPrefManager {
 
     // Save user session
     public void saveUserSession(User user) {
-        String userJson = gson.toJson(user);
-        editor.putString(KEY_USER, userJson);
+        editor.putString(KEY_USER, gson.toJson(user));
         editor.putBoolean(KEY_IS_LOGGED_IN, true);
 
-        // Save caseId separately if available
         if (user.getPatientInfo() != null && user.getPatientInfo().getCase_id() != null) {
             editor.putString(KEY_CASE_ID, user.getPatientInfo().getCase_id());
         }
 
-        // Save referenceId for Guardian
         if (user.getReferenceId() != null && !user.getReferenceId().isEmpty()) {
             editor.putString(KEY_REFERENCE_ID, user.getReferenceId());
         }
@@ -44,21 +40,18 @@ public class SharedPrefManager {
         editor.apply();
     }
 
-    // Check login status
+    // Login state
     public boolean isLoggedIn() {
         return sharedPreferences.getBoolean(KEY_IS_LOGGED_IN, false);
     }
 
-    // Get current user
+    // Return logged in user
     public User getCurrentUser() {
-        String userJson = sharedPreferences.getString(KEY_USER, null);
-        if (userJson != null) {
-            return gson.fromJson(userJson, User.class);
-        }
-        return null;
+        String json = sharedPreferences.getString(KEY_USER, null);
+        return json != null ? gson.fromJson(json, User.class) : null;
     }
 
-    // Clear session
+    // Clear full session
     public void clearSession() {
         editor.clear();
         editor.apply();
@@ -68,7 +61,7 @@ public class SharedPrefManager {
         clearSession();
     }
 
-    // CaseId methods
+    // CaseId functions
     public void saveCaseId(String caseId) {
         editor.putString(KEY_CASE_ID, caseId);
         editor.apply();
@@ -78,13 +71,23 @@ public class SharedPrefManager {
         return sharedPreferences.getString(KEY_CASE_ID, "");
     }
 
-    // ReferenceId methods for Guardian
-    public void saveReferenceId(String referenceId) {
-        editor.putString(KEY_REFERENCE_ID, referenceId);
+    public void clearCaseId() {
+        editor.remove(KEY_CASE_ID);
+        editor.apply();
+    }
+
+    // Reference ID functions
+    public void saveReferenceId(String refId) {
+        editor.putString(KEY_REFERENCE_ID, refId);
         editor.apply();
     }
 
     public String getReferenceId() {
         return sharedPreferences.getString(KEY_REFERENCE_ID, "");
+    }
+
+    public void clearReferenceId() {
+        editor.remove(KEY_REFERENCE_ID);
+        editor.apply();
     }
 }

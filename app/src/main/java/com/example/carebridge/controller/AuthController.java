@@ -5,10 +5,11 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
-import com.example.carebridge.model.User;
 import com.example.carebridge.model.PatientInfo;
+import com.example.carebridge.model.User;
 import com.example.carebridge.utils.ApiConstants;
 import com.example.carebridge.utils.SharedPrefManager;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
 
 import org.json.JSONException;
@@ -16,139 +17,259 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
+import okhttp3.*;
 
 public class AuthController {
 
     private static final String TAG = "AuthController";
-    private final Context context;
     private final SharedPrefManager sharedPrefManager;
     private final OkHttpClient client;
 
-    // Use constants instead of hardcoded URLs
-    // private static final String BASE_URL = "http://10.0.2.2/CareBridge/careBridge-web-app/careBridge-website/endpoints/auth/";
-    // private static final String LOGIN_URL = BASE_URL + "login.php";
-
     public AuthController(Context context) {
-        this.context = context;
         this.sharedPrefManager = new SharedPrefManager(context);
         this.client = new OkHttpClient();
-        Log.d(TAG, "[INIT] AuthController initialized");
     }
 
+    // ============================
+    // LOGIN
+    // ============================
     public interface LoginCallback {
         void onSuccess(User user);
         void onFailure(String message);
     }
 
     public void login(String username, String password, LoginCallback callback) {
+
+        Log.d(TAG, "Login request started...");
+
         JSONObject json = new JSONObject();
         try {
             json.put("username", username);
             json.put("password", password);
-            Log.d(TAG, "[LOGIN REQUEST] JSON: " + json.toString());
+
+            Log.d(TAG, "Login JSON body: " + json.toString());
+
         } catch (JSONException e) {
-            Log.e(TAG, "[LOGIN ERROR] JSON creation failed", e);
-            callback.onFailure("Error creating request JSON");
+            Log.e(TAG, "Error creating login JSON: " + e.getMessage());
+            callback.onFailure("Error building JSON");
             return;
         }
 
-        RequestBody body = RequestBody.create(json.toString(), MediaType.get("application/json; charset=utf-8"));
+        RequestBody body = RequestBody.create(
+                json.toString(),
+                MediaType.get("application/json; charset=utf-8")
+        );
+
         Request request = new Request.Builder()
                 .url(ApiConstants.getLoginUrl())
-                .post(body).build();
+                .post(body)
+                .build();
+
+        Log.d(TAG, "Login API URL: " + ApiConstants.getLoginUrl());
 
         client.newCall(request).enqueue(new Callback() {
-            final Handler mainHandler = new Handler(Looper.getMainLooper());
+            final Handler handler = new Handler(Looper.getMainLooper());
 
             @Override
             public void onFailure(Call call, IOException e) {
-                Log.e(TAG, "[NETWORK ERROR] " + e.getMessage());
-                mainHandler.post(() -> callback.onFailure("Network error: " + e.getMessage()));
+                Log.e(TAG, "Login API FAILED: " + e.getMessage());
+                handler.post(() -> callback.onFailure("Network error"));
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                String resString = response.body() != null ? response.body().string() : "";
-                Log.d(TAG, "[RESPONSE] " + resString);
 
-                mainHandler.post(() -> {
+                String responseStr = response.body().string();
+                Log.d(TAG, "Login API Response: " + responseStr);
+
+                handler.post(() -> {
                     try {
-                        JSONObject resJson = new JSONObject(resString);
-                        String status = resJson.optString("status");
-                        String message = resJson.optString("message");
+                        JSONObject res = new JSONObject(responseStr);
 
-                        if ("success".equalsIgnoreCase(status)) {
-                            JSONObject userJson = resJson.getJSONObject("user");
-                            User user = new User();
-                            user.setId(userJson.optInt("user_id"));
-                            user.setUsername(userJson.optString("username"));
-                            user.setRole(userJson.optString("role"));
-                            user.setReferenceId(userJson.optString("reference_id"));
-                            user.setCreatedAt(userJson.optString("created_at"));
-
-                            JSONObject linkedDataJson = userJson.optJSONObject("linked_data");
-                            String caseIdToSave;
-                            if (linkedDataJson != null && linkedDataJson.length() > 0) {
-                                PatientInfo patientInfo = new Gson().fromJson(linkedDataJson.toString(), PatientInfo.class);
-                                user.setPatientInfo(patientInfo);
-                                Log.d(TAG, "[PATIENT INFO] " + patientInfo.toString());
-
-                                caseIdToSave = (patientInfo.getCase_id() != null && !patientInfo.getCase_id().isEmpty())
-                                        ? patientInfo.getCase_id()
-                                        : user.getReferenceId();
-
-                            } else {
-                                Log.w(TAG, "[PATIENT INFO] linked_data is empty or null");
-                                user.setPatientInfo(new PatientInfo());
-                                caseIdToSave = user.getReferenceId();
-                            }
-
-                            final String finalCaseId = caseIdToSave;
-                            new Thread(() -> {
-                                sharedPrefManager.saveUserSession(user);
-                                sharedPrefManager.saveCaseId(finalCaseId);
-                                sharedPrefManager.saveReferenceId(user.getReferenceId());
-
-                                Log.d(TAG, "[SESSION] User session saved: " + user.getUsername());
-                                Log.d(TAG, "[SESSION] Case ID saved: " + sharedPrefManager.getCaseId());
-                                Log.d(TAG, "[SESSION] Reference ID saved: " + sharedPrefManager.getReferenceId());
-                            }).start();
-
-                            callback.onSuccess(user);
-                        } else {
-                            callback.onFailure(message.isEmpty() ? "Login failed" : message);
+                        if (!"success".equalsIgnoreCase(res.optString("status"))) {
+                            Log.e(TAG, "Login failed: " + res.optString("message"));
+                            callback.onFailure(res.optString("message", "Login failed"));
+                            return;
                         }
 
-                    } catch (JSONException e) {
-                        Log.e(TAG, "[RESPONSE ERROR] Invalid server response", e);
-                        callback.onFailure("Invalid server response");
+                        JSONObject userJson = res.getJSONObject("user");
+                        Log.d(TAG, "User JSON received: " + userJson.toString());
+
+                        User user = new User();
+                        user.setId(userJson.getInt("user_id"));
+                        user.setUsername(userJson.getString("username"));
+                        user.setRole(userJson.getString("role"));
+                        user.setReferenceId(userJson.optString("reference_id"));
+                        user.setCreatedAt(userJson.optString("created_at"));
+
+                        JSONObject linked = userJson.optJSONObject("linked_data");
+                        String caseIdToStore;
+
+                        if (linked != null && linked.length() > 0) {
+                            Log.d(TAG, "Linked data found: " + linked.toString());
+
+                            PatientInfo pi =
+                                    new Gson().fromJson(linked.toString(), PatientInfo.class);
+
+                            user.setPatientInfo(pi);
+
+                            caseIdToStore = pi.getCase_id() != null ?
+                                    pi.getCase_id() :
+                                    user.getReferenceId();
+
+                        } else {
+                            Log.d(TAG, "No linked data found.");
+                            user.setPatientInfo(new PatientInfo());
+                            caseIdToStore = user.getReferenceId();
+                        }
+
+                        sharedPrefManager.saveUserSession(user);
+                        sharedPrefManager.saveCaseId(caseIdToStore);
+                        sharedPrefManager.saveReferenceId(user.getReferenceId());
+
+                        Log.d(TAG, "User session saved successfully.");
+                        saveFcmTokenToServer(user.getId());
+
+                        callback.onSuccess(user);
+
+                    } catch (Exception e) {
+                        Log.e(TAG, "Error parsing login response: " + e.getMessage());
+                        callback.onFailure("Invalid response");
                     }
                 });
             }
         });
     }
 
+    // ============================
+    // SAVE FCM TOKEN ON LOGIN
+    // ============================
+    public void saveFcmTokenToServer(int userId) {
+
+        Log.d(TAG, "Fetching FCM token to store in server...");
+
+        FirebaseMessaging.getInstance().getToken().addOnSuccessListener(token -> {
+
+            Log.d(TAG, "FCM Token received: " + token);
+
+            try {
+                JSONObject json = new JSONObject();
+                json.put("user_id", userId);
+                json.put("fcm_token", token);
+
+                Log.d(TAG, "JSON for save token: " + json.toString());
+                Log.d(TAG, "Save Token API: " + ApiConstants.getUpdateFcmTokenUrl());
+
+                RequestBody body = RequestBody.create(
+                        json.toString(),
+                        MediaType.get("application/json; charset=utf-8")
+                );
+
+                Request request = new Request.Builder()
+                        .url(ApiConstants.getUpdateFcmTokenUrl())
+                        .post(body)
+                        .build();
+
+                client.newCall(request).enqueue(new Callback() {
+                    @Override
+                    public void onFailure(Call c, IOException e) {
+                        Log.e(TAG, "Failed to save FCM token: " + e.getMessage());
+                    }
+
+                    @Override
+                    public void onResponse(Call c, Response r) {
+                        try {
+                            String resp = r.body().string();
+                            Log.d(TAG, "Save FCM token API response: " + resp);
+                        } catch (Exception ignored) {}
+                    }
+                });
+
+            } catch (Exception e) {
+                Log.e(TAG, "Error building JSON for token save: " + e.getMessage());
+            }
+        });
+    }
+
+    // ============================
+    // LOGOUT
+    // ============================
     public void logout() {
-        Log.d(TAG, "[LOGOUT] Clearing session");
+
+        Log.d(TAG, "Logout started...");
+        User user = sharedPrefManager.getCurrentUser();
+
+        if (user == null) {
+            Log.e(TAG, "No user found in session.");
+            return;
+        }
+
+        int userId = user.getId();
+        Log.d(TAG, "Logging out userId=" + userId);
+
+        deleteFcmTokenFromServer(userId);
+
+        FirebaseMessaging.getInstance().deleteToken()
+                .addOnSuccessListener(a -> Log.d(TAG, "FCM token deleted locally"))
+                .addOnFailureListener(e -> Log.e(TAG, "Failed to delete token locally: " + e.getMessage()));
+
         sharedPrefManager.clearSession();
+        sharedPrefManager.clearCaseId();
+        sharedPrefManager.clearReferenceId();
+        Log.d(TAG, "Local SharedPref session cleared.");
+    }
+
+    // ============================
+    // DELETE TOKEN API
+    // ============================
+    private void deleteFcmTokenFromServer(int userId) {
+
+        Log.d(TAG, "Deleting FCM token from server for userId=" + userId);
+
+        JSONObject json = new JSONObject();
+        try {
+            json.put("user_id", userId);
+            Log.d(TAG, "Delete token JSON: " + json.toString());
+
+        } catch (JSONException e) {
+            Log.e(TAG, "Failed to create JSON for token delete: " + e.getMessage());
+        }
+
+        Log.d(TAG, "Delete Token API URL: " + ApiConstants.getDeleteFcmTokenUrl());
+
+        RequestBody body = RequestBody.create(
+                json.toString(),
+                MediaType.get("application/json; charset=utf-8")
+        );
+
+        Request request = new Request.Builder()
+                .url(ApiConstants.getDeleteFcmTokenUrl())
+                .post(body)
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.e(TAG, "Delete token API FAILED: " + e.getMessage());
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) {
+                try {
+                    String resp = response.body().string();
+                    Log.d(TAG, "Delete token API response: " + resp);
+                } catch (Exception e) {
+                    Log.e(TAG, "Error reading delete response: " + e.getMessage());
+                }
+            }
+        });
     }
 
     public boolean isLoggedIn() {
-        boolean loggedIn = sharedPrefManager.isLoggedIn();
-        Log.d(TAG, "[SESSION CHECK] isLoggedIn=" + loggedIn);
-        return loggedIn;
+        return sharedPrefManager.isLoggedIn();
     }
 
     public User getCurrentUser() {
-        User user = sharedPrefManager.getCurrentUser();
-        Log.d(TAG, "[SESSION USER] " + (user != null ? user.getUsername() : "null"));
-        return user;
+        return sharedPrefManager.getCurrentUser();
     }
 }

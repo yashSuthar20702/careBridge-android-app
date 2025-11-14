@@ -1,6 +1,8 @@
 package com.example.carebridge.utils;
 
-/** API configuration utility providing centralized endpoint management and host configuration */
+/**
+ * API configuration utility providing centralized endpoint management and host configuration
+ */
 public class ApiConstants {
 
     // Development flag to toggle between local testing and production server
@@ -8,7 +10,9 @@ public class ApiConstants {
 
     // Host configuration for different environments
     private static final String LOCALHOST_IP = "10.0.2.2"; // Android emulator localhost
-    private static final String DEVICE_SERVER_IP = "10.0.0.165"; // Production server
+//    private static final String DEVICE_SERVER_IP = "10.0.0.165"; // Production server
+
+    private static final String DEVICE_SERVER_IP = "10.144.99.26"; // Production server
 
     // Dynamic host selection based on environment flag
     public static String getBaseHost() {
@@ -39,7 +43,22 @@ public class ApiConstants {
         return "http://" + getBaseHost() + API_ROOT + "prescription/";
     }
 
-    // Specific API endpoint generators with parameter support
+    // ------------------------------------------------------
+    // ⭐ NEW: FCM API BASE URL
+    // ------------------------------------------------------
+    public static String getFcmBaseUrl() {
+        return "http://" + getBaseHost() + API_ROOT + "users/";
+    }
+
+    public static String getUpdateFcmTokenUrl() {
+        return getFcmBaseUrl() + "save_fcm_token.php";
+    }
+
+    public static String getDeleteFcmTokenUrl() {
+        return getFcmBaseUrl() + "delete_fcm_token.php";
+    }
+
+    // Specific API endpoint generators
     public static String getLoginUrl() {
         return getAuthBaseUrl() + "login.php";
     }
@@ -60,7 +79,6 @@ public class ApiConstants {
         return getPatientGuardianAssignmentBaseUrl() + "getByGuardian.php?guardian_id=" + guardianId;
     }
 
-    // Prescription API endpoint
     public static String getPrescriptionByCaseIdUrl(String caseId) {
         return getPrescriptionBaseUrl() + "get.php?case_id=" + caseId;
     }
