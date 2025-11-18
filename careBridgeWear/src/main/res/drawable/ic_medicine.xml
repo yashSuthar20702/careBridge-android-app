@@ -1,0 +1,16 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+
+    <!-- Medicine capsule body -->
+    <path
+        android:fillColor="@color/status_active"
+        android:pathData="M18,8c2.21,0 4,1.79 4,4s-1.79,4 -4,4H6c-2.21,0 -4,-1.79 -4,-4s1.79,-4 4,-4H18z"/>
+
+    <!-- Medical cross -->
+    <path
+        android:fillColor="@color/white"
+        android:pathData="M13,9v2h2v2h-2v2h-2v-2H9v-2h2V9h2z"/>
+</vector>

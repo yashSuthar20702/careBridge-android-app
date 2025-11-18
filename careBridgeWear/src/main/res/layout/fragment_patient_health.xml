@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_patient_dashboard"
+    android:padding="16dp"
+    android:focusable="true"
+    android:clickable="true"
+    android:focusableInTouchMode="true">
+
+    <!-- Title -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/health_screen_title"
+        android:textColor="@color/text_primary"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="0dp"
+        android:focusable="false"
+        android:clickable="false" />
+
+    <!-- Health Data Container -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="-10dp"
+        android:focusable="false"
+        android:clickable="false">
+
+        <TextView
+            android:id="@+id/tv_heart_rate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/heart_rate"
+            android:textColor="@color/text_primary"
+            android:textSize="14sp"
+            android:textAlignment="center"
+            android:layout_marginBottom="1dp"
+            android:focusable="false"
+            android:clickable="false" />
+
+        <TextView
+            android:id="@+id/tv_blood_pressure"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/blood_pressure"
+            android:textColor="@color/text_primary"
+            android:textSize="14sp"
+            android:textAlignment="center"
+            android:layout_marginBottom="1dp"
+            android:focusable="false"
+            android:clickable="false" />
+
+        <TextView
+            android:id="@+id/tv_last_check"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/last_check"
+            android:textColor="@color/text_secondary"
+            android:textSize="12sp"
+            android:textAlignment="center"
+            android:focusable="false"
+            android:clickable="false" />
+
+    </LinearLayout>
+
+    <!-- Swipe Hint -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/swipe_to_go_back"
+        android:textColor="@color/text_secondary"
+        android:textSize="10sp"
+        android:textAlignment="center"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="20dp"
+        android:focusable="false"
+        android:clickable="false" />
+
+</RelativeLayout>

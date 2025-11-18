@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_patient_dashboard"
+    android:padding="16dp"
+    android:focusable="true"
+    android:clickable="true"
+    android:focusableInTouchMode="true">
+
+    <!-- Title -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/call_screen_title"
+        android:textColor="@color/text_primary"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
+        android:focusable="false"
+        android:clickable="false" />
+
+    <!-- Horizontal Button Container -->
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="20dp"
+        android:focusable="false"
+        android:clickable="false">
+
+        <!-- Emergency Call Button -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="25dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:focusable="false"
+            android:clickable="false">
+
+            <ImageButton
+                android:id="@+id/btn_emergency_call"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/round_button_bg"
+                android:contentDescription="@string/emergency_call"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_call"
+                android:focusable="true"
+                android:clickable="true" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/emergency"
+                android:textAlignment="center"
+                android:textColor="@color/text_primary"
+                android:textSize="12sp"
+                android:focusable="false"
+                android:clickable="false" />
+
+            <TextView
+                android:id="@+id/tv_emergency_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="@string/emergency_number"
+                android:textAlignment="center"
+                android:textColor="@color/text_secondary"
+                android:textSize="10sp"
+                android:focusable="false"
+                android:clickable="false" />
+
+        </LinearLayout>
+
+        <!-- Guardian Call Button -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:focusable="false"
+            android:clickable="false">
+
+            <ImageButton
+                android:id="@+id/btn_guardian_call"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/round_button_bg"
+                android:contentDescription="@string/call_guardian"
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_guardian"
+                android:focusable="true"
+                android:clickable="true" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/guardian"
+                android:textAlignment="center"
+                android:textColor="@color/text_primary"
+                android:textSize="12sp"
+                android:focusable="false"
+                android:clickable="false" />
+
+            <TextView
+                android:id="@+id/tv_guardian_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="@string/guardian_name"
+                android:textAlignment="center"
+                android:textColor="@color/text_secondary"
+                android:textSize="10sp"
+                android:focusable="false"
+                android:clickable="false" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</RelativeLayout>
