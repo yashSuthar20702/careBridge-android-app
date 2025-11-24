@@ -7,7 +7,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.carebridge.R;
-import com.example.carebridge.model.Medication;
+import com.example.carebridge.shared.model.Medication;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -81,25 +81,25 @@ public class MedicationAdapter extends RecyclerView.Adapter<MedicationAdapter.Me
         }
 
         void bind(Medication medication) {
-            // Medicine name
-            tvMedName.setText(medication.getMedicine_name());
+            // Medicine name - FIXED
+            tvMedName.setText(medication.getMedicineName());  // ✅ camelCase
 
-            // Dosage
-            tvMedDosage.setText("Dosage: " + medication.getDosage());
+            // Dosage - FIXED
+            tvMedDosage.setText("Dosage: " + medication.getDosage());  // ✅ correct
 
             // Timing (Morning, Afternoon, etc.)
             String timeSummary = medication.getTimeSummary();
             tvMedTime.setText(timeSummary.isEmpty() ? "Timing: N/A" : "Take at: " + timeSummary);
 
-            // Duration
-            tvMedDuration.setText("For " + medication.getDuration_days() + " days");
+            // Duration - FIXED
+            tvMedDuration.setText("For " + medication.getDurationDays() + " days");  // ✅ camelCase
 
-            // Extra instructions
-            String instructions = medication.getExtra_instructions() != null && !medication.getExtra_instructions().isEmpty()
-                    ? medication.getExtra_instructions()
+            // Extra instructions - FIXED
+            String instructions = medication.getExtraInstructions() != null && !medication.getExtraInstructions().isEmpty()
+                    ? medication.getExtraInstructions()  // ✅ camelCase
                     : "No additional instructions";
             tvMedInstructions.setText("Instructions: " + instructions +
-                    (medication.getWith_food() == 1 ? " (With food)" : " (Without food)"));
+                    (medication.getWithFood() == 1 ? " (With food)" : " (Without food)"));  // ✅ camelCase
         }
     }
 }

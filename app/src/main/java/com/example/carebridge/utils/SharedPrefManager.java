@@ -3,7 +3,7 @@ package com.example.carebridge.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.example.carebridge.model.User;
+import com.example.carebridge.shared.model.User;
 import com.google.gson.Gson;
 
 public class SharedPrefManager {
@@ -29,8 +29,9 @@ public class SharedPrefManager {
         editor.putString(KEY_USER, gson.toJson(user));
         editor.putBoolean(KEY_IS_LOGGED_IN, true);
 
-        if (user.getPatientInfo() != null && user.getPatientInfo().getCase_id() != null) {
-            editor.putString(KEY_CASE_ID, user.getPatientInfo().getCase_id());
+        // ✅ FIXED: Changed from getCase_id() to getCaseId()
+        if (user.getPatientInfo() != null && user.getPatientInfo().getCaseId() != null) {
+            editor.putString(KEY_CASE_ID, user.getPatientInfo().getCaseId());
         }
 
         if (user.getReferenceId() != null && !user.getReferenceId().isEmpty()) {

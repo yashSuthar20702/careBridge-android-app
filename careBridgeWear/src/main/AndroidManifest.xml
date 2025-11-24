@@ -1,78 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="com.example.carebridge.wear">
+    xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- Permissions -->
     <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
-    <!-- Essential Wear OS features -->
+    <!-- Wear OS features -->
     <uses-feature
         android:name="android.hardware.type.watch"
         android:required="true" />
 
-    <!-- Wear OS specific features -->
-    <uses-feature
-        android:name="android.hardware.type.wearable"
-        android:required="true" />
-
-    <!-- Support both round and rectangular screens -->
-    <uses-feature
-        android:name="android.hardware.screen.portrait"
-        android:required="false" />
-
+    <!-- Round screen support -->
     <uses-feature
         android:name="android.hardware.screen.round"
         android:required="false" />
 
-    <!-- Indicate this is a Wear OS app -->
-    <uses-feature
-        android:name="android.hardware.location"
-        android:required="false" />
-
-    <application
-        android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:theme="@android:style/Theme.DeviceDefault"
-        android:supportsRtl="true"
-        tools:targetApi="31">
-
-        <!-- Main Wear Activity -->
-        <meta-data
-            android:name="com.google.android.wearable.standalone"
-            android:value="true" />
+    <application>
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
-            android:theme="@android:style/Theme.DeviceDefault"
-            android:allowEmbedded="true"
-            android:taskAffinity=""
-            android:launchMode="singleTask"
-            android:screenOrientation="fullUser"
-            android:resizeableActivity="false">
-
-            <!-- Main launcher intent -->
+            android:theme="@style/Theme.CareBridgeWear.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="com.google.android.wearable.intent.category.WEAR_LAUNCHER" />
             </intent-filter>
-
-            <!-- Wear OS companion configuration -->
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="com.google.android.wearable.intent.category.COMPANION_CONFIGURATION" />
-            </intent-filter>
-
-            <!-- Required metadata for Wear OS -->
-            <meta-data
-                android:name="com.google.android.wearable.standalone"
-                android:value="true" />
-
-            <!-- Enable immersive mode to help with gesture conflicts -->
-            <meta-data
-                android:name="android.app.WEARABLE_EDGE_SWIPE_DEAD_ZONE"
-                android:value="20dp" />
         </activity>
+
+        <activity
+            android:name=".CallActivity"
+            android:theme="@style/Theme.CareBridgeWear.NoActionBar" />
+
+        <activity
+            android:name=".MedicineActivity"
+            android:theme="@style/Theme.CareBridgeWear.NoActionBar" />
+
+        <activity
+            android:name=".HealthInfoActivity"
+            android:theme="@style/Theme.CareBridgeWear.NoActionBar" />
+
+        <activity
+            android:name=".GuardianActivity"
+            android:theme="@style/Theme.CareBridgeWear.NoActionBar" />
     </application>
 </manifest>

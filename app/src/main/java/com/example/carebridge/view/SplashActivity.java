@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.carebridge.R;
-import com.example.carebridge.utils.SharedPrefManager;
+import com.example.carebridge.shared.utils.SharedPrefManager;
 
 /** Splash screen activity showing app branding while checking user authentication status */
 public class SplashActivity extends AppCompatActivity {
@@ -41,7 +41,7 @@ public class SplashActivity extends AppCompatActivity {
     /** Redirect to patient or guardian dashboard based on user role */
     private void redirectToDashboard() {
         Intent intent;
-        com.example.carebridge.model.User user = sharedPrefManager.getCurrentUser();
+        com.example.carebridge.shared.model.User user = sharedPrefManager.getCurrentUser();
 
         // Determine dashboard based on user role
         if (user != null && user.getRole().equals(getString(R.string.patient_role))) {

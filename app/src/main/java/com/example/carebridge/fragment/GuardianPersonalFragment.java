@@ -14,8 +14,8 @@ import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.carebridge.R;
-import com.example.carebridge.controller.GuardianController;
-import com.example.carebridge.model.GuardianInfo;
+import com.example.carebridge.shared.controller.GuardianController;
+import com.example.carebridge.shared.model.GuardianInfo;
 import com.facebook.shimmer.ShimmerFrameLayout;
 
 public class GuardianPersonalFragment extends Fragment {

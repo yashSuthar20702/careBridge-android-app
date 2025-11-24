@@ -16,9 +16,9 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.core.content.ContextCompat;
 
 import com.example.carebridge.R;
-import com.example.carebridge.controller.AssignedPatientController;
-import com.example.carebridge.model.AssignedPatientInfo;
-import com.example.carebridge.utils.SharedPrefManager;
+import com.example.carebridge.shared.controller.AssignedPatientController;
+import com.example.carebridge.shared.model.AssignedPatientInfo;
+import com.example.carebridge.shared.utils.SharedPrefManager;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.card.MaterialCardView;
 

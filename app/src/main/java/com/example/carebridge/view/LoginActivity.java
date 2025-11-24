@@ -14,8 +14,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.example.carebridge.R;
-import com.example.carebridge.controller.AuthController;
-import com.example.carebridge.model.User;
+import com.example.carebridge.shared.controller.AuthController;
+import com.example.carebridge.shared.model.User;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;

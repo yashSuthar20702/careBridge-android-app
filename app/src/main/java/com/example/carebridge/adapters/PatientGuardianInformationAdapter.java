@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.carebridge.R;
-import com.example.carebridge.model.PatientGuardianInfo;
+import com.example.carebridge.shared.model.PatientGuardianInfo;
 import com.google.android.material.button.MaterialButton;
 
 import java.util.List;

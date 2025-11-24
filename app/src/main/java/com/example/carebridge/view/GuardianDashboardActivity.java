@@ -20,8 +20,8 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.carebridge.R;
 import com.example.carebridge.adapters.GuardianDashboardPagerAdapter;
-import com.example.carebridge.controller.AuthController;
-import com.example.carebridge.model.User;
+import com.example.carebridge.shared.controller.AuthController;
+import com.example.carebridge.shared.model.User;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.button.MaterialButton;
 
@@ -65,17 +65,14 @@ public class GuardianDashboardActivity extends AppCompatActivity {
         try {
             if (currentUser != null &&
                     currentUser.getPatientInfo() != null &&
-                    currentUser.getPatientInfo().getFull_name() != null) {
-                tvGuardianName.setText(currentUser.getPatientInfo().getFull_name());
+                    currentUser.getPatientInfo().getFullName() != null) {  // ✅ FIXED: getFull_name() → getFullName()
+                tvGuardianName.setText(currentUser.getPatientInfo().getFullName());  // ✅ FIXED: getFull_name() → getFullName()
             } else {
                 tvGuardianName.setText(getString(R.string.guardian_fallback_name));
             }
         } catch (Exception e) {
             Log.e(TAG, "Error setting name: " + e.getMessage());
         }
-
-        btnLogout.setOnClickListener(v -> openLogoutDialog());
-
         // Setup ViewPager + Bottom Nav
         viewPager.setAdapter(new GuardianDashboardPagerAdapter(this));
         viewPager.setUserInputEnabled(false);

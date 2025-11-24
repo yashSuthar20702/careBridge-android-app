@@ -35,6 +35,8 @@ android {
 }
 
 dependencies {
+    // ✅ Shared Library
+    implementation project(':careBridge-shared')
 
     // Core & AppCompat
     implementation "androidx.core:core-splashscreen:1.0.1"
@@ -48,7 +50,7 @@ dependencies {
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
     implementation 'androidx.activity:activity:1.7.2'
 
-    // Retrofit + OkHttp
+    // ✅ ADD THESE BACK - FullMapActivity uses Retrofit directly
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
     implementation 'com.squareup.okhttp3:logging-interceptor:4.11.0'
@@ -73,11 +75,8 @@ dependencies {
     implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'com.tbuonomo:dotsindicator:4.3'
 
-    //Firebase
     // Firebase
     implementation platform('com.google.firebase:firebase-bom:34.5.0')
     implementation 'com.google.firebase:firebase-analytics'
     implementation 'com.google.firebase:firebase-messaging'
-
-
 }

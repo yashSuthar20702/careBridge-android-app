@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.carebridge.R;
-import com.example.carebridge.model.PatientInfo;
+import com.example.carebridge.shared.model.PatientInfo;
 
 import java.util.List;
 
@@ -34,7 +34,8 @@ public class PatientPagerAdapter extends RecyclerView.Adapter<PatientPagerAdapte
     public void onBindViewHolder(@NonNull PatientViewHolder holder, int position) {
         PatientInfo patient = patients.get(position);
 
-        holder.tvPatientName.setText(patient.getFull_name());
+        // ✅ FIXED: Changed from getFull_name() to getFullName()
+        holder.tvPatientName.setText(patient.getFullName());
 
         int total = patient.getTotalMedicines();
         int taken = patient.getTakenMedicines();

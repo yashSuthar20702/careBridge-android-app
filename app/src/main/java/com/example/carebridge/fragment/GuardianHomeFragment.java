@@ -25,12 +25,12 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.example.carebridge.R;
 import com.example.carebridge.adapters.MedicationAdapter;
 import com.example.carebridge.adapters.PatientPagerAdapter;
-import com.example.carebridge.controller.AssignedPatientController;
-import com.example.carebridge.controller.PrescriptionController;
-import com.example.carebridge.model.AssignedPatientInfo;
-import com.example.carebridge.model.Medication;
-import com.example.carebridge.model.PatientInfo;
-import com.example.carebridge.model.Prescription;
+import com.example.carebridge.shared.controller.AssignedPatientController;
+import com.example.carebridge.shared.controller.PrescriptionController;
+import com.example.carebridge.shared.model.AssignedPatientInfo;
+import com.example.carebridge.shared.model.Medication;
+import com.example.carebridge.shared.model.PatientInfo;
+import com.example.carebridge.shared.model.Prescription;
 import com.example.carebridge.utils.SharedPrefManager;
 import com.example.carebridge.view.FullMapActivity;
 import com.example.carebridge.view.FullMapActivityBlue;
@@ -152,16 +152,16 @@ public class GuardianHomeFragment extends Fragment {
                 patientList.clear();
                 for (AssignedPatientInfo p : patients) {
                     PatientInfo info = new PatientInfo();
-                    info.setFull_name(p.getFull_name());
-                    info.setCase_id(p.getPatient_id());
+                    info.setFullName(p.getFull_name());   // ✅ snake_case getter
+                    info.setCaseId(p.getPatient_id());    // ✅ snake_case getter
                     patientList.add(info);
                 }
-
                 PatientPagerAdapter adapter = new PatientPagerAdapter(patientList);
                 vpPatients.setAdapter(adapter);
                 dotsIndicatorPatients.setViewPager2(vpPatients);
 
-                if (!patientList.isEmpty()) loadPatientMedicines(patientList.get(0).getCase_id());
+                // ✅ FIXED: Changed from getCase_id() to getCaseId()
+                if (!patientList.isEmpty()) loadPatientMedicines(patientList.get(0).getCaseId());
                 else showNoMedicines(true);
             }
 
@@ -172,7 +172,8 @@ public class GuardianHomeFragment extends Fragment {
         vpPatients.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
-                if (position < patientList.size()) loadPatientMedicines(patientList.get(position).getCase_id());
+                // ✅ FIXED: Changed from getCase_id() to getCaseId()
+                if (position < patientList.size()) loadPatientMedicines(patientList.get(position).getCaseId());
             }
         });
     }
@@ -200,7 +201,8 @@ public class GuardianHomeFragment extends Fragment {
 
                 // Update patient medicine stats
                 for (PatientInfo patient : patientList) {
-                    if (caseId.equals(patient.getCase_id())) {
+                    // ✅ FIXED: Changed from getCase_id() to getCaseId()
+                    if (caseId.equals(patient.getCaseId())) {
                         patient.setTotalMedicines(total);
                         patient.setTakenMedicines(taken);
                         break;

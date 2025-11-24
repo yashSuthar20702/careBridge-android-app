@@ -26,9 +26,9 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.carebridge.R;
 import com.example.carebridge.adapters.MedicationAdapter;
-import com.example.carebridge.controller.PrescriptionController;
-import com.example.carebridge.model.Medication;
-import com.example.carebridge.model.Prescription;
+import com.example.carebridge.shared.controller.PrescriptionController;
+import com.example.carebridge.shared.model.Medication;
+import com.example.carebridge.shared.model.Prescription;
 import com.example.carebridge.view.FullMapActivity;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;

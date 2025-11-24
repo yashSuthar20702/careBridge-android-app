@@ -17,10 +17,10 @@ import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.carebridge.R;
-import com.example.carebridge.controller.PatientController;
-import com.example.carebridge.model.PatientInfo;
-import com.example.carebridge.model.User;
-import com.example.carebridge.utils.SharedPrefManager;
+import com.example.carebridge.shared.controller.PatientController;
+import com.example.carebridge.shared.model.PatientInfo;
+import com.example.carebridge.shared.model.User;
+import com.example.carebridge.shared.utils.SharedPrefManager;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.card.MaterialCardView;
 
@@ -139,19 +139,39 @@ public class PersonalInfoFragment extends Fragment {
     }
 
     /** Populate UI with patient information */
+    /** Populate UI with patient information */
     private void displayPatientInfo(PatientInfo patientInfo) {
-        setBoldLabel(tvFullName, getString(R.string.full_name_label), safeString(patientInfo.getFull_name()));
+        // ✅ FIXED: Changed from getFull_name() to getFullName()
+        setBoldLabel(tvFullName, getString(R.string.full_name_label), safeString(patientInfo.getFullName()));
+
         setBoldLabel(tvPatientAge, getString(R.string.age_label), calculateAge(patientInfo.getDob()) + "");
+
+        // ✅ FIXED: Changed from getGender() to getGender() (might be correct already)
         setBoldLabel(tvGender, getString(R.string.gender_label), safeString(patientInfo.getGender()));
-        setBoldLabel(tvBloodType, getString(R.string.blood_type_label), safeString(patientInfo.getBlood_group()));
-        setBoldLabel(tvHeight, getString(R.string.height_label), safeString(patientInfo.getHeight_cm()) + getString(R.string.cm_unit));
-        setBoldLabel(tvWeight, getString(R.string.weight_label), safeString(patientInfo.getWeight_kg()) + getString(R.string.kg_unit));
+
+        // ✅ FIXED: Changed from getBlood_group() to getBloodGroup()
+        setBoldLabel(tvBloodType, getString(R.string.blood_type_label), safeString(patientInfo.getBloodGroup()));
+
+        // ✅ FIXED: Changed from getHeight_cm() to getHeightCm()
+        setBoldLabel(tvHeight, getString(R.string.height_label), safeString(patientInfo.getHeightCm()) + getString(R.string.cm_unit));
+
+        // ✅ FIXED: Changed from getWeight_kg() to getWeightKg()
+        setBoldLabel(tvWeight, getString(R.string.weight_label), safeString(patientInfo.getWeightKg()) + getString(R.string.kg_unit));
+
         setBoldLabel(tvAllergies, getString(R.string.allergies_label), joinList(patientInfo.getAllergies()));
-        setBoldLabel(tvConditions, getString(R.string.conditions_label), joinList(patientInfo.getMedical_conditions()));
-        setBoldLabel(tvPastSurgeries, getString(R.string.past_surgeries_label), safeString(patientInfo.getPast_surgeries()));
-        setBoldLabel(tvCurrentSymptoms, getString(R.string.current_symptoms_label), safeString(patientInfo.getCurrent_symptoms()));
+        setBoldLabel(tvConditions, getString(R.string.conditions_label), joinList(patientInfo.getMedicalConditions()));
+
+        // ✅ FIXED: Changed from getPast_surgeries() to getPastSurgeries()
+        setBoldLabel(tvPastSurgeries, getString(R.string.past_surgeries_label), safeString(patientInfo.getPastSurgeries()));
+
+        // ✅ FIXED: Changed from getCurrent_symptoms() to getCurrentSymptoms()
+        setBoldLabel(tvCurrentSymptoms, getString(R.string.current_symptoms_label), safeString(patientInfo.getCurrentSymptoms()));
+
         setBoldLabel(tvAddress, getString(R.string.address_label), safeString(patientInfo.getAddress()));
-        setBoldLabel(tvContactNumber, getString(R.string.phone_label), safeString(patientInfo.getContact_number()));
+
+        // ✅ FIXED: Changed from getContact_number() to getContactNumber()
+        setBoldLabel(tvContactNumber, getString(R.string.phone_label), safeString(patientInfo.getContactNumber()));
+
         setBoldLabel(tvEmail, getString(R.string.email_label), safeString(patientInfo.getEmail()));
         setBoldLabel(tvStatus, getString(R.string.status_label), safeString(patientInfo.getStatus()));
 

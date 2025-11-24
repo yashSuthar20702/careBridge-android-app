@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="8dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="2dp"
+    app:cardBackgroundColor="@color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Name Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="8dp">
+
+            <ImageView
+                android:id="@+id/icon_user"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:src="@drawable/ic_user"
+                android:tint="@color/white"
+                android:background="@color/black"
+                android:padding="4dp"
+                android:layout_marginEnd="8dp" />
+
+            <TextView
+                android:id="@+id/guardian_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Guardian Name"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <!-- Details Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginBottom="4dp"
+            android:paddingStart="24dp">
+
+            <ImageView
+                android:id="@+id/icon_heart"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:src="@drawable/ic_heart"
+                android:tint="@color/gray_600"
+                android:layout_marginEnd="4dp" />
+
+            <TextView
+                android:id="@+id/guardian_details"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Type • Relation"
+                android:textColor="@color/gray_600"
+                android:textSize="11sp" />
+
+        </LinearLayout>
+
+        <!-- Phone Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:paddingStart="24dp">
+
+            <ImageView
+                android:id="@+id/icon_phone"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:src="@drawable/ic_phone"
+                android:tint="@color/gray_600"
+                android:layout_marginEnd="4dp" />
+
+            <TextView
+                android:id="@+id/guardian_phone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="+1 234-567-8900"
+                android:textColor="@color/gray_600"
+                android:textSize="11sp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

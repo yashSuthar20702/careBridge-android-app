@@ -1,31 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/fragment_container"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/bg_patient_dashboard"
-    android:padding="8dp"
-    android:focusable="true"
-    android:clickable="true"
-    android:focusableInTouchMode="true">
-
-    <LinearLayout
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <FrameLayout
+        android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/circular_container_bg"
-        android:layout_gravity="center"
-        android:orientation="vertical"
-        android:gravity="center"
-        android:focusable="false"
-        android:clickable="false">
-
-        <!-- Fragment container for dynamic content -->
-        <FrameLayout
-            android:id="@+id/fragment_content"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:focusable="false"
-            android:clickable="false" />
-
-    </LinearLayout>
-</FrameLayout>
+        android:background="@color/black" />
+</layout>

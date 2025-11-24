@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.carebridge.R;
-import com.example.carebridge.model.Medication;
+import com.example.carebridge.shared.model.Medication;
 
 import java.util.List;
 
@@ -35,15 +35,18 @@ public class MedicinePagerAdapter extends RecyclerView.Adapter<MedicinePagerAdap
         Medication med = medicationList.get(position);
         if (med == null) return;
 
-        holder.tvMedName.setText(med.getMedicine_name() != null ? med.getMedicine_name() : "N/A");
+        // ✅ FIXED: Changed from getMedicine_name() to getMedicineName()
+        holder.tvMedName.setText(med.getMedicineName() != null ? med.getMedicineName() : "N/A");
         holder.tvMedDosage.setText(med.getDosage() != null ? med.getDosage() : "-");
 
         String timeSummary = med.getTimeSummary();
         holder.tvMedTime.setText(!timeSummary.isEmpty() ? timeSummary : "-");
 
-        holder.tvMedDuration.setText("For " + med.getDuration_days() + " day" + (med.getDuration_days() > 1 ? "s" : ""));
+        // ✅ FIXED: Changed from getDuration_days() to getDurationDays()
+        holder.tvMedDuration.setText("For " + med.getDurationDays() + " day" + (med.getDurationDays() > 1 ? "s" : ""));
 
-        String instructions = med.getExtra_instructions() != null ? med.getExtra_instructions() : "";
+        // ✅ FIXED: Changed from getExtra_instructions() to getExtraInstructions()
+        String instructions = med.getExtraInstructions() != null ? med.getExtraInstructions() : "";
         holder.tvMedInstructions.setText(instructions + " (" + med.getFoodInstructionText() + ")");
 
         holder.imgMedicineIcon.setImageResource(R.drawable.ic_pill);

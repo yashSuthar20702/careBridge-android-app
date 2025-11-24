@@ -19,8 +19,8 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.carebridge.R;
 import com.example.carebridge.adapters.PatientDashboardPagerAdapter;
-import com.example.carebridge.controller.AuthController;
-import com.example.carebridge.model.User;
+import com.example.carebridge.shared.controller.AuthController;
+import com.example.carebridge.shared.model.User;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.button.MaterialButton;
 
@@ -62,7 +62,7 @@ public class PatientDashboardActivity extends AppCompatActivity {
         bottomNavigationView = findViewById(R.id.bottomNavigationView);
 
         if (currentUser != null && currentUser.getPatientInfo() != null)
-            tvPatientName.setText(currentUser.getPatientInfo().getFull_name());
+            tvPatientName.setText(currentUser.getPatientInfo().getFullName());
 
         viewPager.setAdapter(new PatientDashboardPagerAdapter(this));
         viewPager.setUserInputEnabled(false);
