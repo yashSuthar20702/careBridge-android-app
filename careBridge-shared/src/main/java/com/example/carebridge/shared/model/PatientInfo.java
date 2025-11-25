@@ -1,26 +1,63 @@
 package com.example.carebridge.shared.model;
 
+import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import java.util.List;
 
 public class PatientInfo implements Serializable {
+
+    @SerializedName("case_id")
     private String caseId;
+
+    @SerializedName("full_name")
     private String fullName;
+
+    @SerializedName("dob")
     private String dob;
+
+    @SerializedName("gender")
     private String gender;
+
+    @SerializedName("address")
     private String address;
+
+    @SerializedName("contact_number")
     private String contactNumber;
+
+    @SerializedName("email")
     private String email;
+
+    // API uses "Status" with capital S
+    @SerializedName("Status")
     private String status;
+
+    @SerializedName("created_at")
     private String createdAt;
+
+    @SerializedName("general_info")
     private String generalInfo;
+
+    @SerializedName("blood_group")
     private String bloodGroup;
+
+    @SerializedName("height_cm")
     private String heightCm;
+
+    @SerializedName("weight_kg")
     private String weightKg;
+
+    @SerializedName("past_surgeries")
     private String pastSurgeries;
+
+    @SerializedName("current_symptoms")
     private String currentSymptoms;
+
+    @SerializedName("allergies")
     private List<String> allergies;
+
+    @SerializedName("medical_conditions")
     private List<String> medicalConditions;
+
     private int totalMedicines = 0;
     private int takenMedicines = 0;
 
