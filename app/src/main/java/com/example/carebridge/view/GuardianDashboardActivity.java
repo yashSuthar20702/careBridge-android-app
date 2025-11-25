@@ -37,13 +37,13 @@ public class GuardianDashboardActivity extends AppCompatActivity {
     private TextView tvGuardianName;
     private Button btnLogout;
 
-    // ✅ Launcher for runtime notification permission
+    // Launcher for runtime notification permission
     private final ActivityResultLauncher<String> requestNotificationPermission =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
                 if (isGranted) {
-                    Log.d(TAG, "✅ Notification permission granted by user");
+                    Log.d(TAG, "Notification permission granted");
                 } else {
-                    Log.w(TAG, "⚠️ Notification permission denied by user");
+                    Log.w(TAG, "Notification permission denied");
                 }
             });
 
@@ -65,14 +65,18 @@ public class GuardianDashboardActivity extends AppCompatActivity {
         try {
             if (currentUser != null &&
                     currentUser.getPatientInfo() != null &&
-                    currentUser.getPatientInfo().getFullName() != null) {  // ✅ FIXED: getFull_name() → getFullName()
-                tvGuardianName.setText(currentUser.getPatientInfo().getFullName());  // ✅ FIXED: getFull_name() → getFullName()
+                    currentUser.getPatientInfo().getFullName() != null) {
+                tvGuardianName.setText(currentUser.getPatientInfo().getFullName());
             } else {
                 tvGuardianName.setText(getString(R.string.guardian_fallback_name));
             }
         } catch (Exception e) {
             Log.e(TAG, "Error setting name: " + e.getMessage());
         }
+
+        // 🔥 FIX: Enable logout click
+        btnLogout.setOnClickListener(v -> openLogoutDialog());
+
         // Setup ViewPager + Bottom Nav
         viewPager.setAdapter(new GuardianDashboardPagerAdapter(this));
         viewPager.setUserInputEnabled(false);
@@ -103,19 +107,15 @@ public class GuardianDashboardActivity extends AppCompatActivity {
             }
         });
 
-        // ✅ Ask for notification permission only here, after login
+        // Request notification permission
         requestNotificationPermissionIfNeeded();
     }
 
-    /** Ask for POST_NOTIFICATIONS permission only on Android 13+ */
     private void requestNotificationPermissionIfNeeded() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
                     != PackageManager.PERMISSION_GRANTED) {
-                Log.d(TAG, "🔔 Requesting notification permission");
                 requestNotificationPermission.launch(Manifest.permission.POST_NOTIFICATIONS);
-            } else {
-                Log.d(TAG, "✅ Notification permission already granted");
             }
         }
     }

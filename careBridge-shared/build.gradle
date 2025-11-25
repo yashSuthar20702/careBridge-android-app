@@ -40,6 +40,7 @@ dependencies {
 
     // Shared Preferences
     implementation 'androidx.preference:preference:1.2.1'
+    implementation libs.firebase.messaging
 
     // Testing
     testImplementation 'junit:junit:4.13.2'

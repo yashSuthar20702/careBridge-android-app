@@ -4,14 +4,19 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+
 import com.example.carebridge.shared.model.User;
 import com.example.carebridge.shared.model.PatientInfo;
 import com.example.carebridge.shared.utils.ApiConstants;
 import com.example.carebridge.shared.utils.SharedPrefManager;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.io.IOException;
+
 import okhttp3.*;
 
 public class AuthController {
@@ -110,6 +115,9 @@ public class AuthController {
                         Log.d(TAG, "User session saved successfully.");
                         callback.onSuccess(user);
 
+                        // --- Send FCM token to server ---
+                        sendFcmTokenToServer(user);
+
                     } catch (Exception e) {
                         Log.e(TAG, "Error parsing login response: " + e.getMessage());
                         callback.onFailure("Invalid response");
@@ -117,6 +125,51 @@ public class AuthController {
                 });
             }
         });
+    }
+
+    private void sendFcmTokenToServer(User user) {
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(task -> {
+                    if (!task.isSuccessful()) {
+                        Log.w(TAG, "Fetching FCM token failed", task.getException());
+                        return;
+                    }
+
+                    String fcmToken = task.getResult();
+                    Log.d(TAG, "FCM Token: " + fcmToken);
+
+                    JSONObject json = new JSONObject();
+                    try {
+                        json.put("user_id", user.getId());
+                        json.put("fcm_token", fcmToken);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                        return;
+                    }
+
+                    RequestBody body = RequestBody.create(
+                            json.toString(),
+                            MediaType.get("application/json; charset=utf-8")
+                    );
+
+                    Request request = new Request.Builder()
+                            .url(ApiConstants.getUpdateFcmTokenUrl())
+                            .post(body)
+                            .build();
+
+                    client.newCall(request).enqueue(new Callback() {
+                        @Override
+                        public void onFailure(Call call, IOException e) {
+                            Log.e(TAG, "Failed to update FCM token: " + e.getMessage());
+                        }
+
+                        @Override
+                        public void onResponse(Call call, Response response) throws IOException {
+                            String res = response.body().string();
+                            Log.d(TAG, "FCM token update response: " + res);
+                        }
+                    });
+                });
     }
 
     public boolean isLoggedIn() {
