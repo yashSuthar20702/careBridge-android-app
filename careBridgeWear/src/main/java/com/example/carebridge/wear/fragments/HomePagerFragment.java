@@ -5,14 +5,13 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-
 import com.example.carebridge.wear.CallActivity;
 import com.example.carebridge.wear.GuardianActivity;
 import com.example.carebridge.wear.HealthInfoActivity;
+import com.example.carebridge.wear.MainActivity;
 import com.example.carebridge.wear.MedicineActivity;
 import com.example.carebridge.wear.R;
 import com.example.carebridge.wear.databinding.FragmentHomePagerBinding;
@@ -53,8 +52,21 @@ public class HomePagerFragment extends Fragment {
     }
 
     private void setupButton() {
-        int[] buttonIcons = {R.drawable.ic_phone, R.drawable.ic_pill, R.drawable.ic_activity, R.drawable.ic_user};
-        String[] buttonLabels = {"Call", "Medicine", "Patient Health", "Guardian Info"};
+        int[] buttonIcons = {
+                R.drawable.ic_phone,
+                R.drawable.ic_pill,
+                R.drawable.ic_activity,
+                R.drawable.ic_user,
+                R.drawable.ic_logout  // Add logout icon
+        };
+
+        String[] buttonLabels = {
+                "Call",
+                "Medicine",
+                "Patient Health",
+                "Guardian Info",
+                "Logout"  // Add logout label
+        };
 
         binding.homeMainButton.setImageResource(buttonIcons[position]);
         binding.homeButtonLabel.setText(buttonLabels[position]);
@@ -72,6 +84,12 @@ public class HomePagerFragment extends Fragment {
                     break;
                 case 3:
                     startActivity(new Intent(requireContext(), GuardianActivity.class));
+                    break;
+                case 4:
+                    // Handle logout
+                    if (requireActivity() instanceof MainActivity) {
+                        ((MainActivity) requireActivity()).logout();
+                    }
                     break;
             }
         });

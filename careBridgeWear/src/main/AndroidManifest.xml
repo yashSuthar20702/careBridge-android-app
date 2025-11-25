@@ -17,8 +17,9 @@
         android:required="false" />
 
     <application>
+        <!-- Make LoginActivity the launcher -->
         <activity
-            android:name=".MainActivity"
+            android:name=".LoginActivity"
             android:exported="true"
             android:theme="@style/Theme.CareBridgeWear.NoActionBar">
             <intent-filter>
@@ -27,6 +28,11 @@
                 <category android:name="com.google.android.wearable.intent.category.WEAR_LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:theme="@style/Theme.CareBridgeWear.NoActionBar" />
 
         <activity
             android:name=".CallActivity"

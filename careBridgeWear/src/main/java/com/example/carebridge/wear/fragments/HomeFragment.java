@@ -57,6 +57,7 @@ public class HomeFragment extends Fragment {
         binding.homeIndicator1.setOnClickListener(v -> binding.viewPager.setCurrentItem(1, true));
         binding.homeIndicator2.setOnClickListener(v -> binding.viewPager.setCurrentItem(2, true));
         binding.homeIndicator3.setOnClickListener(v -> binding.viewPager.setCurrentItem(3, true));
+        binding.homeIndicator4.setOnClickListener(v -> binding.viewPager.setCurrentItem(4, true));
     }
 
     private void updateIndicators(int position) {
@@ -64,6 +65,8 @@ public class HomeFragment extends Fragment {
         binding.homeIndicator1.setBackgroundResource(position == 1 ? R.drawable.indicator_active : R.drawable.indicator_inactive);
         binding.homeIndicator2.setBackgroundResource(position == 2 ? R.drawable.indicator_active : R.drawable.indicator_inactive);
         binding.homeIndicator3.setBackgroundResource(position == 3 ? R.drawable.indicator_active : R.drawable.indicator_inactive);
+        binding.homeIndicator4.setBackgroundResource(position == 4 ? R.drawable.indicator_active : R.drawable.indicator_inactive);
+
     }
 
     private void startTimeUpdates() {

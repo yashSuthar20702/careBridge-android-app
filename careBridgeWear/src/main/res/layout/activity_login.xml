@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:padding="20dp">
+
+            <!-- Top Spacer -->
+
+            <!-- Login Icon -->
+            <ImageView
+                android:layout_width="54dp"
+                android:layout_height="49dp"
+                android:layout_marginBottom="24dp"
+                android:background="@drawable/circle_bg"
+                android:padding="16dp"
+                android:src="@drawable/ic_person"
+                android:tint="@color/white" />
+
+            <!-- Title -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Login"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="12dp" />
+
+            <!-- Error Message -->
+            <TextView
+                android:id="@+id/error_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Please enter credentials"
+                android:textColor="#FFFF5252"
+                android:textSize="12sp"
+                android:layout_marginBottom="16dp"
+                android:visibility="gone" />
+
+            <!-- Input Fields Container -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:layout_marginBottom="14dp">
+
+                <!-- Username Field -->
+                <EditText
+                    android:id="@+id/username_edit_text"
+                    android:layout_width="220dp"
+                    android:layout_height="34dp"
+                    android:hint="Username"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/gray_400"
+                    android:background="@drawable/rounded_edittext"
+                    android:paddingStart="36dp"
+                    android:paddingEnd="16dp"
+                    android:textSize="14sp"
+                    android:layout_marginBottom="12dp"
+                    android:singleLine="true"
+                    android:imeOptions="actionNext" />
+
+                <!-- Password Field -->
+                <EditText
+                    android:id="@+id/password_edit_text"
+                    android:layout_width="220dp"
+                    android:layout_height="34dp"
+                    android:hint="Password"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/gray_400"
+                    android:background="@drawable/rounded_edittext"
+                    android:paddingStart="36dp"
+                    android:paddingEnd="16dp"
+                    android:textSize="14sp"
+                    android:inputType="textPassword"
+                    android:singleLine="true"
+                    android:imeOptions="actionDone" />
+
+            </LinearLayout>
+
+            <!-- Login Button -->
+            <Button
+                android:id="@+id/login_button"
+                android:layout_width="220dp"
+                android:layout_height="44dp"
+                android:text="LOGIN"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:background="@drawable/rounded_button"
+                android:layout_marginBottom="16dp" />
+
+            <!-- Hint Text -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Enter any credentials to continue"
+                android:textColor="@color/gray_400"
+                android:textSize="10sp"
+                android:layout_marginBottom="40dp" />
+
+            <!-- Bottom Spacer -->
+            <View
+                android:layout_width="1dp"
+                android:layout_height="40dp" />
+
+        </LinearLayout>
+
+    </ScrollView>
+</layout>
