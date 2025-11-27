@@ -1,0 +1,9 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Pressed → brighter white -->
+    <item android:state_pressed="true" android:color="#FFFFFF" />
+
+    <!-- Default → soft white tint -->
+    <item android:color="#E6FFFFFF" />
+
+</selector>

@@ -1,10 +1,14 @@
 package com.example.carebridge.wear.fragments;
 
+import android.animation.ObjectAnimator;
+import android.animation.PropertyValuesHolder;
+import android.animation.ValueAnimator;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -24,7 +28,8 @@ public class HomeFragment extends Fragment {
     private FragmentHomeBinding binding;
     private Handler timeHandler;
     private Runnable timeRunnable;
-    private HomePagerAdapter homePagerAdapter;
+
+    private View[] indicators;
 
     @Nullable
     @Override
@@ -36,13 +41,30 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        initIndicators();
         setupViewPager();
         startTimeUpdates();
     }
 
+    private void initIndicators() {
+        indicators = new View[]{
+                binding.homeIndicator0,
+                binding.homeIndicator1,
+                binding.homeIndicator2,
+                binding.homeIndicator3,
+                binding.homeIndicator4
+        };
+
+        for (int i = 0; i < indicators.length; i++) {
+            int index = i;
+            indicators[i].setOnClickListener(v -> binding.viewPager.setCurrentItem(index, true));
+        }
+    }
+
     private void setupViewPager() {
-        homePagerAdapter = new HomePagerAdapter(this);
-        binding.viewPager.setAdapter(homePagerAdapter);
+        HomePagerAdapter adapter = new HomePagerAdapter(this);
+        binding.viewPager.setAdapter(adapter);
 
         binding.viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
@@ -52,47 +74,87 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        // Set up indicator clicks
-        binding.homeIndicator0.setOnClickListener(v -> binding.viewPager.setCurrentItem(0, true));
-        binding.homeIndicator1.setOnClickListener(v -> binding.viewPager.setCurrentItem(1, true));
-        binding.homeIndicator2.setOnClickListener(v -> binding.viewPager.setCurrentItem(2, true));
-        binding.homeIndicator3.setOnClickListener(v -> binding.viewPager.setCurrentItem(3, true));
-        binding.homeIndicator4.setOnClickListener(v -> binding.viewPager.setCurrentItem(4, true));
+        updateIndicators(0);
     }
 
-    private void updateIndicators(int position) {
-        binding.homeIndicator0.setBackgroundResource(position == 0 ? R.drawable.indicator_active : R.drawable.indicator_inactive);
-        binding.homeIndicator1.setBackgroundResource(position == 1 ? R.drawable.indicator_active : R.drawable.indicator_inactive);
-        binding.homeIndicator2.setBackgroundResource(position == 2 ? R.drawable.indicator_active : R.drawable.indicator_inactive);
-        binding.homeIndicator3.setBackgroundResource(position == 3 ? R.drawable.indicator_active : R.drawable.indicator_inactive);
-        binding.homeIndicator4.setBackgroundResource(position == 4 ? R.drawable.indicator_active : R.drawable.indicator_inactive);
+    private void updateIndicators(int activePos) {
+        for (int i = 0; i < indicators.length; i++) {
+            View indicator = indicators[i];
 
+            if (i == activePos) {
+                indicator.setBackgroundResource(R.drawable.indicator_active);
+                animateActive(indicator);
+            } else {
+                indicator.setBackgroundResource(R.drawable.indicator_inactive);
+                animateInactive(indicator);
+            }
+
+            animateMargin(indicator, i == activePos);
+        }
     }
+
+    // --- ANIMATIONS ---
+
+    private void animateActive(View view) {
+        PropertyValuesHolder scaleX = PropertyValuesHolder.ofFloat(View.SCALE_X, 1f, 1.25f);
+        PropertyValuesHolder scaleY = PropertyValuesHolder.ofFloat(View.SCALE_Y, 1f, 1.25f);
+
+        ObjectAnimator anim = ObjectAnimator.ofPropertyValuesHolder(view, scaleX, scaleY);
+        anim.setDuration(250);
+        anim.setInterpolator(new AccelerateDecelerateInterpolator());
+        anim.start();
+    }
+
+    private void animateInactive(View view) {
+        PropertyValuesHolder scaleX = PropertyValuesHolder.ofFloat(View.SCALE_X, 1.25f, 1f);
+        PropertyValuesHolder scaleY = PropertyValuesHolder.ofFloat(View.SCALE_Y, 1.25f, 1f);
+
+        ObjectAnimator anim = ObjectAnimator.ofPropertyValuesHolder(view, scaleX, scaleY);
+        anim.setDuration(200);
+        anim.setInterpolator(new AccelerateDecelerateInterpolator());
+        anim.start();
+    }
+
+    // Smooth sliding margin animation
+    private void animateMargin(View view, boolean isActive) {
+        ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
+
+        int start = params.leftMargin;
+        int end = isActive ? 16 : 8; // active dot spreads more
+
+        ValueAnimator animator = ValueAnimator.ofInt(start, end);
+        animator.setDuration(250);
+        animator.addUpdateListener(animation -> {
+            params.leftMargin = (int) animation.getAnimatedValue();
+            params.rightMargin = (int) animation.getAnimatedValue();
+            view.setLayoutParams(params);
+        });
+
+        animator.start();
+    }
+
+    // --- TIME ---
 
     private void startTimeUpdates() {
         timeHandler = new Handler();
-        timeRunnable = new Runnable() {
-            @Override
-            public void run() {
-                updateTime();
-                timeHandler.postDelayed(this, 1000);
-            }
+        timeRunnable = () -> {
+            updateTime();
+            timeHandler.postDelayed(timeRunnable, 1000);
         };
         timeHandler.post(timeRunnable);
     }
 
     private void updateTime() {
+        if (binding == null) return;
+
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
-        String currentTime = sdf.format(new Date());
-        binding.homeTime.setText(currentTime);
+        binding.homeTime.setText(sdf.format(new Date()));
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if (timeHandler != null) {
-            timeHandler.removeCallbacks(timeRunnable);
-        }
+        if (timeHandler != null) timeHandler.removeCallbacks(timeRunnable);
         binding = null;
     }
 }

@@ -26,7 +26,7 @@
                 android:layout_alignParentStart="true"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/ic_arrow_left"
-                android:tint="@color/white" />
+                app:tint="@color/white" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -74,8 +74,8 @@
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:src="@drawable/ic_alert"
-                            android:tint="@color/black"
-                            android:layout_marginEnd="12dp" />
+                            android:layout_marginEnd="12dp"
+                            app:tint="@color/black" />
 
                         <LinearLayout
                             android:layout_width="0dp"
@@ -104,7 +104,7 @@
                             android:layout_width="20dp"
                             android:layout_height="20dp"
                             android:src="@drawable/ic_phone"
-                            android:tint="@color/gray_600" />
+                            app:tint="@color/gray_600" />
 
                     </LinearLayout>
 
@@ -131,8 +131,8 @@
                             android:layout_width="24dp"
                             android:layout_height="24dp"
                             android:src="@drawable/ic_shield"
-                            android:tint="@color/black"
-                            android:layout_marginEnd="12dp" />
+                            android:layout_marginEnd="12dp"
+                            app:tint="@color/black" />
 
                         <LinearLayout
                             android:layout_width="0dp"
@@ -161,7 +161,7 @@
                             android:layout_width="20dp"
                             android:layout_height="20dp"
                             android:src="@drawable/ic_phone"
-                            android:tint="@color/gray_600" />
+                            app:tint="@color/gray_600" />
 
                     </LinearLayout>
 

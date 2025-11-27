@@ -1,11 +1,40 @@
-<?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="oval">
-    <solid android:color="@color/white" />
-    <stroke
-        android:width="1dp"
-        android:color="@color/gray_200" />
-    <size
-        android:width="100dp"
-        android:height="100dp" />
-</shape>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- PRESSED (Soft glow + lift effect) -->
+    <item android:state_pressed="true">
+        <shape android:shape="oval">
+
+            <!-- White base -->
+            <solid android:color="#C0FDFD"/>
+
+            <!-- Teal border when pressed -->
+            <stroke
+                android:color="#AA7EF6FF"
+                android:width="5dp" />
+
+            <size android:width="120dp" android:height="120dp" />
+
+            <!-- Glow ONLY in pressed state -->
+            <shadow
+                android:shadowColor="#667EF6FF"
+                android:shadowDx="0"
+                android:shadowDy="2"
+                android:shadowRadius="22" />
+        </shape>
+    </item>
+
+    <!-- DEFAULT (NO glow at all) -->
+    <item>
+        <shape android:shape="oval">
+
+            <solid android:color="#FFFFFF" />
+
+            <!-- Minimal border for definition -->
+            <stroke
+                android:color="#22000000"
+                android:width="0.8dp" />
+
+        </shape>
+    </item>
+
+</selector>
