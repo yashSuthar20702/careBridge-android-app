@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <color name="wear_black">#000000</color>
+    <color name="wear_white">#FFFFFF</color>
+    <color name="wear_gray_light">#B3B3B3</color>
+    <color name="wear_gray_border">#3A3A3A</color>
+    <color name="wear_input_bg">#222222</color>
+    <color name="wear_error_red">#FF5252</color>
+    <color name="wear_primary_blue">#1976D2</color>
+    <color name="wear_icon_circle">#1AFFFFFF</color>
+
+    <!-- Neutral Grays -->
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
     <color name="gray_200">#E5E7EB</color>
@@ -9,13 +20,13 @@
     <color name="gray_800">#1F2937</color>
     <color name="gray_900">#111827</color>
 
+    <!-- Accent Colors -->
     <color name="blue_500">#FF2196F3</color>
     <color name="red">#FFF44336</color>
-
-    <!-- Add the missing colors -->
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
+
 </resources>

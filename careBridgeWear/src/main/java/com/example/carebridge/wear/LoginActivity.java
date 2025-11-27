@@ -1,66 +1,78 @@
 package com.example.carebridge.wear;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.KeyEvent;
-import android.view.View;
+import android.os.Handler;
+import android.os.Looper;
+import android.util.Log;
 import android.view.inputmethod.EditorInfo;
-import android.widget.TextView;
-import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.carebridge.shared.controller.AuthController;
+import com.example.carebridge.shared.model.User;
 import com.example.carebridge.wear.databinding.ActivityLoginBinding;
+import com.example.carebridge.wear.utils.WearSharedPrefManager;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.messaging.FirebaseMessaging;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 public class LoginActivity extends AppCompatActivity {
 
+    private static final String TAG = "WearLoginActivity";
+
     private ActivityLoginBinding binding;
-    private SharedPreferences sharedPreferences;
-    private static final String PREFS_NAME = "CareBridgePrefs";
-    private static final String KEY_IS_LOGGED_IN = "isLoggedIn";
+    private AuthController authController;
+    private WearSharedPrefManager wearSharedPrefManager;
+
+    private final Handler timeHandler = new Handler(Looper.getMainLooper());
+    private final SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a", Locale.getDefault());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        sharedPreferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
+        // Ontario timezone for live time
+        timeFormat.setTimeZone(TimeZone.getTimeZone("America/Toronto"));
 
-        // Check if user is already logged in
-        if (sharedPreferences.getBoolean(KEY_IS_LOGGED_IN, false)) {
-            startMainActivity();
+        authController = new AuthController(this);
+        wearSharedPrefManager = new WearSharedPrefManager(this);
+
+        // Redirect if already logged in
+        User currentUser = wearSharedPrefManager.getCurrentUser();
+        if (currentUser != null) {
+            redirectToDashboard(currentUser);
             return;
         }
 
         setupViews();
+        startClockUpdater();
     }
 
     private void setupViews() {
-        // Setup login button
         binding.loginButton.setOnClickListener(v -> attemptLogin());
 
-        // Setup keyboard actions
-        binding.passwordEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE) {
-                    attemptLogin();
-                    return true;
-                }
-                return false;
+        binding.passwordEditText.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                attemptLogin();
+                return true;
             }
+            return false;
         });
 
-        // Optional: Next button on username field
-        binding.usernameEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_NEXT) {
-                    binding.passwordEditText.requestFocus();
-                    return true;
-                }
-                return false;
+        binding.usernameEditText.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_NEXT) {
+                binding.passwordEditText.requestFocus();
+                return true;
             }
+            return false;
         });
     }
 
@@ -68,65 +80,90 @@ public class LoginActivity extends AppCompatActivity {
         String username = binding.usernameEditText.getText().toString().trim();
         String password = binding.passwordEditText.getText().toString().trim();
 
-        // Validation
         if (username.isEmpty()) {
             showError("Please enter username");
             binding.usernameEditText.requestFocus();
             return;
         }
-
         if (password.isEmpty()) {
             showError("Please enter password");
             binding.passwordEditText.requestFocus();
             return;
         }
 
-        // For demo - accept any non-empty credentials
-        performLogin();
+        performLogin(username, password);
     }
 
-    private void performLogin() {
-        // Show loading state
+    private void performLogin(String username, String password) {
         binding.loginButton.setEnabled(false);
         binding.loginButton.setText("LOGGING IN...");
 
-        // Simulate login process
-        binding.loginButton.postDelayed(() -> {
-            // Save login state
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putBoolean(KEY_IS_LOGGED_IN, true);
-            editor.putString("username", binding.usernameEditText.getText().toString().trim());
-            editor.apply();
+        authController.login(username, password, new AuthController.LoginCallback() {
+            @Override
+            public void onSuccess(User user) {
+                // Save user session
+                wearSharedPrefManager.saveUserSession(user);
 
-            // Show success message
-            Toast.makeText(LoginActivity.this, "Login successful!", Toast.LENGTH_SHORT).show();
+                // Initialize Firebase
+                FirebaseApp.initializeApp(LoginActivity.this);
 
-            startMainActivity();
-        }, 1000);
-    }
+                // Generate FCM token
+                FirebaseMessaging.getInstance().getToken()
+                        .addOnCompleteListener(task -> {
+                            if (task.isSuccessful() && task.getResult() != null) {
+                                wearSharedPrefManager.saveReferenceId(task.getResult());
+                                Log.d(TAG, "FCM Token: " + task.getResult());
+                            } else {
+                                Log.w(TAG, "Fetching FCM token failed", task.getException());
+                            }
+                            redirectToDashboard(user);
+                        });
+            }
 
-    private void startMainActivity() {
-        Intent intent = new Intent(this, MainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-        finish();
+            @Override
+            public void onFailure(String message) {
+                binding.loginButton.setEnabled(true);
+                binding.loginButton.setText("LOGIN");
+                showError(message);
+            }
+        });
     }
 
     private void showError(String message) {
         binding.errorText.setText(message);
-        binding.errorText.setVisibility(View.VISIBLE);
+        binding.errorText.setVisibility(android.view.View.VISIBLE);
+        binding.errorText.postDelayed(() -> binding.errorText.setVisibility(android.view.View.GONE), 3000);
+    }
 
-        // Hide error after 3 seconds
-        binding.errorText.postDelayed(() -> {
-            binding.errorText.setVisibility(View.GONE);
-        }, 3000);
+    private void redirectToDashboard(User user) {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.putExtra("user", user);
+        startActivity(intent);
+        finish();
+    }
+
+    private void startClockUpdater() {
+        timeHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                if (binding != null) {
+                    binding.tvLiveTime.setText(timeFormat.format(new Date()));
+                }
+                timeHandler.postDelayed(this, 1000);
+            }
+        });
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        // Reset button state when returning to login
         binding.loginButton.setEnabled(true);
         binding.loginButton.setText("LOGIN");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        timeHandler.removeCallbacksAndMessages(null);
     }
 }

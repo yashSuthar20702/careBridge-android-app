@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.wear.widget.SwipeDismissFrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp"
+        android:background="@drawable/wear_circle_gray"
+        android:gravity="center"
+        android:backgroundTint="@android:color/transparent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/tvMessage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Do you want to logout?"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:paddingBottom="28dp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/btnCancel"
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
+                    android:layout_marginEnd="24dp"
+                    android:background="@drawable/wear_button_circle_dark"
+                    android:gravity="center"
+                    android:includeFontPadding="false"
+                    android:lineHeight="72dp"
+                    android:text="✖"
+                    android:textSize="28sp"
+                    android:textColor="@color/white" />
+
+                <TextView
+                    android:id="@+id/btnConfirm"
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
+                    android:layout_marginStart="24dp"
+                    android:background="@drawable/wear_button_circle_light"
+                    android:gravity="center"
+                    android:includeFontPadding="false"
+                    android:lineHeight="72dp"
+                    android:text="✔"
+                    android:textSize="28sp"
+                    android:textColor="@color/white" />
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </FrameLayout>
+
+</androidx.wear.widget.SwipeDismissFrameLayout>
