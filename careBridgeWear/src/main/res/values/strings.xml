@@ -2,7 +2,7 @@
     <string name="app_name">CareBridgeWear</string>
     <string name="call">Call</string>
     <string name="medicine">Medicine</string>
-    <string name="patient_health">Patient Health</string>
+    <string name="patient_health">Patient Info</string>
     <string name="guardian_info">Guardian Info</string>
 
     <!-- New strings for accessibility -->

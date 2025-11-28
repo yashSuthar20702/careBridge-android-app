@@ -17,20 +17,25 @@
         android:gravity="center_vertical"
         android:clickable="true"
         android:focusable="true"
-        android:background="?attr/selectableItemBackground">
+        android:background="?android:attr/selectableItemBackground">
 
+        <!-- Your existing content here -->
         <ImageView
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:src="@drawable/ic_shield"
             android:layout_marginEnd="12dp"
+            android:clickable="false"
+            android:focusable="false"
             app:tint="@color/black" />
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:clickable="false"
+            android:focusable="false">
 
             <TextView
                 android:id="@+id/guardian_name"
@@ -39,7 +44,9 @@
                 android:text="Guardian Name"
                 android:textColor="@color/black"
                 android:textSize="16sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:clickable="false"
+                android:focusable="false" />
 
             <TextView
                 android:id="@+id/guardian_relation"
@@ -47,7 +54,9 @@
                 android:layout_height="wrap_content"
                 android:text="Relation"
                 android:textColor="@color/gray_600"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                android:clickable="false"
+                android:focusable="false" />
 
             <TextView
                 android:id="@+id/guardian_phone"
@@ -55,7 +64,9 @@
                 android:layout_height="wrap_content"
                 android:text="Phone Number"
                 android:textColor="@color/gray_600"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                android:clickable="false"
+                android:focusable="false" />
 
         </LinearLayout>
 
@@ -63,6 +74,8 @@
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:src="@drawable/ic_phone"
+            android:clickable="false"
+            android:focusable="false"
             app:tint="@color/gray_600" />
 
     </LinearLayout>
