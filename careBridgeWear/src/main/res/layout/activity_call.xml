@@ -17,12 +17,10 @@
             android:layout_marginBottom="8dp"
             android:layout_marginLeft="8dp">
 
-
             <ImageButton
                 android:id="@+id/call_back_button"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-
                 android:layout_alignParentStart="true"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/ic_arrow_left"
@@ -33,7 +31,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:text=" Call"
+                android:text="Call"
                 android:textColor="@color/white"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -110,62 +108,23 @@
 
                 </androidx.cardview.widget.CardView>
 
-                <!-- Primary Guardian Contact -->
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/call_guardian_contact"
+                <!-- Guardians Section Header -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Contacts"
+                    android:textColor="@color/white"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginStart="8dp" />
+
+                <!-- Guardians RecyclerView -->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/guardians_recycler_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    app:cardCornerRadius="24dp"
-                    app:cardElevation="4dp"
-                    app:cardBackgroundColor="@color/white">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:padding="16dp"
-                        android:gravity="center_vertical">
-
-                        <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:src="@drawable/ic_shield"
-                            android:layout_marginEnd="12dp"
-                            app:tint="@color/black" />
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Primary Guardian"
-                                android:textColor="@color/black"
-                                android:textSize="16sp"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Jasjit S. - Friend"
-                                android:textColor="@color/gray_600"
-                                android:textSize="12sp" />
-
-                        </LinearLayout>
-
-                        <ImageView
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:src="@drawable/ic_phone"
-                            app:tint="@color/gray_600" />
-
-                    </LinearLayout>
-
-                </androidx.cardview.widget.CardView>
+                    android:layout_marginBottom="8dp" />
 
             </LinearLayout>
 

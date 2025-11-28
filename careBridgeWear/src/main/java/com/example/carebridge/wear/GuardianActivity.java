@@ -29,8 +29,8 @@ public class GuardianActivity extends AppCompatActivity {
 
     private void initializeData() {
         guardianList = new ArrayList<>();
-        guardianList.add(new Guardian("Sarah Smith", "Family", "Daughter", "+1 234-5679"));
-        guardianList.add(new Guardian("Mary Johnson", "Caretaker", "Primary Nurse", "+1 234-5680"));
+        guardianList.add(new Guardian("Yash", "Family", "Friend", "+1 519-569-2560"));
+        guardianList.add(new Guardian("Dhwani", "Caretaker", "Primary Nurse", "+1 519-568-2540"));
     }
 
     private void setupRecyclerView() {
