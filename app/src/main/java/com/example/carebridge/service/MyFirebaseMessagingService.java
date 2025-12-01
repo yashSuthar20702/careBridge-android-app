@@ -14,7 +14,6 @@ import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 
 import com.example.carebridge.R;
-import com.example.carebridge.view.GuardianDashboardActivity;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 
@@ -25,26 +24,26 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private static final String TAG = "FCM_Service";
     private static final String CHANNEL_ID = "carebridge_channel";
 
+    // ✅ store logId from FCM data
+    private String lastLogId = null;
+
     @Override
     public void onNewToken(@NonNull String token) {
         super.onNewToken(token);
         Log.d(TAG, "✅ New FCM Token: " + token);
-
-        // TODO: Send this token to your backend server to link with user account
+        // send token to your backend
     }
 
     @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
-        Log.d(TAG, "📩 Message received from: " + remoteMessage.getFrom());
+        Log.d(TAG, "📩 Message received: " + remoteMessage.getFrom());
 
-        // ✅ Log the full message payload for debugging
         if (remoteMessage.getData().size() > 0) {
             Log.d(TAG, "📦 Data Payload: " + remoteMessage.getData());
             handleDataMessage(remoteMessage.getData());
         }
 
         if (remoteMessage.getNotification() != null) {
-            Log.d(TAG, "🔔 Notification Body: " + remoteMessage.getNotification().getBody());
             sendNotification(
                     remoteMessage.getNotification().getTitle(),
                     remoteMessage.getNotification().getBody()
@@ -57,53 +56,73 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             String title = data.get("title");
             String message = data.get("body");
 
+            // ✅ EXTRACT log_id HERE
+            lastLogId = data.get("log_id");
+
+            Log.d(TAG, "📌 Extracted log_id: " + lastLogId);
+
             if (title == null) title = "CareBridge";
             if (message == null) message = "You have a new update.";
 
             sendNotification(title, message);
+
         } catch (Exception e) {
             Log.e(TAG, "⚠️ Error handling data message: " + e.getMessage(), e);
         }
     }
 
     private void sendNotification(String title, String messageBody) {
-        Intent intent = new Intent(this, GuardianDashboardActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
-        PendingIntent pendingIntent = PendingIntent.getActivity(
-                this,
-                0,
-                intent,
-                PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE
+        // ❗ logId is now stored earlier
+        String logId = lastLogId;
+
+        if (logId == null) {
+            Log.e(TAG, "❌ log_id missing in FCM payload.");
+            return; // stop to avoid null crash
+        }
+
+        // 👉 ACTION: Taken
+        Intent takenIntent = new Intent(this, NotificationActionReceiver.class);
+        takenIntent.setAction("MED_TAKEN");
+        takenIntent.putExtra("log_id", logId);
+
+        PendingIntent takenPending = PendingIntent.getBroadcast(
+                this, 1, takenIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+        );
+
+        // 👉 ACTION: Not Taken
+        Intent notTakenIntent = new Intent(this, NotificationActionReceiver.class);
+        notTakenIntent.setAction("MED_NOT_TAKEN");
+        notTakenIntent.putExtra("log_id", logId);
+
+        PendingIntent notTakenPending = PendingIntent.getBroadcast(
+                this, 2, notTakenIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
         );
 
         Uri soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+        NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
-        NotificationManager notificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-        // ✅ Create notification channel (Android 8.0+)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(
                     CHANNEL_ID,
                     "CareBridge Notifications",
                     NotificationManager.IMPORTANCE_HIGH
             );
-            channel.setDescription("Notifications for medicine reminders and alerts");
-            notificationManager.createNotificationChannel(channel);
+            nm.createNotificationChannel(channel);
         }
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_health)
                 .setContentTitle(title)
                 .setContentText(messageBody)
-                .setAutoCancel(true)
                 .setSound(soundUri)
+                .setAutoCancel(true)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
-                .setContentIntent(pendingIntent);
+                .addAction(R.drawable.ic_check, "Taken", takenPending)
+                .addAction(R.drawable.ic_health, "Not Taken", notTakenPending);
 
-        notificationManager.notify((int) System.currentTimeMillis(), builder.build());
-
-        Log.d(TAG, "✅ Notification sent: " + title + " → " + messageBody);
+        nm.notify((int) System.currentTimeMillis(), builder.build());
     }
 }

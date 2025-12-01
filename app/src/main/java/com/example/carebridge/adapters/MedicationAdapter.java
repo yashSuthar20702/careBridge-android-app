@@ -4,10 +4,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.example.carebridge.R;
 import com.example.carebridge.shared.model.Medication;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,13 +18,12 @@ public class MedicationAdapter extends RecyclerView.Adapter<MedicationAdapter.Me
 
     private List<Medication> medicationList = new ArrayList<>();
     private OnItemClickListener onItemClickListener;
-    private final boolean isBlue; // New flag
+    private final boolean isBlue;
 
     public interface OnItemClickListener {
         void onItemClick(Medication medication);
     }
 
-    // Updated constructor to accept isBlue flag
     public MedicationAdapter(List<Medication> medicationList, boolean isBlue) {
         this.isBlue = isBlue;
         if (medicationList != null) {
@@ -41,7 +43,6 @@ public class MedicationAdapter extends RecyclerView.Adapter<MedicationAdapter.Me
     @NonNull
     @Override
     public MedicationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // Inflate different layout based on isBlue flag
         int layoutId = isBlue ? R.layout.item_medication_blue : R.layout.item_medication;
         View view = LayoutInflater.from(parent.getContext()).inflate(layoutId, parent, false);
         return new MedicationViewHolder(view);
@@ -81,25 +82,22 @@ public class MedicationAdapter extends RecyclerView.Adapter<MedicationAdapter.Me
         }
 
         void bind(Medication medication) {
-            // Medicine name - FIXED
-            tvMedName.setText(medication.getMedicineName());  // ✅ camelCase
+            tvMedName.setText(medication.getMedicineName());
+            tvMedDosage.setText("Dosage: " + medication.getDosage());
 
-            // Dosage - FIXED
-            tvMedDosage.setText("Dosage: " + medication.getDosage());  // ✅ correct
-
-            // Timing (Morning, Afternoon, etc.)
             String timeSummary = medication.getTimeSummary();
             tvMedTime.setText(timeSummary.isEmpty() ? "Timing: N/A" : "Take at: " + timeSummary);
 
-            // Duration - FIXED
-            tvMedDuration.setText("For " + medication.getDurationDays() + " days");  // ✅ camelCase
+            tvMedDuration.setText("For " + medication.getDurationDays() + " days");
 
-            // Extra instructions - FIXED
-            String instructions = medication.getExtraInstructions() != null && !medication.getExtraInstructions().isEmpty()
-                    ? medication.getExtraInstructions()  // ✅ camelCase
+            // FIXED: replaced getWithFood() with getFoodInstructionText()
+            String instructions = medication.getExtraInstructions() != null &&
+                    !medication.getExtraInstructions().isEmpty()
+                    ? medication.getExtraInstructions()
                     : "No additional instructions";
+
             tvMedInstructions.setText("Instructions: " + instructions +
-                    (medication.getWithFood() == 1 ? " (With food)" : " (Without food)"));  // ✅ camelCase
+                    " • " + medication.getFoodInstructionText());
         }
     }
 }

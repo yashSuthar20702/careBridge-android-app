@@ -1,6 +1,5 @@
 package com.example.carebridge.shared.model;
 
-
 import java.util.List;
 
 public class Prescription {

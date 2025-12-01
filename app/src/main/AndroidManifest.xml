@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.example.carebridge">
 
-    <!--  Required permissions -->
+    <!-- Required permissions -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -23,84 +23,80 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CareBridge">
 
-    <!--  Firebase Initialization -->
-    <meta-data
-        android:name="com.google.firebase.messaging.default_notification_icon"
-        android:resource="@drawable/ic_health" />
-    <meta-data
-        android:name="com.google.firebase.messaging.default_notification_color"
-        android:resource="@color/primary_blue" />
-    <meta-data
-        android:name="com.google.firebase.messaging.default_notification_channel_id"
-        android:value="carebridge_channel" />
+        <!-- Firebase Notification Defaults -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_health" />
 
-    <!--  Google Maps API Key -->
-    <meta-data
-        android:name="com.google.android.geo.API_KEY"
-        android:value="AIzaSyCt1z0X-4oq24pwiZOS6OPYzQ_ROmPvqmE" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/primary_blue" />
 
-    <!--  Required for Google Play Services Maps -->
-    <meta-data
-        android:name="com.google.android.gms.version"
-        android:value="@integer/google_play_services_version" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_channel_id"
+            android:value="carebridge_channel" />
 
-    <!--  Splash Screen -->
-    <activity
-        android:name=".view.SplashActivity"
-        android:exported="true">
+        <!-- Google Maps API Key -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="YOUR_API_KEY_HERE" />
+        <!-- Replace this with your actual API key safely -->
 
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
+        <!-- Required for Google Play Services Maps -->
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
 
-    </activity>
+        <!-- Splash Screen -->
+        <activity
+            android:name=".view.SplashActivity"
+            android:exported="true">
 
-    <!--  Login -->
-    <activity
-        android:name=".view.LoginActivity"
-        android:windowSoftInputMode="adjustResize|stateHidden"
-        android:exported="false" />
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
 
-    <!--  Patient Dashboard -->
-    <activity
-        android:name=".view.PatientDashboardActivity"
-        android:exported="false" />
+        </activity>
 
-    <!--  Guardian Dashboard -->
-    <activity
-        android:name=".view.GuardianDashboardActivity"
-        android:exported="false" />
+        <!-- Login -->
+        <activity
+            android:name=".view.LoginActivity"
+            android:windowSoftInputMode="adjustResize|stateHidden"
+            android:exported="false" />
 
-    <!--  Full Screen Map Activities -->
-    <activity
-        android:name=".view.FullMapActivity"
-        android:exported="false" />
-    <activity
-        android:name=".view.FullMapActivityBlue"
-        android:exported="false" />
+        <!-- Patient Dashboard -->
+        <activity
+            android:name=".view.PatientDashboardActivity"
+            android:exported="false" />
 
-    <!--  Firebase Messaging Service -->
-    <service
-        android:name=".service.MyFirebaseMessagingService"
-        android:exported="false">
-        <intent-filter>
-            <action android:name="com.google.firebase.MESSAGING_EVENT" />
-        </intent-filter>
-    </service>
+        <!-- Guardian Dashboard -->
+        <activity
+            android:name=".view.GuardianDashboardActivity"
+            android:exported="false" />
 
-    <!--  Firebase required receiver -->
-    <receiver
-        android:name="com.google.firebase.iid.FirebaseInstanceIdReceiver"
-        android:exported="true"
-        android:permission="com.google.android.c2dm.permission.SEND">
-        <intent-filter>
-            <action android:name="com.google.android.c2dm.intent.RECEIVE" />
-            <action android:name="com.google.android.c2dm.intent.REGISTRATION" />
-            <category android:name="${applicationId}" />
-        </intent-filter>
-    </receiver>
+        <!-- Full Screen Map Activities -->
+        <activity
+            android:name=".view.FullMapActivity"
+            android:exported="false" />
 
-</application>
+        <activity
+            android:name=".view.FullMapActivityBlue"
+            android:exported="false" />
 
-    </manifest>
+        <!-- Firebase Messaging Service -->
+        <service
+            android:name=".service.MyFirebaseMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <!-- NO LONGER NEEDED (REMOVED):
+             FirebaseInstanceIdReceiver is deprecated & removed by Firebase -->
+        <!-- Firebase automatically handles token refresh now -->
+
+    </application>
+
+</manifest>
