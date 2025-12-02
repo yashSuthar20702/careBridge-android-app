@@ -14,7 +14,8 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp">
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="8dp">
 
             <ImageButton
                 android:id="@+id/medicine_back_button"
@@ -36,6 +37,19 @@
                 android:layout_centerVertical="true"/>
 
         </RelativeLayout>
+
+        <!-- No Medicine / No Internet Text -->
+        <TextView
+            android:id="@+id/no_medicine_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="No medicines found"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:layout_gravity="center_horizontal"
+            android:visibility="gone"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp" />
 
         <!-- Medicine List -->
         <androidx.recyclerview.widget.RecyclerView

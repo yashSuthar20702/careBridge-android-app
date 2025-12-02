@@ -63,7 +63,7 @@ public class HomePagerFragment extends Fragment {
         String[] buttonLabels = {
                 "Call",
                 "Medicine",
-                "Patient Health",
+                "Patient Info",
                 "Guardian Info",
                 "Logout"  // Add logout label
         };

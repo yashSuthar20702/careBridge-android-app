@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
@@ -10,6 +9,7 @@
     android:layout_marginBottom="8dp"
     android:gravity="center_vertical">
 
+    <!-- Icon -->
     <ImageView
         android:id="@+id/medicine_icon"
         android:layout_width="20dp"
@@ -18,6 +18,7 @@
         android:tint="@color/black"
         android:layout_marginEnd="12dp" />
 
+    <!-- Left Column -->
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -41,8 +42,18 @@
             android:textColor="@color/gray_600"
             android:textSize="12sp" />
 
+        <!-- MISSING FIELD → NOW FIXED -->
+        <TextView
+            android:id="@+id/medicine_food"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="With food"
+            android:textColor="@color/gray_600"
+            android:textSize="11sp"
+            android:layout_marginTop="2dp"/>
     </LinearLayout>
 
+    <!-- Right Column -->
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

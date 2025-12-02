@@ -1,13 +1,20 @@
 package com.example.carebridge.wear;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.Network;
+import android.net.NetworkCapabilities;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.example.carebridge.shared.controller.PrescriptionController;
+import com.example.carebridge.shared.model.Medication;
+import com.example.carebridge.shared.model.Prescription;
 import com.example.carebridge.wear.adapters.MedicineAdapter;
 import com.example.carebridge.wear.databinding.ActivityMedicineBinding;
-import com.example.carebridge.wear.models.Medicine;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +22,8 @@ import java.util.List;
 public class MedicineActivity extends AppCompatActivity {
 
     private ActivityMedicineBinding binding;
-    private List<Medicine> medicineList;
+    private List<Medication> medicineList = new ArrayList<>();
+    private MedicineAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,23 +31,76 @@ public class MedicineActivity extends AppCompatActivity {
         binding = ActivityMedicineBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        initializeData();
         setupRecyclerView();
-    }
+        loadMedicineData();
 
-    private void initializeData() {
-        medicineList = new ArrayList<>();
-        medicineList.add(new Medicine("Aspirin", "100mg", "8:00 AM", false));
-        medicineList.add(new Medicine("Metformin", "500mg", "12:00 PM", true));
-        medicineList.add(new Medicine("Lisinopril", "10mg", "6:00 PM", false));
-        medicineList.add(new Medicine("Vitamin D", "1000IU", "8:00 PM", false));
+        binding.medicineBackButton.setOnClickListener(v -> finish());
     }
 
     private void setupRecyclerView() {
-        MedicineAdapter adapter = new MedicineAdapter(medicineList);
+        adapter = new MedicineAdapter(medicineList);
         binding.medicineRecyclerView.setAdapter(adapter);
         binding.medicineRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+    }
 
-        binding.medicineBackButton.setOnClickListener(v -> finish());
+    private boolean isInternetAvailable() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (cm == null) return false;
+
+        Network network = cm.getActiveNetwork();
+        if (network == null) return false;
+
+        NetworkCapabilities nc = cm.getNetworkCapabilities(network);
+        return nc != null &&
+                (nc.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)
+                        || nc.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR));
+    }
+
+    private void loadMedicineData() {
+
+        // If no internet, show message
+        if (!isInternetAvailable()) {
+            showNoMedicine("No internet connection");
+            return;
+        }
+
+        PrescriptionController controller = new PrescriptionController(this);
+        controller.fetchPrescriptions(new PrescriptionController.PrescriptionCallback() {
+            @Override
+            public void onSuccess(List<Prescription> prescriptions) {
+
+                medicineList.clear();
+
+                for (Prescription p : prescriptions) {
+                    if (p.getMedicines() != null) {
+                        medicineList.addAll(p.getMedicines());
+                    }
+                }
+
+                if (medicineList.isEmpty()) {
+                    showNoMedicine("No medicine found");
+                } else {
+                    showList();
+                }
+
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onFailure(String errorMessage) {
+                showNoMedicine("Failed to load data. Try again.");
+            }
+        });
+    }
+
+    private void showNoMedicine(String message) {
+        binding.medicineRecyclerView.setVisibility(View.GONE);
+        binding.noMedicineText.setVisibility(View.VISIBLE);
+        binding.noMedicineText.setText(message);
+    }
+
+    private void showList() {
+        binding.noMedicineText.setVisibility(View.GONE);
+        binding.medicineRecyclerView.setVisibility(View.VISIBLE);
     }
 }
