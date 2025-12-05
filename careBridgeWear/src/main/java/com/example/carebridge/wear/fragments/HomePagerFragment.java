@@ -5,12 +5,15 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
 import com.example.carebridge.wear.CallActivity;
 import com.example.carebridge.wear.GuardianActivity;
 import com.example.carebridge.wear.HealthInfoActivity;
+import com.example.carebridge.wear.HealthMonitorActivity;
 import com.example.carebridge.wear.MainActivity;
 import com.example.carebridge.wear.MedicineActivity;
 import com.example.carebridge.wear.R;
@@ -57,7 +60,8 @@ public class HomePagerFragment extends Fragment {
                 R.drawable.ic_pill,
                 R.drawable.ic_activity,
                 R.drawable.ic_user,
-                R.drawable.ic_logout  // Add logout icon
+                R.drawable.ic_heart,  // Health Monitor icon
+                R.drawable.ic_logout
         };
 
         String[] buttonLabels = {
@@ -65,7 +69,8 @@ public class HomePagerFragment extends Fragment {
                 "Medicine",
                 "Patient Info",
                 "Guardian Info",
-                "Logout"  // Add logout label
+                "Health Monitor",  // New label
+                "Logout"
         };
 
         binding.homeMainButton.setImageResource(buttonIcons[position]);
@@ -86,6 +91,10 @@ public class HomePagerFragment extends Fragment {
                     startActivity(new Intent(requireContext(), GuardianActivity.class));
                     break;
                 case 4:
+                    // Health Monitor
+                    startActivity(new Intent(requireContext(), HealthMonitorActivity.class));
+                    break;
+                case 5:
                     // Handle logout
                     if (requireActivity() instanceof MainActivity) {
                         ((MainActivity) requireActivity()).logout();

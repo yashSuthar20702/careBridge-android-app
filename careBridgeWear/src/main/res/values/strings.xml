@@ -4,6 +4,7 @@
     <string name="medicine">Medicine</string>
     <string name="patient_health">Patient Info</string>
     <string name="guardian_info">Guardian Info</string>
+    <string name="health_monitor">Health Monitor</string>
 
     <!-- New strings for accessibility -->
     <string name="main_action_button">Main Action Button</string>
@@ -11,4 +12,17 @@
     <string name="page_indicator_2">Page 2 indicator</string>
     <string name="page_indicator_3">Page 3 indicator</string>
     <string name="page_indicator_4">Page 4 indicator</string>
+    <string name="page_indicator_5">Page 5 indicator</string>
+    <string name="page_indicator_6">Page 6 indicator</string>
+
+    <!-- Health Monitor Strings -->
+    <string name="start_monitoring">Start Monitoring</string>
+    <string name="stop_monitoring">Stop Monitoring</string>
+    <string name="sensors_active">Sensors Active</string>
+    <string name="heart_rate_normal">Normal</string>
+    <string name="heart_rate_low">Low</string>
+    <string name="heart_rate_high">High</string>
+    <string name="activity_low">Low</string>
+    <string name="activity_medium">Medium</string>
+    <string name="activity_high">High</string>
 </resources>

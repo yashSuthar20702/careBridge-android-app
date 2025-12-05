@@ -53,7 +53,8 @@ public class HomeFragment extends Fragment {
                 binding.homeIndicator1,
                 binding.homeIndicator2,
                 binding.homeIndicator3,
-                binding.homeIndicator4
+                binding.homeIndicator4,
+                binding.homeIndicator5
         };
 
         for (int i = 0; i < indicators.length; i++) {

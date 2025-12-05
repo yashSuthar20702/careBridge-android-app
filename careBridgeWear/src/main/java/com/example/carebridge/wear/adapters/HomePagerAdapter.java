@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
+
 import com.example.carebridge.wear.fragments.HomePagerFragment;
 
 public class HomePagerAdapter extends FragmentStateAdapter {
@@ -24,6 +25,6 @@ public class HomePagerAdapter extends FragmentStateAdapter {
 
     @Override
     public int getItemCount() {
-        return 5; // Call, Medicine, Patient Health, Guardian Info, Logout
+        return 6; // Call, Medicine, Patient Health, Guardian Info, Health Monitor, Logout
     }
 }

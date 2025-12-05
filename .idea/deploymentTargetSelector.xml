@@ -4,10 +4,10 @@
     <selectionStates>
       <SelectionState runConfigName="careBridgeWear">
         <option name="selectionMode" value="DROPDOWN" />
-        <DropdownSelection timestamp="2025-12-02T17:59:36.312500Z">
+        <DropdownSelection timestamp="2025-12-05T19:15:03.262029400Z">
           <Target type="DEFAULT_BOOT">
             <handle>
-              <DeviceId pluginId="LocalEmulator" identifier="path=/Users/yashsuthar/.android/avd/Wear_OS_Large_Round.avd" />
+              <DeviceId pluginId="LocalEmulator" identifier="path=C:\Users\singh\.android\avd\Wear_OS_Small_Round.avd" />
             </handle>
           </Target>
         </DropdownSelection>

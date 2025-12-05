@@ -37,9 +37,9 @@
 
                 <TextView
                     android:id="@+id/btnCancel"
-                    android:layout_width="72dp"
-                    android:layout_height="72dp"
-                    android:layout_marginEnd="24dp"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_marginEnd="2dp"
                     android:background="@drawable/wear_button_circle_dark"
                     android:gravity="center"
                     android:includeFontPadding="false"
@@ -50,9 +50,9 @@
 
                 <TextView
                     android:id="@+id/btnConfirm"
-                    android:layout_width="72dp"
-                    android:layout_height="72dp"
-                    android:layout_marginStart="24dp"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:layout_marginStart="8dp"
                     android:background="@drawable/wear_button_circle_light"
                     android:gravity="center"
                     android:includeFontPadding="false"
