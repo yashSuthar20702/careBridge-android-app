@@ -93,6 +93,11 @@
             </intent-filter>
         </service>
 
+        <!-- Receiver for notification actions -->
+        <receiver
+            android:name=".service.NotificationActionReceiver"
+            android:exported="true" />
+
         <!-- NO LONGER NEEDED (REMOVED):
              FirebaseInstanceIdReceiver is deprecated & removed by Firebase -->
         <!-- Firebase automatically handles token refresh now -->

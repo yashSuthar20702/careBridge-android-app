@@ -3,6 +3,7 @@ package com.example.carebridge.service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -20,14 +21,20 @@ import retrofit2.Response;
 
 public class NotificationActionReceiver extends BroadcastReceiver {
 
+    private static final String TAG = "ACTION_RECEIVER";
+
     @Override
     public void onReceive(Context context, Intent intent) {
+        // Log the entire intent for debugging
+        Bundle extras = intent.getExtras();
+        Log.d(TAG, "Intent received: " + intent.getAction() + " | extras: " + (extras != null ? extras.toString() : "null"));
 
+        // Extract log_id and status
         String logIdStr = intent.getStringExtra("log_id");
         String takenStatus = intent.getStringExtra("taken_status");
 
         if (logIdStr == null || takenStatus == null) {
-            Log.e("ACTION_RECEIVER", "Missing log_id or taken_status");
+            Log.e(TAG, "Missing log_id or taken_status in intent");
             return;
         }
 
@@ -35,39 +42,39 @@ public class NotificationActionReceiver extends BroadcastReceiver {
         try {
             logId = Integer.parseInt(logIdStr);
         } catch (NumberFormatException e) {
-            Log.e("ACTION_RECEIVER", "Invalid log_id: " + logIdStr);
+            Log.e(TAG, "Invalid log_id: " + logIdStr);
             return;
         }
 
-        Log.d("ACTION_RECEIVER", "Action Received → Log #" + logId + " | " + takenStatus);
+        Log.d(TAG, "Action Received → Log #" + logId + " | " + takenStatus);
 
+        // Call API
         ApiService api = ApiClient.getClient().create(ApiService.class);
-
         api.updateMedicineStatus(String.valueOf(logId), takenStatus).enqueue(new Callback<JsonObject>() {
             @Override
             public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-
                 if (response.body() == null || !response.isSuccessful()) {
-                    Log.e("ACTION_RECEIVER", "Null or failed API response, using fallback");
+                    Log.e(TAG, "API null or failed response, fallback triggered");
                     runWorkManagerFallback(context, logId, takenStatus);
                     return;
                 }
 
-                Log.d("ACTION_RECEIVER", "API Response: " + response.body());
+                Log.d(TAG, "API Response: " + response.body());
                 Toast.makeText(context, "Updated: " + takenStatus, Toast.LENGTH_SHORT).show();
+
+                // Clear the notification
                 NotificationHelper.clearNotification(context, logId);
             }
 
             @Override
             public void onFailure(Call<JsonObject> call, Throwable t) {
-                Log.e("ACTION_RECEIVER", "API Failed: " + t.getMessage());
+                Log.e(TAG, "API Failed: " + t.getMessage());
                 runWorkManagerFallback(context, logId, takenStatus);
             }
         });
     }
 
     private void runWorkManagerFallback(Context context, int logId, String status) {
-
         Data data = new Data.Builder()
                 .putInt("log_id", logId)
                 .putString("taken_status", status)
@@ -84,6 +91,6 @@ public class NotificationActionReceiver extends BroadcastReceiver {
 
         WorkManager.getInstance(context).enqueue(request);
 
-        Log.d("ACTION_RECEIVER", "WorkManager Fallback Triggered for Log #" + logId);
+        Log.d(TAG, "WorkManager Fallback Triggered for Log #" + logId);
     }
 }

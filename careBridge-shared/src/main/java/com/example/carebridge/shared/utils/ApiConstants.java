@@ -1,7 +1,7 @@
 package com.example.carebridge.shared.utils;
 
 public class ApiConstants {
-    public static final boolean USE_LOCALHOST = true;
+    public static final boolean USE_LOCALHOST = false;
     private static final String LOCALHOST_IP = "10.0.2.2";
     private static final String DEVICE_SERVER_IP = "10.0.0.165";
     private static final String API_ROOT = "/CareBridge/careBridge-web-app/careBridge-website/endpoints/";

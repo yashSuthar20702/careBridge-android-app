@@ -10,7 +10,7 @@ import retrofit2.http.POST;
 public interface ApiService {
 
     @FormUrlEncoded
-    @POST("update_medicine_status.php")
+    @POST("updateStatus.php")
     Call<JsonObject> updateMedicineStatus(
             @Field("log_id") String logId,
             @Field("taken_status") String takenStatus

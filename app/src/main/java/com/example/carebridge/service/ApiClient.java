@@ -11,7 +11,7 @@ public class ApiClient {
 
         if (retrofit == null) {
             retrofit = new Retrofit.Builder()
-                    .baseUrl("https://your-server-url.com/") // <-- your backend domain
+                    .baseUrl("http://10.0.0.165/careBridge/careBridge-web-app/careBridge-website/endpoints/medicine_log/")
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
         }
