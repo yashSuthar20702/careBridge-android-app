@@ -84,33 +84,20 @@ public class HomeFragment extends Fragment {
         cardWarning = view.findViewById(R.id.cardWarning);
         tvWarningMessage = view.findViewById(R.id.tvWarningMessage);
 
-        // Open full map button
-        Button btnOpenFullMap = view.findViewById(R.id.btnOpenFullMap);
-        btnOpenFullMap.setOnClickListener(v -> openFullMap());
-
-        // Initialize MapView
-        mapView = view.findViewById(R.id.mapView);
-        mapView.onCreate(savedInstanceState);
-        mapView.setOnClickListener(v -> openFullMap());
-
         // RecyclerView setup
         rvMedications.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new MedicationAdapter(medicationList, false);
         rvMedications.setAdapter(adapter);
 
-        swipeRefreshLayout.setOnRefreshListener(this::refreshData);
-
-        startClock();
-        loadPrescriptionData();
-
-        // Maps initialization
-        try { MapsInitializer.initialize(requireContext()); }
-        catch (Exception e) { Log.e(TAG, "MapsInitializer failed", e); }
+        // Map setup
+        mapView = view.findViewById(R.id.mapView);
+        mapView.onCreate(savedInstanceState);
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity());
 
         mapView.getMapAsync(map -> {
             googleMap = map;
+
             int currentNightMode = getResources().getConfiguration().uiMode
                     & android.content.res.Configuration.UI_MODE_NIGHT_MASK;
             int styleRes = (currentNightMode == android.content.res.Configuration.UI_MODE_NIGHT_YES)
@@ -127,6 +114,19 @@ public class HomeFragment extends Fragment {
 
             enableUserLocation();
         });
+
+        // Full map button
+        Button btnOpenFullMap = view.findViewById(R.id.btnOpenFullMap);
+        btnOpenFullMap.setOnClickListener(v -> openFullMap());
+
+        // SwipeRefresh
+        swipeRefreshLayout.setOnRefreshListener(this::refreshData);
+
+        startClock();
+        loadPrescriptionData();
+
+        try { MapsInitializer.initialize(requireContext()); }
+        catch (Exception e) { Log.e(TAG, "MapsInitializer failed", e); }
 
         return view;
     }
@@ -192,14 +192,14 @@ public class HomeFragment extends Fragment {
                     }
                 }
 
-                // Hide warning card on success
-                cardWarning.setVisibility(View.GONE);
                 updateSummaryCounts();
 
                 if (medicationList.isEmpty()) {
                     showNoMedicineView(true);
+                    showWarning("No medicine assigned right now.");
                 } else {
                     showNoMedicineView(false);
+                    cardWarning.setVisibility(View.GONE);
                 }
 
                 adapter.notifyDataSetChanged();
@@ -210,10 +210,19 @@ public class HomeFragment extends Fragment {
             public void onFailure(String errorMessage) {
                 medicationList.clear();
                 updateSummaryCounts();
-                showNoMedicineView(true);
-                showWarning(getString(R.string.network_error_retry_message));
+
+                if ("No active prescriptions found".equalsIgnoreCase(errorMessage)) {
+                    showNoMedicineView(true);  // Show "No medicines" text
+                    showWarning("No medicine assigned right now.");
+                } else {
+                    showNoMedicineView(false); // Keep map visible
+                    showWarning(getString(R.string.network_error_retry_message));
+                }
+
+                adapter.notifyDataSetChanged();
                 swipeRefreshLayout.setRefreshing(false);
             }
+
         });
     }
 

@@ -13,6 +13,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.Call;
@@ -95,8 +96,21 @@ public class PrescriptionController {
                 return;
             }
 
-            List<Prescription> prescriptions = prescriptionResponse.getPrescriptions();
-            callback.onSuccess(prescriptions);
+            List<Prescription> allPrescriptions = prescriptionResponse.getPrescriptions();
+            List<Prescription> activePrescriptions = new ArrayList<>();
+
+            // Filter only Active prescriptions
+            for (Prescription p : allPrescriptions) {
+                if ("Active".equalsIgnoreCase(p.getStatus())) {
+                    activePrescriptions.add(p);
+                }
+            }
+
+            if (activePrescriptions.isEmpty()) {
+                callback.onFailure("No active prescriptions found");
+            } else {
+                callback.onSuccess(activePrescriptions);
+            }
 
         } catch (JsonSyntaxException e) {
             callback.onFailure("JSON format error");

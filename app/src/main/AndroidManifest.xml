@@ -39,7 +39,7 @@
         <!-- Google Maps API Key -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="YOUR_API_KEY_HERE" />
+            android:value="AIzaSyCt1z0X-4oq24pwiZOS6OPYzQ_ROmPvqmE" />
         <!-- Replace this with your actual API key safely -->
 
         <!-- Required for Google Play Services Maps -->

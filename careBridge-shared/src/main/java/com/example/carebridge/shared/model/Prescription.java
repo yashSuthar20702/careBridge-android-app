@@ -6,6 +6,9 @@ public class Prescription {
     private int prescription_id;
     private String case_id;
     private String doctor_name;
+    private String issue_date;
+    private String status;
+    private String notes;
     private String created_at;
     private List<Medication> medicines;
 
@@ -17,6 +20,15 @@ public class Prescription {
 
     public String getDoctor_name() { return doctor_name; }
     public void setDoctor_name(String doctor_name) { this.doctor_name = doctor_name; }
+
+    public String getIssue_date() { return issue_date; }
+    public void setIssue_date(String issue_date) { this.issue_date = issue_date; }
+
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
+
+    public String getNotes() { return notes; }
+    public void setNotes(String notes) { this.notes = notes; }
 
     public String getCreated_at() { return created_at; }
     public void setCreated_at(String created_at) { this.created_at = created_at; }
