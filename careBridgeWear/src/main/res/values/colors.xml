@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Wear OS Theme Colors -->
     <color name="wear_black">#000000</color>
     <color name="wear_white">#FFFFFF</color>
     <color name="wear_gray_light">#B3B3B3</color>
@@ -9,56 +10,71 @@
     <color name="wear_primary_blue">#1976D2</color>
     <color name="wear_icon_circle">#1AFFFFFF</color>
 
-    <!-- Complete Gray Scale -->
-    <color name="gray_50">#F9FAFB</color>
-    <color name="gray_100">#F3F4F6</color>
+    <!-- Gray Scale -->
+    <color name="black">#000000</color>
+    <color name="white">#FFFFFF</color>
     <color name="gray_200">#E5E7EB</color>
-    <color name="gray_300">#D1D5DB</color>
     <color name="gray_400">#9CA3AF</color>
-    <color name="gray_500">#6B7280</color>
     <color name="gray_600">#4B5563</color>
     <color name="gray_700">#374151</color>
     <color name="gray_800">#1F2937</color>
     <color name="gray_900">#111827</color>
 
-    <!-- Basic Colors -->
-    <color name="black">#000000</color>
-    <color name="white">#FFFFFF</color>
-    <color name="red">#FFF44336</color>
+    <!-- Material Colors -->
+    <color name="red">#F44336</color>
+    <color name="pink">#E91E63</color>
+    <color name="purple">#9C27B0</color>
+    <color name="deep_purple">#673AB7</color>
+    <color name="indigo">#3F51B5</color>
+    <color name="blue">#2196F3</color>
+    <color name="light_blue">#03A9F4</color>
+    <color name="cyan">#00BCD4</color>
+    <color name="teal">#009688</color>
+    <color name="green">#4CAF50</color>
+    <color name="light_green">#8BC34A</color>
+    <color name="lime">#CDDC39</color>
+    <color name="yellow">#FFEB3B</color>
+    <color name="amber">#FFC107</color>
+    <color name="orange">#FF9800</color>
+    <color name="deep_orange">#FF5722</color>
+    <color name="brown">#795548</color>
+    <color name="grey">#9E9E9E</color>
+    <color name="blue_grey">#607D8B</color>
 
     <!-- Accent Colors -->
-    <color name="blue_500">#FF2196F3</color>
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
+    <color name="blue_500">#2196F3</color>
 
-    <!-- Health Monitor Specific Colors -->
-    <color name="green_300">#81C784</color>
-    <color name="green_400">#66BB6A</color>
-    <color name="green_500">#4CAF50</color>
-    <color name="green_600">#43A047</color>
+    <!-- Health Monitor Gradient Colors -->
+    <!-- Heart Rate Gradient -->
+    <color name="heart_rate_start">#EF4444</color>
+    <color name="heart_rate_end">#FCA5A5</color>
 
-    <color name="red_300">#E57373</color>
-    <color name="red_400">#EF5350</color>
-    <color name="red_500">#F44336</color>
-    <color name="red_600">#E53935</color>
+    <!-- Steps Gradient -->
+    <color name="steps_start">#8B5CF6</color>
+    <color name="steps_end">#A78BFA</color>
 
-    <color name="blue_300">#64B5F6</color>
-    <color name="blue_400">#42A5F5</color>
+    <!-- Blood Oxygen Gradient -->
+    <color name="blood_oxygen_start">#0EA5E9</color>
+    <color name="blood_oxygen_end">#38BDF8</color>
 
+    <!-- Status Colors -->
+    <color name="status_green">#10B981</color>
+    <color name="status_orange">#F59E0B</color>
+    <color name="status_cyan">#06B6D4</color>
 
-    <color name="purple_300">#BA68C8</color>
-    <color name="purple_400">#AB47BC</color>
+    <!-- Health Monitor Background Colors -->
+    <color name="heart_rate_bg">#20EF4444</color>
+    <color name="steps_bg">#208B5CF6</color>
+    <color name="blood_oxygen_bg">#200EA5E9</color>
+    <color name="calories_bg">#20F59E0B</color>
+    <color name="sleep_bg">#200D9488</color>
 
+    <!-- Icon Colors -->
+    <color name="icon_tint">#E6FFFFFF</color>
 
-    <color name="orange_300">#FFB74D</color>
-    <color name="orange_400">#FFA726</color>
-    <color name="orange_500">#FF9800</color>
-
-    <color name="yellow_300">#FFF176</color>
-    <color name="yellow_400">#FFEE58</color>
-    <color name="yellow_500">#FFEB3B</color>
-    <color name="yellow_600">#FDD835</color>
 </resources>

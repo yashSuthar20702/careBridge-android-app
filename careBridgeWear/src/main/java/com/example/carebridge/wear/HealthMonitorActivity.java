@@ -1,7 +1,7 @@
 package com.example.carebridge.wear;
 
 import android.Manifest;
-import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -12,103 +12,50 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.wear.widget.WearableLinearLayoutManager;
+import androidx.wear.widget.WearableRecyclerView;
 
+import com.example.carebridge.wear.adapters.HealthMetricAdapter;
 import com.example.carebridge.wear.databinding.ActivityHealthMonitorBinding;
-import com.example.carebridge.wear.utils.HealthDataManager;
+import com.example.carebridge.wear.models.HealthMetric;
+import com.google.android.material.snackbar.Snackbar;
 
-import java.util.Locale;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
-public class HealthMonitorActivity extends AppCompatActivity implements SensorEventListener {
+public class HealthMonitorActivity extends AppCompatActivity implements
+        SensorEventListener, HealthMetricAdapter.OnHealthMetricClickListener {
 
     private static final String TAG = "HealthMonitorActivity";
-    private static final int REQUEST_SENSOR_PERMISSIONS = 101;
+    private static final int PERMISSIONS_REQUEST = 100;
 
     private ActivityHealthMonitorBinding binding;
+    private List<HealthMetric> healthMetrics = new ArrayList<>();
+    private HealthMetricAdapter adapter;
+    private int selectedPosition = 0;
+
+    // Sensor related
     private SensorManager sensorManager;
     private Sensor heartRateSensor;
     private Sensor stepCounterSensor;
-    private Sensor accelerometerSensor;
 
-    private HealthDataManager healthDataManager;
     private Handler handler = new Handler(Looper.getMainLooper());
+    private Random random = new Random();
     private boolean isMonitoring = false;
-    private boolean isUsingMockData = true; // Track if we're using mock data
-    private int pulseAnimationCounter = 0;
 
-    // Default values
-    private int currentHeartRate = 72;
-    private int currentBloodOxygen = 98;
-    private int currentSteps = 3542;
-    private int currentCalories = 385;
-    private long lastSensorUpdateTime = 0;
-    private static final long SENSOR_TIMEOUT = 5000; // 5 seconds without sensor data
-
-    private final Runnable pulseAnimation = new Runnable() {
+    // Update runnable
+    private Runnable updateRunnable = new Runnable() {
         @Override
         public void run() {
-            if (isMonitoring) {
-                pulseAnimationCounter++;
-                float scale = 1.0f + (float) Math.sin(pulseAnimationCounter * 0.3) * 0.1f;
-                binding.heartIcon.setScaleX(scale);
-                binding.heartIcon.setScaleY(scale);
-                handler.postDelayed(this, 100);
-            }
-        }
-    };
-
-    private final Runnable mockDataUpdater = new Runnable() {
-        @Override
-        public void run() {
-            if (isMonitoring && isUsingMockData) {
-                // Only update if we're not getting sensor data
-                long timeSinceLastSensor = System.currentTimeMillis() - lastSensorUpdateTime;
-
-                if (timeSinceLastSensor > SENSOR_TIMEOUT) {
-                    // Update heart rate (simulate realistic variation)
-                    int heartRateChange = (int) (Math.random() * 5) - 2; // -2 to +2
-                    currentHeartRate = Math.max(60, Math.min(100, currentHeartRate + heartRateChange));
-                    updateHeartRateUI(currentHeartRate);
-
-                    // Update blood oxygen
-                    int spO2Change = (int) (Math.random() * 3) - 1; // -1 to +1
-                    currentBloodOxygen = Math.max(95, Math.min(100, currentBloodOxygen + spO2Change));
-                    updateBloodOxygenUI(currentBloodOxygen);
-
-                    // Update steps (30% chance to increment)
-                    if (Math.random() > 0.7) {
-                        int stepsAdded = (int) (Math.random() * 3) + 1;
-                        currentSteps += stepsAdded;
-                        currentCalories += stepsAdded / 10;
-                        updateStepsUI(currentSteps);
-                        updateCaloriesUI(currentCalories);
-                        updateActivityLevelUI(currentSteps);
-                    }
-
-                    Log.d(TAG, "Mock data updated: HR=" + currentHeartRate + ", Steps=" + currentSteps);
-                }
-            }
-            handler.postDelayed(this, 3000); // Update every 3 seconds
-        }
-    };
-
-    private final Runnable sensorTimeoutChecker = new Runnable() {
-        @Override
-        public void run() {
-            long timeSinceLastSensor = System.currentTimeMillis() - lastSensorUpdateTime;
-
-            if (timeSinceLastSensor > SENSOR_TIMEOUT) {
-                // Switch back to mock data if no sensor data for 5 seconds
-                isUsingMockData = true;
-                Log.d(TAG, "Switching to mock data - no sensor updates");
-            }
-
-            handler.postDelayed(this, 1000); // Check every second
+            updateSimulatedData();
+            handler.postDelayed(this, 3000);
         }
     };
 
@@ -118,306 +65,394 @@ public class HealthMonitorActivity extends AppCompatActivity implements SensorEv
         binding = ActivityHealthMonitorBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        healthDataManager = new HealthDataManager(this);
-        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-
         setupUI();
-        checkAndRequestPermissions();
+        setupCarousel();
+        checkPermissions();
     }
 
     private void setupUI() {
         binding.healthMonitorBackButton.setOnClickListener(v -> finish());
+        binding.healthMonitorTitle.setText("Health Monitor");
+    }
 
-        binding.monitorButton.setOnClickListener(v -> {
-            if (!isMonitoring) {
-                startMonitoring();
-            } else {
-                stopMonitoring();
+    private void setupCarousel() {
+        // Initialize data with metrics - ONLY 3 ITEMS
+        initializeHealthMetrics();
+
+        // Create adapter
+        adapter = new HealthMetricAdapter(healthMetrics, this);
+
+        // Setup WearableLinearLayoutManager for normal vertical scrolling
+        WearableLinearLayoutManager layoutManager = new WearableLinearLayoutManager(this);
+        layoutManager.setOrientation(WearableLinearLayoutManager.VERTICAL);
+
+        // Add scaling effect based on position from center
+        layoutManager.setLayoutCallback(new WearableLinearLayoutManager.LayoutCallback() {
+            @Override
+            public void onLayoutFinished(View child, RecyclerView parent) {
+                // Calculate distance from center for subtle scaling
+                float centerY = parent.getHeight() / 2f;
+                float childCenterY = child.getY() + child.getHeight() / 2f;
+                float distanceFromCenter = Math.abs(centerY - childCenterY);
+
+                float maxDistance = centerY;
+                if (maxDistance > 0) {
+                    // Subtle scaling effect
+                    float scale = 1.0f - (distanceFromCenter / maxDistance) * 0.15f;
+                    scale = Math.max(0.85f, Math.min(1.1f, scale));
+
+                    float alpha = 1.0f - (distanceFromCenter / maxDistance) * 0.3f;
+                    alpha = Math.max(0.7f, Math.min(1.0f, alpha));
+
+                    child.setScaleX(scale);
+                    child.setScaleY(scale);
+                    child.setAlpha(alpha);
+                }
             }
         });
 
-        // Initialize with saved data or defaults
-        currentHeartRate = healthDataManager.getLastHeartRate();
-        currentSteps = healthDataManager.getLastSteps();
+        // Set up the WearableRecyclerView
+        binding.healthMonitorRecyclerView.setLayoutManager(layoutManager);
+        binding.healthMonitorRecyclerView.setAdapter(adapter);
+        binding.healthMonitorRecyclerView.setHasFixedSize(true);
 
-        updateHeartRateUI(currentHeartRate);
-        updateBloodOxygenUI(currentBloodOxygen);
-        updateStepsUI(currentSteps);
-        updateCaloriesUI(currentCalories);
-        updateActivityLevelUI(currentSteps);
+        // DISABLE circular scrolling
+        binding.healthMonitorRecyclerView.setCircularScrollingGestureEnabled(false);
+
+        // DISABLE edge centering - this causes automatic scrolling
+        binding.healthMonitorRecyclerView.setEdgeItemsCenteringEnabled(false);
+
+        // Simple scroll listener to update scaling
+        binding.healthMonitorRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    // Find which item is closest to center
+                    View closestToCenter = null;
+                    float minDistance = Float.MAX_VALUE;
+
+                    for (int i = 0; i < recyclerView.getChildCount(); i++) {
+                        View child = recyclerView.getChildAt(i);
+                        int position = recyclerView.getChildAdapterPosition(child);
+                        if (position != RecyclerView.NO_POSITION) {
+                            float centerY = recyclerView.getHeight() / 2f;
+                            float childCenterY = child.getY() + child.getHeight() / 2f;
+                            float distance = Math.abs(centerY - childCenterY);
+
+                            if (distance < minDistance) {
+                                minDistance = distance;
+                                closestToCenter = child;
+                            }
+                        }
+                    }
+
+                    if (closestToCenter != null) {
+                        int position = recyclerView.getChildAdapterPosition(closestToCenter);
+                        if (position != RecyclerView.NO_POSITION) {
+                            updateSelection(position);
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                // Update scaling during scroll
+                for (int i = 0; i < recyclerView.getChildCount(); i++) {
+                    View child = recyclerView.getChildAt(i);
+                    layoutManager.getLayoutCallback().onLayoutFinished(child, recyclerView);
+                }
+            }
+        });
+
+        // Initialize selection to first item (Heart Rate)
+        selectedPosition = 0;
+        adapter.setSelectedPosition(selectedPosition);
+
+        // NO automatic scrolling - let the RecyclerView show items naturally
     }
 
-    private void checkAndRequestPermissions() {
-        String[] permissions = {
-                Manifest.permission.BODY_SENSORS,
-                Manifest.permission.ACTIVITY_RECOGNITION
-        };
+    private void initializeHealthMetrics() {
+        healthMetrics.clear();
 
-        boolean allGranted = true;
-        for (String permission : permissions) {
-            if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
-                allGranted = false;
-                break;
+        // Exactly 3 metrics
+        healthMetrics.add(new HealthMetric(
+                "heart_rate",
+                "Heart Rate",
+                "72",
+                "BPM",
+                "Real-time monitoring",
+                R.drawable.ic_heart,
+                R.color.red,
+                R.color.heart_rate_start,
+                R.color.heart_rate_end,
+                "HeartRateDetailActivity"
+        ));
+
+        healthMetrics.add(new HealthMetric(
+                "steps",
+                "Steps",
+                "3542",
+                "steps",
+                "Daily activity",
+                R.drawable.ic_steps,
+                R.color.purple_500,
+                R.color.steps_start,
+                R.color.steps_end,
+                "StepsDetailActivity"
+        ));
+
+        healthMetrics.add(new HealthMetric(
+                "blood_oxygen",
+                "Blood Oxygen",
+                "98",
+                "%",
+                "SpO2 Level",
+                R.drawable.ic_droplet,
+                R.color.blue_500,
+                R.color.blood_oxygen_start,
+                R.color.blood_oxygen_end,
+                "BloodOxygenDetailActivity"
+        ));
+    }
+
+    private void updateSelection(int newPosition) {
+        int oldPosition = selectedPosition;
+        selectedPosition = newPosition;
+
+        // Update cursor position in adapter
+        if (adapter != null) {
+            adapter.setSelectedPosition(selectedPosition);
+        }
+
+        // Update cursor visibility
+        binding.healthMonitorRecyclerView.post(() -> {
+            for (int i = 0; i < binding.healthMonitorRecyclerView.getChildCount(); i++) {
+                View child = binding.healthMonitorRecyclerView.getChildAt(i);
+                int position = binding.healthMonitorRecyclerView.getChildAdapterPosition(child);
+                if (position != RecyclerView.NO_POSITION) {
+                    View cursor = child.findViewById(R.id.selection_cursor);
+                    if (cursor != null) {
+                        boolean isSelected = (position == selectedPosition);
+                        cursor.setVisibility(isSelected ? View.VISIBLE : View.GONE);
+
+                        // Animate cursor appearance
+                        if (isSelected) {
+                            cursor.setAlpha(0f);
+                            cursor.animate()
+                                    .alpha(1f)
+                                    .setDuration(200)
+                                    .start();
+                        }
+                    }
+                }
             }
-        }
+        });
+    }
 
-        if (!allGranted) {
-            ActivityCompat.requestPermissions(this, permissions, REQUEST_SENSOR_PERMISSIONS);
+    private void checkPermissions() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.BODY_SENSORS)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.BODY_SENSORS)) {
+
+                Snackbar.make(binding.getRoot(),
+                                "Health monitoring requires sensor permissions",
+                                Snackbar.LENGTH_LONG)
+                        .setAction("GRANT", v -> requestPermissions())
+                        .show();
+            } else {
+                requestPermissions();
+            }
         } else {
-            setupSensors();
+            startSensors();
         }
+    }
+
+    private void requestPermissions() {
+        ActivityCompat.requestPermissions(this,
+                new String[]{
+                        Manifest.permission.BODY_SENSORS,
+                        Manifest.permission.ACTIVITY_RECOGNITION
+                },
+                PERMISSIONS_REQUEST);
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == REQUEST_SENSOR_PERMISSIONS) {
-            boolean allGranted = true;
-            for (int result : grantResults) {
-                if (result != PackageManager.PERMISSION_GRANTED) {
-                    allGranted = false;
-                    break;
-                }
-            }
-            if (allGranted) {
-                setupSensors();
-                Toast.makeText(this, "Health monitoring enabled", Toast.LENGTH_SHORT).show();
+
+        if (requestCode == PERMISSIONS_REQUEST) {
+            if (grantResults.length > 0 &&
+                    grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                startSensors();
             } else {
-                Toast.makeText(this, "Some features require sensor permissions", Toast.LENGTH_LONG).show();
-                startMockDataOnly();
+                startSimulatedUpdates();
             }
         }
     }
 
-    private void setupSensors() {
-        // Heart Rate Sensor
-        if (sensorManager != null) {
-            heartRateSensor = sensorManager.getDefaultSensor(Sensor.TYPE_HEART_RATE);
-            if (heartRateSensor != null) {
-                Log.d(TAG, "Heart rate sensor available: " + heartRateSensor.getName());
-            } else {
-                Log.w(TAG, "Heart rate sensor not available");
-            }
+    private void startSensors() {
+        sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 
-            // Step Counter Sensor
-            stepCounterSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
-            if (stepCounterSensor != null) {
-                Log.d(TAG, "Step counter sensor available: " + stepCounterSensor.getName());
-            } else {
-                Log.w(TAG, "Step counter sensor not available");
-            }
-
-            // Accelerometer for activity detection
-            accelerometerSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-            if (accelerometerSensor != null) {
-                Log.d(TAG, "Accelerometer sensor available: " + accelerometerSensor.getName());
-            }
+        // Heart rate sensor
+        heartRateSensor = sensorManager.getDefaultSensor(Sensor.TYPE_HEART_RATE);
+        if (heartRateSensor != null) {
+            sensorManager.registerListener(this, heartRateSensor,
+                    SensorManager.SENSOR_DELAY_NORMAL);
+            isMonitoring = true;
+            Log.d(TAG, "Heart rate sensor registered");
+        } else {
+            Log.w(TAG, "No heart rate sensor available");
         }
 
-        // Start mock data updates for demonstration
-        startMockDataOnly();
-    }
-
-    private void startMockDataOnly() {
-        handler.post(mockDataUpdater);
-        handler.post(sensorTimeoutChecker);
-        isUsingMockData = true;
-    }
-
-    private void startMonitoring() {
-        isMonitoring = true;
-        binding.monitorButton.setText("Stop Monitoring");
-        binding.monitorButton.setBackgroundResource(R.drawable.button_red);
-        binding.sensorStatus.setVisibility(View.VISIBLE);
-        binding.heartRateValue.setTextColor(getResources().getColor(R.color.red_400, getTheme()));
-
-        // Register sensor listeners if available
-        if (sensorManager != null) {
-            if (heartRateSensor != null) {
-                sensorManager.registerListener(this, heartRateSensor, SensorManager.SENSOR_DELAY_NORMAL);
-                Log.d(TAG, "Heart rate sensor registered");
-            }
-            if (stepCounterSensor != null) {
-                sensorManager.registerListener(this, stepCounterSensor, SensorManager.SENSOR_DELAY_UI);
-                Log.d(TAG, "Step counter sensor registered");
-            }
-            if (accelerometerSensor != null) {
-                sensorManager.registerListener(this, accelerometerSensor, SensorManager.SENSOR_DELAY_NORMAL);
-                Log.d(TAG, "Accelerometer sensor registered");
-            }
+        // Step counter sensor
+        stepCounterSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
+        if (stepCounterSensor != null) {
+            sensorManager.registerListener(this, stepCounterSensor,
+                    SensorManager.SENSOR_DELAY_NORMAL);
+            Log.d(TAG, "Step counter sensor registered");
+        } else {
+            Log.w(TAG, "No step counter sensor available");
         }
 
-        // Start pulse animation
-        handler.post(pulseAnimation);
-
-        // Start timeout checker
-        handler.post(sensorTimeoutChecker);
-
-        Toast.makeText(this, "Health monitoring started", Toast.LENGTH_SHORT).show();
+        startSimulatedUpdates();
     }
 
-    private void stopMonitoring() {
-        isMonitoring = false;
-        binding.monitorButton.setText("Start Monitoring");
-        binding.monitorButton.setBackgroundResource(R.drawable.button_green);
-        binding.sensorStatus.setVisibility(View.GONE);
-        binding.heartRateValue.setTextColor(getResources().getColor(R.color.white, getTheme()));
-
-        // Unregister sensor listeners
-        if (sensorManager != null) {
-            sensorManager.unregisterListener(this);
-            Log.d(TAG, "Sensors unregistered");
-        }
-
-        // Reset animation
-        binding.heartIcon.setScaleX(1.0f);
-        binding.heartIcon.setScaleY(1.0f);
-
-        // Stop all handlers
-        handler.removeCallbacks(pulseAnimation);
-        handler.removeCallbacks(mockDataUpdater);
-        handler.removeCallbacks(sensorTimeoutChecker);
-
-        Toast.makeText(this, "Health monitoring stopped", Toast.LENGTH_SHORT).show();
+    private void startSimulatedUpdates() {
+        handler.post(updateRunnable);
     }
 
-    private void updateHeartRateUI(int heartRate) {
-        runOnUiThread(() -> {
-            binding.heartRateValue.setText(heartRate + " BPM");
-
-            // Update status based on heart rate
-            String status;
-            int colorRes;
-            if (heartRate < 60) {
-                status = "Low";
-                colorRes = R.color.blue_400;
-            } else if (heartRate > 100) {
-                status = "High";
-                colorRes = R.color.red_400;
-            } else {
-                status = "Normal";
-                colorRes = R.color.green_400;
-            }
-
-            binding.heartRateStatus.setText(status);
-            binding.heartRateStatus.setTextColor(getResources().getColor(colorRes, getTheme()));
-
-            // Save to health data manager
-            healthDataManager.saveHeartRate(heartRate);
-        });
-    }
-
-    private void updateBloodOxygenUI(int spO2) {
-        runOnUiThread(() -> {
-            binding.bloodOxygenValue.setText(spO2 + "%");
-        });
-    }
-
-    private void updateStepsUI(int steps) {
-        runOnUiThread(() -> {
-            binding.stepsValue.setText(String.format(Locale.getDefault(), "%,d", steps));
-            healthDataManager.saveSteps(steps);
-        });
-    }
-
-    private void updateCaloriesUI(int calories) {
-        runOnUiThread(() -> {
-            binding.caloriesValue.setText(String.valueOf(calories));
-        });
-    }
-
-    private void updateActivityLevelUI(int steps) {
-        runOnUiThread(() -> {
-            String activityLevel;
-            int colorRes;
-
-            if (steps > 5000) {
-                activityLevel = "High";
-                colorRes = R.color.green_500;
-            } else if (steps > 2000) {
-                activityLevel = "Medium";
-                colorRes = R.color.yellow_500;
-            } else {
-                activityLevel = "Low";
-                colorRes = R.color.gray_400;
-            }
-
-            binding.activityLevelValue.setText(activityLevel);
-            binding.activityLevelValue.setTextColor(getResources().getColor(colorRes, getTheme()));
-        });
-    }
-
-    // Sensor Event Listeners
     @Override
     public void onSensorChanged(SensorEvent event) {
-        lastSensorUpdateTime = System.currentTimeMillis();
-        isUsingMockData = false; // We're getting real sensor data
-
-        switch (event.sensor.getType()) {
-            case Sensor.TYPE_HEART_RATE:
-                float heartRate = event.values[0];
-                if (heartRate > 0) {
-                    currentHeartRate = (int) heartRate;
-                    updateHeartRateUI(currentHeartRate);
-                    Log.d(TAG, "Real sensor: Heart rate = " + heartRate + " BPM");
-
-                    // Show sensor source indicator
-                    runOnUiThread(() -> {
-                        binding.sensorStatus.setVisibility(View.VISIBLE);
-                        binding.sensorStatus.findViewById(R.id.sensor_status_text).setVisibility(View.VISIBLE);
-                    });
-                }
-                break;
-
-            case Sensor.TYPE_STEP_COUNTER:
-                float steps = event.values[0];
-                currentSteps = (int) steps;
-                updateStepsUI(currentSteps);
-                Log.d(TAG, "Real sensor: Step count = " + steps);
-                break;
-
-            case Sensor.TYPE_ACCELEROMETER:
-                // Calculate activity level based on acceleration
-                float x = event.values[0];
-                float y = event.values[1];
-                float z = event.values[2];
-
-                double acceleration = Math.sqrt(x*x + y*y + z*z);
-                if (acceleration > 15) {
-                    runOnUiThread(() -> {
-                        binding.activityLevelValue.setText("Active");
-                        binding.activityLevelValue.setTextColor(getResources().getColor(R.color.green_500, getTheme()));
-                    });
-                }
-                break;
+        if (event.sensor.getType() == Sensor.TYPE_HEART_RATE && event.values.length > 0) {
+            float heartRate = event.values[0];
+            updateHeartRate(heartRate);
+        } else if (event.sensor.getType() == Sensor.TYPE_STEP_COUNTER && event.values.length > 0) {
+            float steps = event.values[0];
+            updateSteps((int) steps);
         }
     }
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
-        Log.d(TAG, "Sensor accuracy changed: " + sensor.getName() + " = " + accuracy);
+        Log.d(TAG, "Sensor accuracy changed: " + sensor.getName() + " accuracy: " + accuracy);
+    }
+
+    private void updateHeartRate(float heartRate) {
+        runOnUiThread(() -> {
+            for (HealthMetric metric : healthMetrics) {
+                if (metric.getId().equals("heart_rate")) {
+                    metric.setValue(String.valueOf((int) heartRate));
+                    break;
+                }
+            }
+            if (adapter != null) {
+                adapter.notifyDataSetChanged();
+            }
+        });
+    }
+
+    private void updateSteps(int steps) {
+        runOnUiThread(() -> {
+            for (HealthMetric metric : healthMetrics) {
+                if (metric.getId().equals("steps")) {
+                    metric.setValue(String.valueOf(steps));
+                    break;
+                }
+            }
+            if (adapter != null) {
+                adapter.notifyDataSetChanged();
+            }
+        });
+    }
+
+    private void updateSimulatedData() {
+        runOnUiThread(() -> {
+            for (HealthMetric metric : healthMetrics) {
+                String metricId = metric.getId();
+
+                if (metricId.equals("heart_rate")) {
+                    if (!isMonitoring) {
+                        int heartRate = 65 + random.nextInt(20);
+                        metric.setValue(String.valueOf(heartRate));
+                    }
+                } else if (metricId.equals("steps")) {
+                    if (stepCounterSensor == null) {
+                        int steps = 3500 + random.nextInt(500);
+                        metric.setValue(String.valueOf(steps));
+                    }
+                } else if (metricId.equals("blood_oxygen")) {
+                    int bloodOxygen = 96 + random.nextInt(4);
+                    metric.setValue(String.valueOf(bloodOxygen));
+                }
+            }
+
+            if (adapter != null) {
+                adapter.notifyDataSetChanged();
+            }
+        });
+    }
+
+    @Override
+    public void onHealthMetricClick(HealthMetric metric) {
+        Class<?> activityClass = null;
+
+        switch (metric.getId()) {
+            case "heart_rate":
+                activityClass = HeartRateDetailActivity.class;
+                break;
+            case "steps":
+                activityClass = StepsDetailActivity.class;
+                break;
+            case "blood_oxygen":
+                activityClass = BloodOxygenDetailActivity.class;
+                break;
+        }
+
+        if (activityClass != null) {
+            Intent intent = new Intent(this, activityClass);
+            intent.putExtra("metric_value", metric.getValue());
+            intent.putExtra("metric_label", metric.getLabel());
+            startActivity(intent);
+        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        if (isMonitoring) {
-            stopMonitoring();
+        if (sensorManager != null) {
+            sensorManager.unregisterListener(this);
         }
+        handler.removeCallbacks(updateRunnable);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        // Don't auto-start monitoring on resume
+        if (sensorManager != null) {
+            if (heartRateSensor != null) {
+                sensorManager.registerListener(this, heartRateSensor,
+                        SensorManager.SENSOR_DELAY_NORMAL);
+            }
+            if (stepCounterSensor != null) {
+                sensorManager.registerListener(this, stepCounterSensor,
+                        SensorManager.SENSOR_DELAY_NORMAL);
+            }
+        }
+        handler.post(updateRunnable);
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        handler.removeCallbacksAndMessages(null);
         if (sensorManager != null) {
             sensorManager.unregisterListener(this);
         }
+        handler.removeCallbacksAndMessages(null);
     }
 }
