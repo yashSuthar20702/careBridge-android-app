@@ -1,4 +1,4 @@
-package com.example.carebridge.network;
+package com.example.carebridge.service;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;

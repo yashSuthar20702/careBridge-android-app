@@ -24,30 +24,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
     private static final String TAG = "FCM_Service";
     private static final String CHANNEL_ID = "carebridge_channel";
 
-    // ✅ store logId from FCM data
-    private String lastLogId = null;
-
-    @Override
-    public void onNewToken(@NonNull String token) {
-        super.onNewToken(token);
-        Log.d(TAG, "✅ New FCM Token: " + token);
-        // send token to your backend
-    }
-
     @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
-        Log.d(TAG, "📩 Message received: " + remoteMessage.getFrom());
 
         if (remoteMessage.getData().size() > 0) {
             Log.d(TAG, "📦 Data Payload: " + remoteMessage.getData());
             handleDataMessage(remoteMessage.getData());
-        }
-
-        if (remoteMessage.getNotification() != null) {
-            sendNotification(
-                    remoteMessage.getNotification().getTitle(),
-                    remoteMessage.getNotification().getBody()
-            );
         }
     }
 
@@ -55,61 +37,62 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         try {
             String title = data.get("title");
             String message = data.get("body");
+            String logId = data.get("log_id");
 
-            // ✅ EXTRACT log_id HERE
-            lastLogId = data.get("log_id");
+            if (logId == null) {
+                Log.e(TAG, "❌ Missing log_id in FCM data");
+                return;
+            }
 
-            Log.d(TAG, "📌 Extracted log_id: " + lastLogId);
+            if (title == null) title = "Medicine Reminder 💊";
+            if (message == null) message = "Please confirm your medication status";
 
-            if (title == null) title = "CareBridge";
-            if (message == null) message = "You have a new update.";
-
-            sendNotification(title, message);
+            sendNotification(title, message, logId);
 
         } catch (Exception e) {
-            Log.e(TAG, "⚠️ Error handling data message: " + e.getMessage(), e);
+            Log.e(TAG, "⚠️ Error handling FCM data: " + e.getMessage());
         }
     }
 
-    private void sendNotification(String title, String messageBody) {
+    private void sendNotification(String title, String messageBody, String logId) {
 
-        // ❗ logId is now stored earlier
-        String logId = lastLogId;
-
-        if (logId == null) {
-            Log.e(TAG, "❌ log_id missing in FCM payload.");
-            return; // stop to avoid null crash
+        int logIdInt;
+        try {
+            logIdInt = Integer.parseInt(logId);
+        } catch (NumberFormatException e) {
+            Log.e(TAG, "Invalid log_id format: " + logId);
+            return;
         }
 
-        // 👉 ACTION: Taken
+        // --- PendingIntents ---
         Intent takenIntent = new Intent(this, NotificationActionReceiver.class);
         takenIntent.setAction("MED_TAKEN");
         takenIntent.putExtra("log_id", logId);
+        takenIntent.putExtra("taken_status", "Taken");
 
         PendingIntent takenPending = PendingIntent.getBroadcast(
-                this, 1, takenIntent,
+                this, logIdInt * 10 + 1, takenIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
         );
 
-        // 👉 ACTION: Not Taken
         Intent notTakenIntent = new Intent(this, NotificationActionReceiver.class);
         notTakenIntent.setAction("MED_NOT_TAKEN");
         notTakenIntent.putExtra("log_id", logId);
+        notTakenIntent.putExtra("taken_status", "Not Taken");
 
         PendingIntent notTakenPending = PendingIntent.getBroadcast(
-                this, 2, notTakenIntent,
+                this, logIdInt * 10 + 2, notTakenIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
         );
 
         Uri soundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
+        NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel(
-                    CHANNEL_ID,
-                    "CareBridge Notifications",
-                    NotificationManager.IMPORTANCE_HIGH
+                    CHANNEL_ID, "CareBridge Notifications", NotificationManager.IMPORTANCE_HIGH
             );
+            channel.setSound(soundUri, null);
             nm.createNotificationChannel(channel);
         }
 
@@ -121,8 +104,8 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 .setAutoCancel(true)
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .addAction(R.drawable.ic_check, "Taken", takenPending)
-                .addAction(R.drawable.ic_health, "Not Taken", notTakenPending);
+                .addAction(R.drawable.ic_close, "Not Taken", notTakenPending);
 
-        nm.notify((int) System.currentTimeMillis(), builder.build());
+        nm.notify(logIdInt, builder.build()); // Use logId as unique notification ID
     }
 }

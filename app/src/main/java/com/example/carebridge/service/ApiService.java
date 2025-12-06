@@ -1,4 +1,6 @@
-package com.example.carebridge.network;
+package com.example.carebridge.service;
+
+import com.google.gson.JsonObject;
 
 import retrofit2.Call;
 import retrofit2.http.Field;
@@ -9,8 +11,9 @@ public interface ApiService {
 
     @FormUrlEncoded
     @POST("update_medicine_status.php")
-    Call<String> updateMedicineStatus(
+    Call<JsonObject> updateMedicineStatus(
             @Field("log_id") String logId,
-            @Field("status") String status
+            @Field("taken_status") String takenStatus
     );
+
 }
