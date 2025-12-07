@@ -73,6 +73,9 @@ public class PrescriptionController {
             public void onResponse(Call call, Response response) throws IOException {
                 String res = response.body() != null ? response.body().string() : "";
 
+                // LOG the full response for debugging
+                Log.d(TAG, "Server Response: " + res);
+
                 if (!response.isSuccessful()) {
                     mainHandler.post(() ->
                             callback.onFailure("Server error: " + response.message())
@@ -91,6 +94,8 @@ public class PrescriptionController {
             PrescriptionResponse prescriptionResponse =
                     gson.fromJson(json, PrescriptionResponse.class);
 
+            Log.d(TAG, "Parsed PrescriptionResponse: " + prescriptionResponse);
+
             if (prescriptionResponse == null || !prescriptionResponse.isStatus()) {
                 callback.onFailure("No prescriptions found");
                 return;
@@ -99,12 +104,16 @@ public class PrescriptionController {
             List<Prescription> allPrescriptions = prescriptionResponse.getPrescriptions();
             List<Prescription> activePrescriptions = new ArrayList<>();
 
-            // Filter only Active prescriptions
-            for (Prescription p : allPrescriptions) {
-                if ("Active".equalsIgnoreCase(p.getStatus())) {
-                    activePrescriptions.add(p);
+            if (allPrescriptions != null) {
+                for (Prescription p : allPrescriptions) {
+                    if (p != null && "Active".equalsIgnoreCase(p.getStatus())) {
+                        if (p.getMedicines() == null) p.setMedicines(new ArrayList<>());
+                        activePrescriptions.add(p);
+                    }
                 }
             }
+
+            Log.d(TAG, "Active Prescriptions: " + activePrescriptions);
 
             if (activePrescriptions.isEmpty()) {
                 callback.onFailure("No active prescriptions found");
@@ -113,9 +122,11 @@ public class PrescriptionController {
             }
 
         } catch (JsonSyntaxException e) {
-            callback.onFailure("JSON format error");
+            Log.e(TAG, "JSON parsing error: ", e);
+            callback.onFailure("JSON format error: " + e.getMessage());
         } catch (Exception e) {
-            callback.onFailure("Unexpected parsing error");
+            Log.e(TAG, "Unexpected parsing error: ", e);
+            callback.onFailure("Unexpected parsing error: " + e.getMessage());
         }
     }
 }

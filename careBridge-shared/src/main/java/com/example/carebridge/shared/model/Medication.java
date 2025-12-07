@@ -1,58 +1,86 @@
 package com.example.carebridge.shared.model;
 
+import com.google.gson.annotations.SerializedName;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 public class Medication {
+
+    @SerializedName("prescription_medicine_id")
+    private int prescriptionMedicineId;
+
+    @SerializedName("medicine_id")
     private int medicineId;
+
+    @SerializedName("medicine_name")
     private String medicineName;
+
+    @SerializedName("dosage")
     private String dosage;
 
+    @SerializedName("morning")
     private boolean morning;
+
+    @SerializedName("afternoon")
     private boolean afternoon;
+
+    @SerializedName("evening")
     private boolean evening;
+
+    @SerializedName("night")
     private boolean night;
+
+    @SerializedName("with_food")
     private boolean withFood;
 
     private int durationDays;
+
+    @SerializedName("extra_instructions")
     private String extraInstructions;
+
     private boolean isTaken = false;
+
     private Date scheduledDate;
 
+    @SerializedName("start_date")
+    private String startDateStr;
+
+    @SerializedName("end_date")
+    private String endDateStr;
+
+    public int getPrescriptionMedicineId() { return prescriptionMedicineId; }
     public int getMedicineId() { return medicineId; }
-    public void setMedicineId(int medicineId) { this.medicineId = medicineId; }
-
     public String getMedicineName() { return medicineName; }
-    public void setMedicineName(String medicineName) { this.medicineName = medicineName; }
-
     public String getDosage() { return dosage; }
-    public void setDosage(String dosage) { this.dosage = dosage; }
-
     public boolean isMorning() { return morning; }
-    public void setMorning(boolean morning) { this.morning = morning; }
-
     public boolean isAfternoon() { return afternoon; }
-    public void setAfternoon(boolean afternoon) { this.afternoon = afternoon; }
-
     public boolean isEvening() { return evening; }
-    public void setEvening(boolean evening) { this.evening = evening; }
-
     public boolean isNight() { return night; }
-    public void setNight(boolean night) { this.night = night; }
-
     public boolean isWithFood() { return withFood; }
-    public void setWithFood(boolean withFood) { this.withFood = withFood; }
-
-    public int getDurationDays() { return durationDays; }
-    public void setDurationDays(int durationDays) { this.durationDays = durationDays; }
-
     public String getExtraInstructions() { return extraInstructions; }
-    public void setExtraInstructions(String extraInstructions) { this.extraInstructions = extraInstructions; }
-
     public boolean isTaken() { return isTaken; }
     public void setTaken(boolean taken) { isTaken = taken; }
-
+    public int getDurationDays() { return durationDays; }
     public Date getScheduledDate() { return scheduledDate; }
-    public void setScheduledDate(Date scheduledDate) { this.scheduledDate = scheduledDate; }
+
+    // Call this after deserialization
+    public void calculateDuration() {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+            Date start = sdf.parse(startDateStr);
+            Date end = sdf.parse(endDateStr);
+            this.scheduledDate = start;
+            if (start != null && end != null) {
+                long diff = end.getTime() - start.getTime();
+                this.durationDays = (int) (diff / (1000 * 60 * 60 * 24)) + 1;
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+            this.durationDays = 0;
+        }
+    }
 
     // Summary helpers
     public String getTimeSummary() {
@@ -61,10 +89,7 @@ public class Medication {
         if (afternoon) time.append("Afternoon, ");
         if (evening) time.append("Evening, ");
         if (night) time.append("Night, ");
-
-        if (time.length() > 0)
-            time.setLength(time.length() - 2);
-
+        if (time.length() > 0) time.setLength(time.length() - 2);
         return time.toString();
     }
 
