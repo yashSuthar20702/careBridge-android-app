@@ -48,6 +48,9 @@ public class NotificationActionReceiver extends BroadcastReceiver {
 
         Log.d(TAG, "Action Received → Log #" + logId + " | " + takenStatus);
 
+        // Show toast immediately
+        Toast.makeText(context, "Medicine " + takenStatus, Toast.LENGTH_SHORT).show();
+
         // Call API
         ApiService api = ApiClient.getClient().create(ApiService.class);
         api.updateMedicineStatus(String.valueOf(logId), takenStatus).enqueue(new Callback<JsonObject>() {
@@ -60,9 +63,8 @@ public class NotificationActionReceiver extends BroadcastReceiver {
                 }
 
                 Log.d(TAG, "API Response: " + response.body());
-                Toast.makeText(context, "Updated: " + takenStatus, Toast.LENGTH_SHORT).show();
 
-                // Clear the notification
+                // Clear the notification after API success
                 NotificationHelper.clearNotification(context, logId);
             }
 

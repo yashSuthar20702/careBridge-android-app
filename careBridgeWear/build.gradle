@@ -1,6 +1,6 @@
 plugins {
     id 'com.android.application'
-    id 'com.google.gms.google-services' // Google Services plugin for Firebase
+    id 'com.google.gms.google-services' // Firebase
 }
 
 android {
@@ -13,7 +13,6 @@ android {
         targetSdk 34
         versionCode 1
         versionName "1.0"
-
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -37,35 +36,42 @@ android {
 }
 
 dependencies {
-    // Shared Library
+    // Shared Module
     implementation project(':careBridge-shared')
 
-    // Wear OS specific
+    // Wear OS Libraries
+    implementation 'androidx.wear:wear:1.3.0'
     implementation 'androidx.core:core:1.12.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.10.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'androidx.wear:wear:1.3.0'
     implementation 'androidx.recyclerview:recyclerview:1.3.2'
     implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'androidx.viewpager2:viewpager2:1.0.0'
     implementation 'androidx.fragment:fragment:1.6.2'
-    implementation 'androidx.gridlayout:gridlayout:1.0.0'
 
+    // Google Maps (Optional)
     implementation 'com.google.android.gms:play-services-maps:18.1.0'
 
-    // Gson for WearSharedPrefManager
+    // Gson
     implementation 'com.google.code.gson:gson:2.10.1'
 
-    // Firebase (BOM ensures compatible versions)
-    implementation platform('com.google.firebase:firebase-bom:32.2.2')
-    implementation 'com.google.firebase:firebase-analytics'
-    implementation 'com.google.firebase:firebase-messaging'
+    // Retrofit & OkHttp (same as phone)
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.11.0'
 
-    // Health Services (Optional - for advanced health monitoring)
+    // WorkManager (for fallback API sync)
+    implementation 'androidx.work:work-runtime:2.9.0'
+
+    // Firebase (Using BOM for matching versions)
+    implementation platform('com.google.firebase:firebase-bom:33.1.1')
+    implementation 'com.google.firebase:firebase-messaging'
+    implementation 'com.google.firebase:firebase-analytics'
+
+    // Health Services
     implementation 'androidx.health:health-services-client:1.0.0-beta01'
 
-    // Test dependencies
+    // Testing
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'

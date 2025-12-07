@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
+import android.view.View;
 import android.view.inputmethod.EditorInfo;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,24 +14,34 @@ import com.example.carebridge.shared.controller.AuthController;
 import com.example.carebridge.shared.model.User;
 import com.example.carebridge.wear.databinding.ActivityLoginBinding;
 import com.example.carebridge.wear.utils.WearSharedPrefManager;
+import com.example.carebridge.shared.utils.ApiConstants;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.messaging.FirebaseMessaging;
 
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
+
 public class LoginActivity extends AppCompatActivity {
 
     private static final String TAG = "WearLoginActivity";
-
     private ActivityLoginBinding binding;
     private AuthController authController;
     private WearSharedPrefManager wearSharedPrefManager;
 
     private final Handler timeHandler = new Handler(Looper.getMainLooper());
     private final SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a", Locale.getDefault());
+    private final OkHttpClient client = new OkHttpClient();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,16 +50,13 @@ public class LoginActivity extends AppCompatActivity {
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // Ontario timezone for live time
         timeFormat.setTimeZone(TimeZone.getTimeZone("America/Toronto"));
 
         authController = new AuthController(this);
         wearSharedPrefManager = new WearSharedPrefManager(this);
 
-        // Redirect if already logged in
-        User currentUser = wearSharedPrefManager.getCurrentUser();
-        if (currentUser != null) {
-            redirectToDashboard(currentUser);
+        if (wearSharedPrefManager.getCurrentUser() != null) {
+            redirectToDashboard(wearSharedPrefManager.getCurrentUser());
             return;
         }
 
@@ -66,14 +74,6 @@ public class LoginActivity extends AppCompatActivity {
             }
             return false;
         });
-
-        binding.usernameEditText.setOnEditorActionListener((v, actionId, event) -> {
-            if (actionId == EditorInfo.IME_ACTION_NEXT) {
-                binding.passwordEditText.requestFocus();
-                return true;
-            }
-            return false;
-        });
     }
 
     private void attemptLogin() {
@@ -82,12 +82,10 @@ public class LoginActivity extends AppCompatActivity {
 
         if (username.isEmpty()) {
             showError(getString(R.string.enter_username));
-            binding.usernameEditText.requestFocus();
             return;
         }
         if (password.isEmpty()) {
             showError(getString(R.string.enter_password));
-            binding.passwordEditText.requestFocus();
             return;
         }
 
@@ -96,26 +94,29 @@ public class LoginActivity extends AppCompatActivity {
 
     private void performLogin(String username, String password) {
         binding.loginButton.setEnabled(false);
-        binding.loginButton.setText(getString(R.string.logging_in));
+        binding.loginButton.setText(R.string.logging_in);
 
         authController.login(username, password, new AuthController.LoginCallback() {
             @Override
             public void onSuccess(User user) {
-                // Save user session
                 wearSharedPrefManager.saveUserSession(user);
 
-                // Initialize Firebase
                 FirebaseApp.initializeApp(LoginActivity.this);
 
-                // Generate FCM token
                 FirebaseMessaging.getInstance().getToken()
                         .addOnCompleteListener(task -> {
                             if (task.isSuccessful() && task.getResult() != null) {
-                                wearSharedPrefManager.saveReferenceId(task.getResult());
-                                Log.d(TAG, "FCM Token: " + task.getResult());
+                                String token = task.getResult();
+                                Log.d(TAG, "FCM Token (Wear): " + token);
+
+                                wearSharedPrefManager.saveReferenceId(token);
+
+                                // Send to backend
+                                sendFcmTokenToServer(user.getId(), token);
                             } else {
-                                Log.w(TAG, "Fetching FCM token failed", task.getException());
+                                Log.w(TAG, "FCM token fetch failed", task.getException());
                             }
+
                             redirectToDashboard(user);
                         });
             }
@@ -123,16 +124,48 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onFailure(String message) {
                 binding.loginButton.setEnabled(true);
-                binding.loginButton.setText(getString(R.string.login));
+                binding.loginButton.setText(R.string.login);
                 showError(message);
             }
         });
     }
 
-    private void showError(String message) {
-        binding.errorText.setText(message);
-        binding.errorText.setVisibility(android.view.View.VISIBLE);
-        binding.errorText.postDelayed(() -> binding.errorText.setVisibility(android.view.View.GONE), 3000);
+    private void sendFcmTokenToServer(int userId, String fcmToken) {
+        try {
+            JSONObject json = new JSONObject();
+            json.put("user_id", userId);
+            json.put("wear_os_fcm_token", fcmToken);
+
+            RequestBody body = RequestBody.create(
+                    json.toString(),
+                    MediaType.get("application/json; charset=utf-8")
+            );
+
+            Request request = new Request.Builder()
+                    .url(ApiConstants.getUpdateWearFcmTokenUrl())
+                    .post(body)
+                    .build();
+
+            client.newCall(request).enqueue(new okhttp3.Callback() {
+                @Override
+                public void onFailure(okhttp3.Call call, IOException e) {
+                    Log.e(TAG, "Wear failed to update FCM token: " + e.getMessage());
+                }
+
+                @Override
+                public void onResponse(okhttp3.Call call, Response response) throws IOException {
+                    Log.d(TAG, "Wear FCM token update response: " + response.body().string());
+                }
+            });
+        } catch (Exception e) {
+            Log.e(TAG, "FCM token JSON building error: " + e.getMessage());
+        }
+    }
+
+    private void showError(String msg) {
+        binding.errorText.setText(msg);
+        binding.errorText.setVisibility(View.VISIBLE);
+        binding.errorText.postDelayed(() -> binding.errorText.setVisibility(View.GONE), 3000);
     }
 
     private void redirectToDashboard(User user) {
@@ -146,19 +179,10 @@ public class LoginActivity extends AppCompatActivity {
         timeHandler.post(new Runnable() {
             @Override
             public void run() {
-                if (binding != null) {
-                    binding.tvLiveTime.setText(timeFormat.format(new Date()));
-                }
+                binding.tvLiveTime.setText(timeFormat.format(new Date()));
                 timeHandler.postDelayed(this, 1000);
             }
         });
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        binding.loginButton.setEnabled(true);
-        binding.loginButton.setText(getString(R.string.login));
     }
 
     @Override

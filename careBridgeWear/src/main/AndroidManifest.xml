@@ -10,28 +10,18 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
 
-    <!-- NEW: Add these permissions for health sensors -->
+    <!-- Health Sensors -->
     <uses-permission android:name="android.permission.BODY_SENSORS" />
     <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
 
     <!-- Wear OS features -->
-    <uses-feature
-        android:name="android.hardware.type.watch"
-        android:required="true" />
-
-    <uses-feature
-        android:name="android.hardware.screen.round"
-        android:required="false" />
-
-    <!-- NEW: Add health sensor features -->
-    <uses-feature
-        android:name="android.hardware.sensor.heartrate"
-        android:required="false" />
-    <uses-feature
-        android:name="android.hardware.sensor.step_counter"
-        android:required="false" />
+    <uses-feature android:name="android.hardware.type.watch" android:required="true" />
+    <uses-feature android:name="android.hardware.screen.round" android:required="false" />
+    <uses-feature android:name="android.hardware.sensor.heartrate" android:required="false" />
+    <uses-feature android:name="android.hardware.sensor.step_counter" android:required="false" />
 
     <application
         android:allowBackup="true"
@@ -43,12 +33,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CareBridgeWear">
 
-        <!-- Standalone Wear App -->
+        <!-- Standalone Wear App requirement -->
         <meta-data
             android:name="com.google.android.wearable.standalone"
             android:value="true" />
 
-        <!-- LoginActivity -->
+        <!-- Activities -->
         <activity
             android:name=".LoginActivity"
             android:exported="true"
@@ -61,52 +51,62 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".MainActivity"
+        <activity android:name=".MainActivity"
             android:exported="true"
             android:taskAffinity="${applicationId}"
             android:theme="@style/Theme.CareBridgeWear.NoActionBar" />
 
-        <activity
-            android:name=".CallActivity"
+        <activity android:name=".CallActivity"
             android:taskAffinity="${applicationId}"
             android:theme="@style/Theme.CareBridgeWear.NoActionBar" />
 
-        <activity
-            android:name=".MedicineActivity"
+        <activity android:name=".MedicineActivity"
             android:taskAffinity="${applicationId}"
             android:theme="@style/Theme.CareBridgeWear.NoActionBar" />
 
-        <activity
-            android:name=".HealthInfoActivity"
+        <activity android:name=".HealthInfoActivity"
             android:taskAffinity="${applicationId}"
             android:theme="@style/Theme.CareBridgeWear.NoActionBar" />
 
-        <activity
-            android:name=".GuardianActivity"
+        <activity android:name=".GuardianActivity"
             android:taskAffinity="${applicationId}"
             android:theme="@style/Theme.CareBridgeWear.NoActionBar" />
 
-        <!-- NEW: Add Health Monitor Activities -->
-        <activity
-            android:name=".HealthMonitorActivity"
+        <activity android:name=".HealthMonitorActivity"
             android:taskAffinity="${applicationId}"
             android:theme="@style/Theme.CareBridgeWear.NoActionBar" />
 
-        <activity
-            android:name=".HeartRateDetailActivity"
+        <activity android:name=".HeartRateDetailActivity"
             android:taskAffinity="${applicationId}"
             android:theme="@style/Theme.CareBridgeWear.NoActionBar" />
 
-        <activity
-            android:name=".StepsDetailActivity"
+        <activity android:name=".StepsDetailActivity"
             android:taskAffinity="${applicationId}"
             android:theme="@style/Theme.CareBridgeWear.NoActionBar" />
 
-        <activity
-            android:name=".BloodOxygenDetailActivity"
+        <activity android:name=".BloodOxygenDetailActivity"
             android:taskAffinity="${applicationId}"
             android:theme="@style/Theme.CareBridgeWear.NoActionBar" />
+
+        <!-- Firebase Messaging Service -->
+        <service
+            android:name=".service.WearFirebaseMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+        <!-- Notification Action Receiver (Taken / Not Taken) -->
+        <receiver
+            android:name=".service.WearNotificationReceiver"
+            android:exported="true"
+            android:permission="com.google.android.c2dm.permission.RECEIVE">
+            <intent-filter>
+                <action android:name="WEAR_MED_TAKEN" />
+                <action android:name="WEAR_MED_NOT_TAKEN" />
+            </intent-filter>
+        </receiver>
 
     </application>
 

@@ -6,9 +6,6 @@ import android.content.SharedPreferences;
 import com.example.carebridge.shared.model.User;
 import com.google.gson.Gson;
 
-/**
- * Shared Preference manager specifically for Wear OS app
- */
 public class WearSharedPrefManager {
 
     private static final String PREF_NAME = "CareBridgeWearPref";
@@ -17,6 +14,15 @@ public class WearSharedPrefManager {
     private static final String KEY_CASE_ID = "case_id";
     private static final String KEY_REFERENCE_ID = "reference_id";
     private static final String KEY_FCM_TOKEN = "fcm_token";
+
+    // NEW: Saved user_id for API calls
+    private static final String KEY_USER_ID = "user_id";
+
+    // NEW: Health data keys
+    private static final String KEY_HEART_RATE = "heart_rate";
+    private static final String KEY_STEPS = "steps";
+    private static final String KEY_SPO2 = "spo2";
+    private static final String KEY_LAST_SYNC = "last_sync_time";
 
     private final SharedPreferences sharedPreferences;
     private final SharedPreferences.Editor editor;
@@ -33,6 +39,9 @@ public class WearSharedPrefManager {
         editor.putString(KEY_USER, gson.toJson(user));
         editor.putBoolean(KEY_IS_LOGGED_IN, true);
 
+        // Store correct user ID
+        editor.putInt(KEY_USER_ID, user.getId());
+
         if (user.getPatientInfo() != null && user.getPatientInfo().getCaseId() != null) {
             editor.putString(KEY_CASE_ID, user.getPatientInfo().getCaseId());
         }
@@ -44,76 +53,98 @@ public class WearSharedPrefManager {
         editor.apply();
     }
 
-    /** Check if user is logged in */
     public boolean isLoggedIn() {
         return sharedPreferences.getBoolean(KEY_IS_LOGGED_IN, false);
     }
 
-    /** Get current logged-in user */
     public User getCurrentUser() {
         String json = sharedPreferences.getString(KEY_USER, null);
         return json != null ? gson.fromJson(json, User.class) : null;
     }
 
-    /** Clear full session */
-    public void clearSession() {
-        editor.clear();
-        editor.apply();
+    /** Get stored User ID (for delete token API) */
+    public int getUserId() {
+        return sharedPreferences.getInt(KEY_USER_ID, -1);
     }
 
-    /** Logout user */
+    /** Clear only token when watch disconnects */
+    public void clearWearFcmTokenOnly() {
+        editor.remove(KEY_FCM_TOKEN).apply();
+    }
+
+    /** Full Logout */
     public void logout() {
-        clearSession();
+        editor.clear().apply();
     }
 
-    /** Save case ID */
     public void saveCaseId(String caseId) {
-        editor.putString(KEY_CASE_ID, caseId);
-        editor.apply();
+        editor.putString(KEY_CASE_ID, caseId).apply();
     }
 
-    /** Get case ID */
     public String getCaseId() {
         return sharedPreferences.getString(KEY_CASE_ID, "");
     }
 
-    /** Clear case ID */
     public void clearCaseId() {
-        editor.remove(KEY_CASE_ID);
-        editor.apply();
+        editor.remove(KEY_CASE_ID).apply();
     }
 
-    /** Save reference ID */
     public void saveReferenceId(String refId) {
-        editor.putString(KEY_REFERENCE_ID, refId);
-        editor.apply();
+        editor.putString(KEY_REFERENCE_ID, refId).apply();
     }
 
-    /** Get reference ID */
     public String getReferenceId() {
         return sharedPreferences.getString(KEY_REFERENCE_ID, "");
     }
 
-    /** Clear reference ID */
     public void clearReferenceId() {
-        editor.remove(KEY_REFERENCE_ID);
-        editor.apply();
+        editor.remove(KEY_REFERENCE_ID).apply();
     }
 
-    /** Save FCM token */
     public void saveFcmToken(String token) {
-        editor.putString(KEY_FCM_TOKEN, token);
-        editor.apply();
+        editor.putString(KEY_FCM_TOKEN, token).apply();
     }
 
-    /** Get FCM token */
     public String getFcmToken() {
         return sharedPreferences.getString(KEY_FCM_TOKEN, "");
     }
 
-    /** Clear FCM token */
     public void clearFcmToken() {
-        editor.remove(KEY_FCM_TOKEN);
-        editor.apply();
+        editor.remove(KEY_FCM_TOKEN).apply();
+    }
+
+    // ==============================
+    // Wear OS Health Data Storage
+    // ==============================
+    public void saveHeartRate(int bpm) {
+        editor.putInt(KEY_HEART_RATE, bpm).apply();
+    }
+
+    public int getHeartRate() {
+        return sharedPreferences.getInt(KEY_HEART_RATE, 0);
+    }
+
+    public void saveSteps(int count) {
+        editor.putInt(KEY_STEPS, count).apply();
+    }
+
+    public int getSteps() {
+        return sharedPreferences.getInt(KEY_STEPS, 0);
+    }
+
+    public void saveSpo2(int spo2) {
+        editor.putInt(KEY_SPO2, spo2).apply();
+    }
+
+    public int getSpo2() {
+        return sharedPreferences.getInt(KEY_SPO2, 0);
+    }
+
+    public void saveLastSyncTime(String time) {
+        editor.putString(KEY_LAST_SYNC, time).apply();
+    }
+
+    public String getLastSyncTime() {
+        return sharedPreferences.getString(KEY_LAST_SYNC, "");
     }
 }

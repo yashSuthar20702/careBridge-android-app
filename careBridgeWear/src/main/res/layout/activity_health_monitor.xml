@@ -45,9 +45,9 @@
         <androidx.wear.widget.WearableRecyclerView
             android:id="@+id/health_monitor_recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="110dp"
+            android:layout_height="match_parent"
             android:layout_marginTop="50dp"
-            android:layout_marginBottom="50dp"
+            android:layout_marginBottom="5dp"
             android:clipToPadding="true"
             android:paddingTop="0dp"
             android:paddingBottom="0dp" />

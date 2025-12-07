@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/metric_container"
-    android:layout_width="@dimen/container_width_metric"
+    android:layout_width="match_parent"
     android:layout_height="@dimen/container_height_metric"
     android:layout_marginVertical="@dimen/spacing_small"
     android:layout_gravity="center_horizontal"

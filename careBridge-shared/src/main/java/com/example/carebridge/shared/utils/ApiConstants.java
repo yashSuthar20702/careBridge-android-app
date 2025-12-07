@@ -67,4 +67,12 @@ public class ApiConstants {
     public static String getDeleteFcmTokenUrl() {
         return getFcmBaseUrl() + "delete_fcm_token.php";
     }
+
+    public static String getUpdateWearFcmTokenUrl() {
+        return getFcmBaseUrl() + "save_wear_fcm_token.php";
+    }
+
+    public static String getDeleteWearFcmTokenUrl() {
+        return getFcmBaseUrl() + "delete_wear_fcm_token.php";
+    }
 }
