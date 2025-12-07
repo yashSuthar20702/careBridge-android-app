@@ -18,17 +18,17 @@ import com.example.carebridge.wear.MainActivity;
 import com.example.carebridge.wear.MedicineActivity;
 import com.example.carebridge.wear.R;
 import com.example.carebridge.wear.databinding.FragmentHomePagerBinding;
+import com.example.carebridge.wear.utils.Constants;
 
 public class HomePagerFragment extends Fragment {
 
-    private static final String ARG_POSITION = "position";
     private FragmentHomePagerBinding binding;
     private int position;
 
     public static HomePagerFragment newInstance(int position) {
         HomePagerFragment fragment = new HomePagerFragment();
         Bundle args = new Bundle();
-        args.putInt(ARG_POSITION, position);
+        args.putInt(Constants.ARG_POSITION, position);
         fragment.setArguments(args);
         return fragment;
     }
@@ -37,7 +37,7 @@ public class HomePagerFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            position = getArguments().getInt(ARG_POSITION);
+            position = getArguments().getInt(Constants.ARG_POSITION);
         }
     }
 
@@ -54,54 +54,80 @@ public class HomePagerFragment extends Fragment {
         setupButton();
     }
 
+    /**
+     * Set up button icon, label, and click handler based on position
+     */
     private void setupButton() {
-        int[] buttonIcons = {
-                R.drawable.ic_phone,
-                R.drawable.ic_pill,
-                R.drawable.ic_activity,
-                R.drawable.ic_user,
-                R.drawable.ic_heart,  // Health Monitor icon
-                R.drawable.ic_logout
-        };
-
-        String[] buttonLabels = {
-                getString(R.string.call),
-                getString(R.string.medicine),
-                getString(R.string.patient_health),
-                getString(R.string.guardian_info),
-                getString(R.string.health_monitor),  // New label
-                getString(R.string.logout)
-        };
+        int[] buttonIcons = getButtonIcons();
+        String[] buttonLabels = getButtonLabels();
 
         binding.homeMainButton.setImageResource(buttonIcons[position]);
         binding.homeButtonLabel.setText(buttonLabels[position]);
 
-        binding.homeMainButton.setOnClickListener(v -> {
-            switch (position) {
-                case 0:
-                    startActivity(new Intent(requireContext(), CallActivity.class));
-                    break;
-                case 1:
-                    startActivity(new Intent(requireContext(), MedicineActivity.class));
-                    break;
-                case 2:
-                    startActivity(new Intent(requireContext(), HealthInfoActivity.class));
-                    break;
-                case 3:
-                    startActivity(new Intent(requireContext(), GuardianActivity.class));
-                    break;
-                case 4:
-                    // Health Monitor
-                    startActivity(new Intent(requireContext(), HealthMonitorActivity.class));
-                    break;
-                case 5:
-                    // Handle logout
-                    if (requireActivity() instanceof MainActivity) {
-                        ((MainActivity) requireActivity()).logout();
-                    }
-                    break;
-            }
-        });
+        binding.homeMainButton.setOnClickListener(v -> handleButtonClick());
+    }
+
+    /**
+     * Get array of button icons for each position
+     */
+    private int[] getButtonIcons() {
+        return new int[]{
+                R.drawable.ic_phone,
+                R.drawable.ic_pill,
+                R.drawable.ic_activity,
+                R.drawable.ic_user,
+                R.drawable.ic_heart,
+                R.drawable.ic_logout
+        };
+    }
+
+    /**
+     * Get array of button labels for each position
+     */
+    private String[] getButtonLabels() {
+        return new String[]{
+                getString(R.string.call),
+                getString(R.string.medicine),
+                getString(R.string.patient_health),
+                getString(R.string.guardian_info),
+                getString(R.string.health_monitor),
+                getString(R.string.logout)
+        };
+    }
+
+    /**
+     * Handle button click based on position
+     */
+    private void handleButtonClick() {
+        switch (position) {
+            case Constants.BUTTON_CALL:
+                startActivity(new Intent(requireContext(), CallActivity.class));
+                break;
+            case Constants.BUTTON_MEDICINE:
+                startActivity(new Intent(requireContext(), MedicineActivity.class));
+                break;
+            case Constants.BUTTON_PATIENT_HEALTH:
+                startActivity(new Intent(requireContext(), HealthInfoActivity.class));
+                break;
+            case Constants.BUTTON_GUARDIAN_INFO:
+                startActivity(new Intent(requireContext(), GuardianActivity.class));
+                break;
+            case Constants.BUTTON_HEALTH_MONITOR:
+                startActivity(new Intent(requireContext(), HealthMonitorActivity.class));
+                break;
+            case Constants.BUTTON_LOGOUT:
+                handleLogout();
+                break;
+        }
+    }
+
+    /**
+     * Handle logout action
+     */
+    private void handleLogout() {
+        if (requireActivity() instanceof MainActivity) {
+            ((MainActivity) requireActivity()).logout();
+        }
     }
 
     @Override

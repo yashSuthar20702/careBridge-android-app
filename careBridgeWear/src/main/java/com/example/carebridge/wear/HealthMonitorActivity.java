@@ -24,6 +24,7 @@ import androidx.wear.widget.WearableRecyclerView;
 import com.example.carebridge.wear.adapters.HealthMetricAdapter;
 import com.example.carebridge.wear.databinding.ActivityHealthMonitorBinding;
 import com.example.carebridge.wear.models.HealthMetric;
+import com.example.carebridge.wear.utils.Constants;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
@@ -33,13 +34,10 @@ import java.util.Random;
 public class HealthMonitorActivity extends AppCompatActivity implements
         SensorEventListener, HealthMetricAdapter.OnHealthMetricClickListener {
 
-    private static final String TAG = "HealthMonitorActivity";
-    private static final int PERMISSIONS_REQUEST = 100;
-
     private ActivityHealthMonitorBinding binding;
     private List<HealthMetric> healthMetrics = new ArrayList<>();
     private HealthMetricAdapter adapter;
-    private int selectedPosition = 0;
+    private int selectedPosition = Constants.POSITION_FIRST;
 
     // Sensor related
     private SensorManager sensorManager;
@@ -55,7 +53,7 @@ public class HealthMonitorActivity extends AppCompatActivity implements
         @Override
         public void run() {
             updateSimulatedData();
-            handler.postDelayed(this, 3000);
+            handler.postDelayed(this, Constants.UPDATE_INTERVAL_MEDIUM);
         }
     };
 
@@ -70,11 +68,17 @@ public class HealthMonitorActivity extends AppCompatActivity implements
         checkPermissions();
     }
 
+    /**
+     * Set up UI components
+     */
     private void setupUI() {
         binding.healthMonitorBackButton.setOnClickListener(v -> finish());
         binding.healthMonitorTitle.setText(getString(R.string.health_monitor_title));
     }
 
+    /**
+     * Set up carousel RecyclerView
+     */
     private void setupCarousel() {
         // Initialize data with metrics - ONLY 3 ITEMS
         initializeHealthMetrics();
@@ -90,24 +94,7 @@ public class HealthMonitorActivity extends AppCompatActivity implements
         layoutManager.setLayoutCallback(new WearableLinearLayoutManager.LayoutCallback() {
             @Override
             public void onLayoutFinished(View child, RecyclerView parent) {
-                // Calculate distance from center for subtle scaling
-                float centerY = parent.getHeight() / 2f;
-                float childCenterY = child.getY() + child.getHeight() / 2f;
-                float distanceFromCenter = Math.abs(centerY - childCenterY);
-
-                float maxDistance = centerY;
-                if (maxDistance > 0) {
-                    // Subtle scaling effect
-                    float scale = 1.0f - (distanceFromCenter / maxDistance) * 0.15f;
-                    scale = Math.max(0.85f, Math.min(1.1f, scale));
-
-                    float alpha = 1.0f - (distanceFromCenter / maxDistance) * 0.3f;
-                    alpha = Math.max(0.7f, Math.min(1.0f, alpha));
-
-                    child.setScaleX(scale);
-                    child.setScaleY(scale);
-                    child.setAlpha(alpha);
-                }
+                calculateAndApplyScaling(child, parent);
             }
         });
 
@@ -122,37 +109,13 @@ public class HealthMonitorActivity extends AppCompatActivity implements
         // DISABLE edge centering - this causes automatic scrolling
         binding.healthMonitorRecyclerView.setEdgeItemsCenteringEnabled(false);
 
-        // Simple scroll listener to update scaling
+        // Set up scroll listener
         binding.healthMonitorRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    // Find which item is closest to center
-                    View closestToCenter = null;
-                    float minDistance = Float.MAX_VALUE;
-
-                    for (int i = 0; i < recyclerView.getChildCount(); i++) {
-                        View child = recyclerView.getChildAt(i);
-                        int position = recyclerView.getChildAdapterPosition(child);
-                        if (position != RecyclerView.NO_POSITION) {
-                            float centerY = recyclerView.getHeight() / 2f;
-                            float childCenterY = child.getY() + child.getHeight() / 2f;
-                            float distance = Math.abs(centerY - childCenterY);
-
-                            if (distance < minDistance) {
-                                minDistance = distance;
-                                closestToCenter = child;
-                            }
-                        }
-                    }
-
-                    if (closestToCenter != null) {
-                        int position = recyclerView.getChildAdapterPosition(closestToCenter);
-                        if (position != RecyclerView.NO_POSITION) {
-                            updateSelection(position);
-                        }
-                    }
+                    handleScrollIdleState(recyclerView);
                 }
             }
 
@@ -160,7 +123,7 @@ public class HealthMonitorActivity extends AppCompatActivity implements
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 // Update scaling during scroll
-                for (int i = 0; i < recyclerView.getChildCount(); i++) {
+                for (int i = Constants.POSITION_FIRST; i < recyclerView.getChildCount(); i++) {
                     View child = recyclerView.getChildAt(i);
                     layoutManager.getLayoutCallback().onLayoutFinished(child, recyclerView);
                 }
@@ -168,58 +131,113 @@ public class HealthMonitorActivity extends AppCompatActivity implements
         });
 
         // Initialize selection to first item (Heart Rate)
-        selectedPosition = 0;
         adapter.setSelectedPosition(selectedPosition);
-
-        // NO automatic scrolling - let the RecyclerView show items naturally
     }
 
+    /**
+     * Calculate and apply scaling based on distance from center
+     */
+    private void calculateAndApplyScaling(View child, RecyclerView parent) {
+        float centerY = parent.getHeight() / Constants.FLOAT_DIVISOR_TWO;
+        float childCenterY = child.getY() + child.getHeight() / Constants.FLOAT_DIVISOR_TWO;
+        float distanceFromCenter = Math.abs(centerY - childCenterY);
+
+        float maxDistance = centerY;
+        if (maxDistance > Constants.POSITION_FIRST) {
+            // Subtle scaling effect
+            float scale = Constants.FLOAT_SCALE_BASE - (distanceFromCenter / maxDistance) * Constants.FLOAT_SCALE_FACTOR;
+            scale = Math.max(Constants.FLOAT_SCALE_MIN, Math.min(Constants.FLOAT_SCALE_MAX, scale));
+
+            float alpha = Constants.FLOAT_ALPHA_BASE - (distanceFromCenter / maxDistance) * Constants.FLOAT_ALPHA_FACTOR;
+            alpha = Math.max(Constants.FLOAT_ALPHA_MIN, Math.min(Constants.FLOAT_ALPHA_MAX, alpha));
+
+            child.setScaleX(scale);
+            child.setScaleY(scale);
+            child.setAlpha(alpha);
+        }
+    }
+
+    /**
+     * Handle scroll idle state to update selection
+     */
+    private void handleScrollIdleState(RecyclerView recyclerView) {
+        View closestToCenter = null;
+        float minDistance = Float.MAX_VALUE;
+
+        for (int i = Constants.POSITION_FIRST; i < recyclerView.getChildCount(); i++) {
+            View child = recyclerView.getChildAt(i);
+            int position = recyclerView.getChildAdapterPosition(child);
+            if (position != RecyclerView.NO_POSITION) {
+                float centerY = recyclerView.getHeight() / Constants.FLOAT_DIVISOR_TWO;
+                float childCenterY = child.getY() + child.getHeight() / Constants.FLOAT_DIVISOR_TWO;
+                float distance = Math.abs(centerY - childCenterY);
+
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    closestToCenter = child;
+                }
+            }
+        }
+
+        if (closestToCenter != null) {
+            int position = recyclerView.getChildAdapterPosition(closestToCenter);
+            if (position != RecyclerView.NO_POSITION) {
+                updateSelection(position);
+            }
+        }
+    }
+
+    /**
+     * Initialize health metrics data
+     */
     private void initializeHealthMetrics() {
         healthMetrics.clear();
 
         // Exactly 3 metrics
         healthMetrics.add(new HealthMetric(
-                "heart_rate",
+                Constants.METRIC_HEART_RATE,
                 getString(R.string.heart_rate_label),
-                "72",
+                String.valueOf(Constants.DEFAULT_HEART_RATE),
                 getString(R.string.unit_bpm),
                 getString(R.string.heart_rate_desc),
                 R.drawable.ic_heart,
                 R.color.red,
                 R.color.heart_rate_start,
                 R.color.heart_rate_end,
-                "HeartRateDetailActivity"
+                Constants.CLASS_HEART_RATE_DETAIL
         ));
 
         healthMetrics.add(new HealthMetric(
-                "steps",
+                Constants.METRIC_STEPS,
                 getString(R.string.steps_label),
-                "3542",
+                String.valueOf(Constants.DEFAULT_STEPS_VALUE),
                 getString(R.string.unit_steps),
                 getString(R.string.steps_desc),
                 R.drawable.ic_steps,
                 R.color.purple_500,
                 R.color.steps_start,
                 R.color.steps_end,
-                "StepsDetailActivity"
+                Constants.CLASS_STEPS_DETAIL
         ));
 
         healthMetrics.add(new HealthMetric(
-                "blood_oxygen",
+                Constants.METRIC_BLOOD_OXYGEN,
                 getString(R.string.blood_oxygen_label),
-                "98",
+                String.valueOf(Constants.DEFAULT_BLOOD_OXYGEN),
                 getString(R.string.unit_percent),
                 getString(R.string.blood_oxygen_desc),
                 R.drawable.ic_droplet,
                 R.color.blue_500,
                 R.color.blood_oxygen_start,
                 R.color.blood_oxygen_end,
-                "BloodOxygenDetailActivity"
+                Constants.CLASS_BLOOD_OXYGEN_DETAIL
         ));
     }
 
+    /**
+     * Update selection position
+     */
     private void updateSelection(int newPosition) {
-        int oldPosition = selectedPosition;
         selectedPosition = newPosition;
 
         // Update cursor position in adapter
@@ -229,7 +247,7 @@ public class HealthMonitorActivity extends AppCompatActivity implements
 
         // Update cursor visibility
         binding.healthMonitorRecyclerView.post(() -> {
-            for (int i = 0; i < binding.healthMonitorRecyclerView.getChildCount(); i++) {
+            for (int i = Constants.POSITION_FIRST; i < binding.healthMonitorRecyclerView.getChildCount(); i++) {
                 View child = binding.healthMonitorRecyclerView.getChildAt(i);
                 int position = binding.healthMonitorRecyclerView.getChildAdapterPosition(child);
                 if (position != RecyclerView.NO_POSITION) {
@@ -240,10 +258,10 @@ public class HealthMonitorActivity extends AppCompatActivity implements
 
                         // Animate cursor appearance
                         if (isSelected) {
-                            cursor.setAlpha(0f);
+                            cursor.setAlpha(Constants.FLOAT_ALPHA_START);
                             cursor.animate()
-                                    .alpha(1f)
-                                    .setDuration(200)
+                                    .alpha(Constants.FLOAT_ALPHA_END)
+                                    .setDuration(Constants.ANIMATION_DURATION_SHORT)
                                     .start();
                         }
                     }
@@ -252,6 +270,9 @@ public class HealthMonitorActivity extends AppCompatActivity implements
         });
     }
 
+    /**
+     * Check and request permissions
+     */
     private void checkPermissions() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.BODY_SENSORS)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -272,13 +293,16 @@ public class HealthMonitorActivity extends AppCompatActivity implements
         }
     }
 
+    /**
+     * Request permissions
+     */
     private void requestPermissions() {
         ActivityCompat.requestPermissions(this,
                 new String[]{
                         Manifest.permission.BODY_SENSORS,
                         Manifest.permission.ACTIVITY_RECOGNITION
                 },
-                PERMISSIONS_REQUEST);
+                Constants.PERMISSIONS_REQUEST_BODY_SENSORS);
     }
 
     @Override
@@ -286,16 +310,26 @@ public class HealthMonitorActivity extends AppCompatActivity implements
                                            @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        if (requestCode == PERMISSIONS_REQUEST) {
-            if (grantResults.length > 0 &&
-                    grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                startSensors();
-            } else {
-                startSimulatedUpdates();
-            }
+        if (requestCode == Constants.PERMISSIONS_REQUEST_BODY_SENSORS) {
+            handlePermissionResult(grantResults);
         }
     }
 
+    /**
+     * Handle permission request result
+     */
+    private void handlePermissionResult(@NonNull int[] grantResults) {
+        if (grantResults.length > Constants.POSITION_FIRST &&
+                grantResults[Constants.POSITION_FIRST] == PackageManager.PERMISSION_GRANTED) {
+            startSensors();
+        } else {
+            startSimulatedUpdates();
+        }
+    }
+
+    /**
+     * Start sensor monitoring
+     */
     private void startSensors() {
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
 
@@ -305,9 +339,9 @@ public class HealthMonitorActivity extends AppCompatActivity implements
             sensorManager.registerListener(this, heartRateSensor,
                     SensorManager.SENSOR_DELAY_NORMAL);
             isMonitoring = true;
-            Log.d(TAG, "Heart rate sensor registered");
+            Log.d(Constants.TAG_HEALTH_MONITOR_ACTIVITY, Constants.LOG_MSG_HEART_RATE_SENSOR_REGISTERED);
         } else {
-            Log.w(TAG, "No heart rate sensor available");
+            Log.w(Constants.TAG_HEALTH_MONITOR_ACTIVITY, Constants.LOG_MSG_NO_HEART_RATE_SENSOR);
         }
 
         // Step counter sensor
@@ -315,38 +349,47 @@ public class HealthMonitorActivity extends AppCompatActivity implements
         if (stepCounterSensor != null) {
             sensorManager.registerListener(this, stepCounterSensor,
                     SensorManager.SENSOR_DELAY_NORMAL);
-            Log.d(TAG, "Step counter sensor registered");
+            Log.d(Constants.TAG_HEALTH_MONITOR_ACTIVITY, Constants.LOG_MSG_STEP_COUNTER_SENSOR_REGISTERED);
         } else {
-            Log.w(TAG, "No step counter sensor available");
+            Log.w(Constants.TAG_HEALTH_MONITOR_ACTIVITY, Constants.LOG_MSG_NO_STEP_COUNTER_SENSOR);
         }
 
         startSimulatedUpdates();
     }
 
+    /**
+     * Start simulated data updates
+     */
     private void startSimulatedUpdates() {
         handler.post(updateRunnable);
     }
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        if (event.sensor.getType() == Sensor.TYPE_HEART_RATE && event.values.length > 0) {
-            float heartRate = event.values[0];
+        if (event.sensor.getType() == Sensor.TYPE_HEART_RATE && event.values.length > Constants.POSITION_FIRST) {
+            float heartRate = event.values[Constants.POSITION_FIRST];
             updateHeartRate(heartRate);
-        } else if (event.sensor.getType() == Sensor.TYPE_STEP_COUNTER && event.values.length > 0) {
-            float steps = event.values[0];
+        } else if (event.sensor.getType() == Sensor.TYPE_STEP_COUNTER && event.values.length > Constants.POSITION_FIRST) {
+            float steps = event.values[Constants.POSITION_FIRST];
             updateSteps((int) steps);
         }
     }
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
-        Log.d(TAG, "Sensor accuracy changed: " + sensor.getName() + " accuracy: " + accuracy);
+        Log.d(Constants.TAG_HEALTH_MONITOR_ACTIVITY,
+                Constants.LOG_MSG_SENSOR_ACCURACY_CHANGED +
+                        Constants.COLON + Constants.SPACE + sensor.getName() +
+                        Constants.SPACE + Constants.LOG_MSG_ACCURACY + Constants.SPACE + accuracy);
     }
 
+    /**
+     * Update heart rate display
+     */
     private void updateHeartRate(float heartRate) {
         runOnUiThread(() -> {
             for (HealthMetric metric : healthMetrics) {
-                if (metric.getId().equals("heart_rate")) {
+                if (metric.getId().equals(Constants.METRIC_HEART_RATE)) {
                     metric.setValue(String.valueOf((int) heartRate));
                     break;
                 }
@@ -357,10 +400,13 @@ public class HealthMonitorActivity extends AppCompatActivity implements
         });
     }
 
+    /**
+     * Update steps display
+     */
     private void updateSteps(int steps) {
         runOnUiThread(() -> {
             for (HealthMetric metric : healthMetrics) {
-                if (metric.getId().equals("steps")) {
+                if (metric.getId().equals(Constants.METRIC_STEPS)) {
                     metric.setValue(String.valueOf(steps));
                     break;
                 }
@@ -371,23 +417,26 @@ public class HealthMonitorActivity extends AppCompatActivity implements
         });
     }
 
+    /**
+     * Update simulated data
+     */
     private void updateSimulatedData() {
         runOnUiThread(() -> {
             for (HealthMetric metric : healthMetrics) {
                 String metricId = metric.getId();
 
-                if (metricId.equals("heart_rate")) {
+                if (metricId.equals(Constants.METRIC_HEART_RATE)) {
                     if (!isMonitoring) {
-                        int heartRate = 65 + random.nextInt(20);
+                        int heartRate = Constants.HEART_RATE_MIN + random.nextInt(Constants.HEART_RATE_RANGE);
                         metric.setValue(String.valueOf(heartRate));
                     }
-                } else if (metricId.equals("steps")) {
+                } else if (metricId.equals(Constants.METRIC_STEPS)) {
                     if (stepCounterSensor == null) {
-                        int steps = 3500 + random.nextInt(500);
+                        int steps = Constants.STEPS_BASE_VALUE + random.nextInt(Constants.STEPS_RANGE);
                         metric.setValue(String.valueOf(steps));
                     }
-                } else if (metricId.equals("blood_oxygen")) {
-                    int bloodOxygen = 96 + random.nextInt(4);
+                } else if (metricId.equals(Constants.METRIC_BLOOD_OXYGEN)) {
+                    int bloodOxygen = Constants.BLOOD_OXYGEN_MIN + random.nextInt(Constants.BLOOD_OXYGEN_RANGE);
                     metric.setValue(String.valueOf(bloodOxygen));
                 }
             }
@@ -402,22 +451,18 @@ public class HealthMonitorActivity extends AppCompatActivity implements
     public void onHealthMetricClick(HealthMetric metric) {
         Class<?> activityClass = null;
 
-        switch (metric.getId()) {
-            case "heart_rate":
-                activityClass = HeartRateDetailActivity.class;
-                break;
-            case "steps":
-                activityClass = StepsDetailActivity.class;
-                break;
-            case "blood_oxygen":
-                activityClass = BloodOxygenDetailActivity.class;
-                break;
+        if (metric.getId().equals(Constants.METRIC_HEART_RATE)) {
+            activityClass = HeartRateDetailActivity.class;
+        } else if (metric.getId().equals(Constants.METRIC_STEPS)) {
+            activityClass = StepsDetailActivity.class;
+        } else if (metric.getId().equals(Constants.METRIC_BLOOD_OXYGEN)) {
+            activityClass = BloodOxygenDetailActivity.class;
         }
 
         if (activityClass != null) {
             Intent intent = new Intent(this, activityClass);
-            intent.putExtra("metric_value", metric.getValue());
-            intent.putExtra("metric_label", metric.getLabel());
+            intent.putExtra(Constants.EXTRA_METRIC_VALUE, metric.getValue());
+            intent.putExtra(Constants.EXTRA_METRIC_LABEL, metric.getLabel());
             startActivity(intent);
         }
     }

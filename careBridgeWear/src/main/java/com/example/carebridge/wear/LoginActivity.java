@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.carebridge.shared.controller.AuthController;
 import com.example.carebridge.shared.model.User;
 import com.example.carebridge.wear.databinding.ActivityLoginBinding;
+import com.example.carebridge.wear.utils.Constants;
 import com.example.carebridge.wear.utils.WearSharedPrefManager;
 import com.example.carebridge.shared.utils.ApiConstants;
 import com.google.firebase.FirebaseApp;
@@ -34,13 +35,12 @@ import okhttp3.Response;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private static final String TAG = "WearLoginActivity";
     private ActivityLoginBinding binding;
     private AuthController authController;
     private WearSharedPrefManager wearSharedPrefManager;
 
     private final Handler timeHandler = new Handler(Looper.getMainLooper());
-    private final SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a", Locale.getDefault());
+    private final SimpleDateFormat timeFormat = new SimpleDateFormat(Constants.TIME_FORMAT_HH_MM_A, Locale.getDefault());
     private final OkHttpClient client = new OkHttpClient();
 
     @Override
@@ -50,21 +50,25 @@ public class LoginActivity extends AppCompatActivity {
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        timeFormat.setTimeZone(TimeZone.getTimeZone("America/Toronto"));
+        timeFormat.setTimeZone(TimeZone.getTimeZone(Constants.TIMEZONE_TORONTO));
 
         authController = new AuthController(this);
         wearSharedPrefManager = new WearSharedPrefManager(this);
 
+        // Check if user is already logged in
         if (wearSharedPrefManager.getCurrentUser() != null) {
             redirectToDashboard(wearSharedPrefManager.getCurrentUser());
             return;
         }
 
-        setupViews();
+        initializeViews();
         startClockUpdater();
     }
 
-    private void setupViews() {
+    /**
+     * Initialize UI components and set up listeners
+     */
+    private void initializeViews() {
         binding.loginButton.setOnClickListener(v -> attemptLogin());
 
         binding.passwordEditText.setOnEditorActionListener((v, actionId, event) -> {
@@ -76,6 +80,9 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Validate and attempt user login
+     */
     private void attemptLogin() {
         String username = binding.usernameEditText.getText().toString().trim();
         String password = binding.passwordEditText.getText().toString().trim();
@@ -92,6 +99,9 @@ public class LoginActivity extends AppCompatActivity {
         performLogin(username, password);
     }
 
+    /**
+     * Perform login operation with provided credentials
+     */
     private void performLogin(String username, String password) {
         binding.loginButton.setEnabled(false);
         binding.loginButton.setText(R.string.logging_in);
@@ -107,14 +117,14 @@ public class LoginActivity extends AppCompatActivity {
                         .addOnCompleteListener(task -> {
                             if (task.isSuccessful() && task.getResult() != null) {
                                 String token = task.getResult();
-                                Log.d(TAG, "FCM Token (Wear): " + token);
+                                Log.d(Constants.TAG_LOGIN_ACTIVITY, Constants.LOG_EMOJI_SUCCESS + " FCM Token (Wear): " + token);
 
                                 wearSharedPrefManager.saveReferenceId(token);
 
-                                // Send to backend
+                                // Send FCM token to backend
                                 sendFcmTokenToServer(user.getId(), token);
                             } else {
-                                Log.w(TAG, "FCM token fetch failed", task.getException());
+                                Log.w(Constants.TAG_LOGIN_ACTIVITY, Constants.LOG_EMOJI_ERROR + " FCM token fetch failed", task.getException());
                             }
 
                             redirectToDashboard(user);
@@ -130,15 +140,18 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Send FCM token to backend server
+     */
     private void sendFcmTokenToServer(int userId, String fcmToken) {
         try {
             JSONObject json = new JSONObject();
-            json.put("user_id", userId);
-            json.put("wear_os_fcm_token", fcmToken);
+            json.put(Constants.KEY_USER_ID, userId);
+            json.put(Constants.KEY_FCM_TOKEN, fcmToken);
 
             RequestBody body = RequestBody.create(
                     json.toString(),
-                    MediaType.get("application/json; charset=utf-8")
+                    MediaType.get(Constants.HTTP_CONTENT_TYPE_JSON_CHARSET)
             );
 
             Request request = new Request.Builder()
@@ -149,38 +162,47 @@ public class LoginActivity extends AppCompatActivity {
             client.newCall(request).enqueue(new okhttp3.Callback() {
                 @Override
                 public void onFailure(okhttp3.Call call, IOException e) {
-                    Log.e(TAG, "Wear failed to update FCM token: " + e.getMessage());
+                    Log.e(Constants.TAG_LOGIN_ACTIVITY, Constants.LOG_EMOJI_ERROR + " Wear failed to update FCM token: " + e.getMessage());
                 }
 
                 @Override
                 public void onResponse(okhttp3.Call call, Response response) throws IOException {
-                    Log.d(TAG, "Wear FCM token update response: " + response.body().string());
+                    Log.d(Constants.TAG_LOGIN_ACTIVITY, Constants.LOG_EMOJI_SUCCESS + " Wear FCM token update response: " + response.body().string());
                 }
             });
         } catch (Exception e) {
-            Log.e(TAG, "FCM token JSON building error: " + e.getMessage());
+            Log.e(Constants.TAG_LOGIN_ACTIVITY, Constants.LOG_EMOJI_ERROR + " FCM token JSON building error: " + e.getMessage());
         }
     }
 
+    /**
+     * Display error message to user
+     */
     private void showError(String msg) {
         binding.errorText.setText(msg);
         binding.errorText.setVisibility(View.VISIBLE);
-        binding.errorText.postDelayed(() -> binding.errorText.setVisibility(View.GONE), 3000);
+        binding.errorText.postDelayed(() -> binding.errorText.setVisibility(View.GONE), Constants.UPDATE_INTERVAL_MEDIUM);
     }
 
+    /**
+     * Redirect to main dashboard after successful login
+     */
     private void redirectToDashboard(User user) {
         Intent intent = new Intent(this, MainActivity.class);
-        intent.putExtra("user", user);
+        intent.putExtra(Constants.EXTRA_USER, user);
         startActivity(intent);
         finish();
     }
 
+    /**
+     * Start updating clock display
+     */
     private void startClockUpdater() {
         timeHandler.post(new Runnable() {
             @Override
             public void run() {
                 binding.tvLiveTime.setText(timeFormat.format(new Date()));
-                timeHandler.postDelayed(this, 1000);
+                timeHandler.postDelayed(this, Constants.UPDATE_INTERVAL_FAST);
             }
         });
     }

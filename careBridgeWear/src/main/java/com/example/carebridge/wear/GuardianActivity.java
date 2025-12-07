@@ -12,14 +12,13 @@ import com.example.carebridge.shared.model.PatientGuardianInfo;
 import com.example.carebridge.wear.adapters.GuardianAdapter;
 import com.example.carebridge.wear.databinding.ActivityGuardianBinding;
 import com.example.carebridge.wear.models.Guardian;
+import com.example.carebridge.wear.utils.Constants;
 import com.example.carebridge.wear.utils.WearSharedPrefManager;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class GuardianActivity extends AppCompatActivity {
-
-    private static final String TAG = "GuardianActivity";
 
     private ActivityGuardianBinding binding;
     private List<Guardian> guardianList;
@@ -42,6 +41,9 @@ public class GuardianActivity extends AppCompatActivity {
         fetchGuardiansData();
     }
 
+    /**
+     * Set up RecyclerView with adapter and layout manager
+     */
     private void setupRecyclerView() {
         guardianList = new ArrayList<>();
         adapter = new GuardianAdapter(guardianList);
@@ -52,17 +54,26 @@ public class GuardianActivity extends AppCompatActivity {
         showLoadingState();
     }
 
+    /**
+     * Set up click listeners for UI elements
+     */
     private void setupClickListeners() {
         binding.guardianBackButton.setOnClickListener(v -> finish());
     }
 
+    /**
+     * Fetch guardians data from API
+     */
     private void fetchGuardiansData() {
-        Log.d(TAG, "Starting to fetch guardians data for GuardianActivity...");
+        Log.d(Constants.TAG_GUARDIAN_ACTIVITY,
+                Constants.LOG_EMOJI_INFO + Constants.SPACE + Constants.LOG_MSG_GUARDIAN_FETCHING_STARTED);
 
         guardianController.getCurrentGuardian(new PatientGuardianInfoController.PatientGuardianCallback() {
             @Override
             public void onSuccess(List<PatientGuardianInfo> patientGuardianList) {
-                Log.d(TAG, "Guardians data fetched successfully. Count: " + patientGuardianList.size());
+                Log.d(Constants.TAG_GUARDIAN_ACTIVITY,
+                        Constants.LOG_EMOJI_SUCCESS + Constants.SPACE + Constants.LOG_MSG_GUARDIAN_FETCH_SUCCESS +
+                                Constants.COLON + Constants.SPACE + patientGuardianList.size());
 
                 // Convert PatientGuardianInfo to Guardian list
                 convertToGuardianList(patientGuardianList);
@@ -81,7 +92,9 @@ public class GuardianActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(String message) {
-                Log.e(TAG, "Failed to fetch guardians data: " + message);
+                Log.e(Constants.TAG_GUARDIAN_ACTIVITY,
+                        Constants.LOG_EMOJI_ERROR + Constants.SPACE + Constants.LOG_MSG_GUARDIAN_FETCH_FAILED +
+                                Constants.COLON + Constants.SPACE + message);
 
                 // Update UI on main thread
                 runOnUiThread(() -> {
@@ -94,11 +107,14 @@ public class GuardianActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Convert PatientGuardianInfo objects to Guardian model objects
+     */
     private void convertToGuardianList(List<PatientGuardianInfo> patientGuardianList) {
         guardianList.clear();
 
         for (PatientGuardianInfo patientGuardian : patientGuardianList) {
-            // Map PatientGuardianInfo to your Guardian model
+            // Map PatientGuardianInfo to Guardian model
             Guardian guardian = new Guardian(
                     patientGuardian.getFull_name(),
                     patientGuardian.getType(),
@@ -108,20 +124,29 @@ public class GuardianActivity extends AppCompatActivity {
             guardianList.add(guardian);
         }
 
-        // If no data from API, ensure list is empty
+        // Log if no data from API
         if (guardianList.isEmpty()) {
-            Log.d(TAG, "No guardians found in API response");
+            Log.d(Constants.TAG_GUARDIAN_ACTIVITY,
+                    Constants.LOG_EMOJI_INFO + Constants.SPACE + Constants.LOG_MSG_GUARDIAN_NO_DATA);
         }
     }
 
+    /**
+     * Initialize with sample data when API fails
+     */
     private void initializeSampleData() {
         // Fallback to sample data if API fails
         guardianList.clear();
-        guardianList.add(new Guardian("Yash", "Family", "Friend", "+1 519-569-2560"));
-        guardianList.add(new Guardian("Dhwani", "Caretaker", "Primary Nurse", "+1 519-568-2540"));
+        guardianList.add(new Guardian(Constants.SAMPLE_NAME_YASH, Constants.SAMPLE_TYPE_FAMILY,
+                Constants.SAMPLE_RELATION_FRIEND, Constants.SAMPLE_PHONE_YASH));
+        guardianList.add(new Guardian(Constants.SAMPLE_NAME_DHWANI, Constants.SAMPLE_TYPE_CARETAKER,
+                Constants.SAMPLE_RELATION_NURSE, Constants.SAMPLE_PHONE_DHWANI));
         adapter.notifyDataSetChanged();
     }
 
+    /**
+     * Show loading state while fetching data
+     */
     private void showLoadingState() {
         runOnUiThread(() -> {
             binding.guardianRecyclerView.setVisibility(View.GONE);
@@ -129,19 +154,31 @@ public class GuardianActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Hide loading state when data is loaded
+     */
     private void hideLoadingState() {
         runOnUiThread(() -> {
             binding.guardianRecyclerView.setVisibility(View.VISIBLE);
         });
     }
 
+    /**
+     * Show empty state when no guardians available
+     */
     private void showEmptyState() {
-        Log.d(TAG, "No guardians available to display");
+        Log.d(Constants.TAG_GUARDIAN_ACTIVITY,
+                Constants.LOG_EMOJI_INFO + Constants.SPACE + Constants.LOG_MSG_GUARDIAN_EMPTY_STATE);
         // You can add an empty state view to your layout
     }
 
+    /**
+     * Show error state with message
+     */
     private void showErrorState(String message) {
-        Log.e(TAG, "Error state: " + message);
+        Log.e(Constants.TAG_GUARDIAN_ACTIVITY,
+                Constants.LOG_EMOJI_ERROR + Constants.SPACE + Constants.LOG_MSG_GUARDIAN_ERROR_STATE +
+                        Constants.COLON + Constants.SPACE + message);
         // You can add an error message view to your layout
     }
 }

@@ -18,6 +18,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.example.carebridge.wear.R;
 import com.example.carebridge.wear.adapters.HomePagerAdapter;
 import com.example.carebridge.wear.databinding.FragmentHomeBinding;
+import com.example.carebridge.wear.utils.Constants;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -28,7 +29,6 @@ public class HomeFragment extends Fragment {
     private FragmentHomeBinding binding;
     private Handler timeHandler;
     private Runnable timeRunnable;
-
     private View[] indicators;
 
     @Nullable
@@ -47,6 +47,9 @@ public class HomeFragment extends Fragment {
         startTimeUpdates();
     }
 
+    /**
+     * Initialize page indicators
+     */
     private void initIndicators() {
         indicators = new View[]{
                 binding.homeIndicator0,
@@ -54,15 +57,18 @@ public class HomeFragment extends Fragment {
                 binding.homeIndicator2,
                 binding.homeIndicator3,
                 binding.homeIndicator4,
-                binding.homeIndicator5  // ADD THIS: 6th indicator
+                binding.homeIndicator5
         };
 
-        for (int i = 0; i < indicators.length; i++) {
+        for (int i = Constants.POSITION_FIRST; i < indicators.length; i++) {
             int index = i;
             indicators[i].setOnClickListener(v -> binding.viewPager.setCurrentItem(index, true));
         }
     }
 
+    /**
+     * Set up ViewPager with adapter and page change listener
+     */
     private void setupViewPager() {
         HomePagerAdapter adapter = new HomePagerAdapter(this);
         binding.viewPager.setAdapter(adapter);
@@ -75,11 +81,14 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        updateIndicators(0);
+        updateIndicators(Constants.POSITION_FIRST);
     }
 
+    /**
+     * Update indicator appearance based on active position
+     */
     private void updateIndicators(int activePos) {
-        for (int i = 0; i < indicators.length; i++) {
+        for (int i = Constants.POSITION_FIRST; i < indicators.length; i++) {
             View indicator = indicators[i];
 
             if (i == activePos) {
@@ -94,68 +103,88 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    // --- ANIMATIONS ---
-
+    /**
+     * Animate active indicator with scale up
+     */
     private void animateActive(View view) {
-        PropertyValuesHolder scaleX = PropertyValuesHolder.ofFloat(View.SCALE_X, 1f, 1.25f);
-        PropertyValuesHolder scaleY = PropertyValuesHolder.ofFloat(View.SCALE_Y, 1f, 1.25f);
+        PropertyValuesHolder scaleX = PropertyValuesHolder.ofFloat(View.SCALE_X,
+                Constants.FLOAT_SCALE_INACTIVE, Constants.FLOAT_SCALE_ACTIVE);
+        PropertyValuesHolder scaleY = PropertyValuesHolder.ofFloat(View.SCALE_Y,
+                Constants.FLOAT_SCALE_INACTIVE, Constants.FLOAT_SCALE_ACTIVE);
 
         ObjectAnimator anim = ObjectAnimator.ofPropertyValuesHolder(view, scaleX, scaleY);
-        anim.setDuration(250);
+        anim.setDuration(Constants.ANIMATION_DURATION_MEDIUM);
         anim.setInterpolator(new AccelerateDecelerateInterpolator());
         anim.start();
     }
 
+    /**
+     * Animate inactive indicator with scale down
+     */
     private void animateInactive(View view) {
-        PropertyValuesHolder scaleX = PropertyValuesHolder.ofFloat(View.SCALE_X, 1.25f, 1f);
-        PropertyValuesHolder scaleY = PropertyValuesHolder.ofFloat(View.SCALE_Y, 1.25f, 1f);
+        PropertyValuesHolder scaleX = PropertyValuesHolder.ofFloat(View.SCALE_X,
+                Constants.FLOAT_SCALE_ACTIVE, Constants.FLOAT_SCALE_INACTIVE);
+        PropertyValuesHolder scaleY = PropertyValuesHolder.ofFloat(View.SCALE_Y,
+                Constants.FLOAT_SCALE_ACTIVE, Constants.FLOAT_SCALE_INACTIVE);
 
         ObjectAnimator anim = ObjectAnimator.ofPropertyValuesHolder(view, scaleX, scaleY);
-        anim.setDuration(200);
+        anim.setDuration(Constants.ANIMATION_DURATION_SHORT);
         anim.setInterpolator(new AccelerateDecelerateInterpolator());
         anim.start();
     }
 
-    // Smooth sliding margin animation
+    /**
+     * Animate margin changes for indicators
+     */
     private void animateMargin(View view, boolean isActive) {
         ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
 
         int start = params.leftMargin;
-        int end = isActive ? 16 : 8; // active dot spreads more
+        int end = isActive ? Constants.INDICATOR_MARGIN_ACTIVE : Constants.INDICATOR_MARGIN_INACTIVE;
 
         ValueAnimator animator = ValueAnimator.ofInt(start, end);
-        animator.setDuration(250);
+        animator.setDuration(Constants.ANIMATION_DURATION_MEDIUM);
         animator.addUpdateListener(animation -> {
-            params.leftMargin = (int) animation.getAnimatedValue();
-            params.rightMargin = (int) animation.getAnimatedValue();
+            int marginValue = (int) animation.getAnimatedValue();
+            params.leftMargin = marginValue;
+            params.rightMargin = marginValue;
             view.setLayoutParams(params);
         });
 
         animator.start();
     }
 
-    // --- TIME ---
-
+    /**
+     * Start time update handler
+     */
     private void startTimeUpdates() {
         timeHandler = new Handler();
-        timeRunnable = () -> {
-            updateTime();
-            timeHandler.postDelayed(timeRunnable, 1000);
+        timeRunnable = new Runnable() {
+            @Override
+            public void run() {
+                updateTime();
+                timeHandler.postDelayed(this, Constants.UPDATE_INTERVAL_FAST);
+            }
         };
         timeHandler.post(timeRunnable);
     }
 
+    /**
+     * Update time display
+     */
     private void updateTime() {
         if (binding == null) return;
 
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
+        SimpleDateFormat sdf = new SimpleDateFormat(Constants.TIME_FORMAT_HH_MM, Locale.getDefault());
         binding.homeTime.setText(sdf.format(new Date()));
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if (timeHandler != null) timeHandler.removeCallbacks(timeRunnable);
+        if (timeHandler != null) {
+            timeHandler.removeCallbacks(timeRunnable);
+        }
         binding = null;
     }
 }

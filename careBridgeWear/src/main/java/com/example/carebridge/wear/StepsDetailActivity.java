@@ -11,6 +11,7 @@ import android.os.Looper;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.carebridge.wear.databinding.ActivityStepsDetailBinding;
+import com.example.carebridge.wear.utils.Constants;
 
 import java.util.Random;
 
@@ -19,8 +20,8 @@ public class StepsDetailActivity extends AppCompatActivity implements SensorEven
     private ActivityStepsDetailBinding binding;
     private SensorManager sensorManager;
     private Sensor stepCounterSensor;
-    private int stepCount = 0;
-    private int dailyGoal = 10000; // Keep for internal calculation
+    private int stepCount = Constants.POSITION_FIRST;
+    private int dailyGoal = Constants.DAILY_STEP_GOAL;
     private Handler handler = new Handler(Looper.getMainLooper());
     private Random random = new Random();
 
@@ -28,7 +29,7 @@ public class StepsDetailActivity extends AppCompatActivity implements SensorEven
         @Override
         public void run() {
             updateSimulatedSteps();
-            handler.postDelayed(this, 2000); // Update every 2 seconds
+            handler.postDelayed(this, Constants.UPDATE_INTERVAL_SLOW);
         }
     };
 
@@ -38,25 +39,38 @@ public class StepsDetailActivity extends AppCompatActivity implements SensorEven
         binding = ActivityStepsDetailBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        String stepsValue = getIntent().getStringExtra("metric_value");
-        if (stepsValue != null) {
-            try {
-                stepCount = Integer.parseInt(stepsValue);
-            } catch (NumberFormatException e) {
-                stepCount = 3542;
-            }
-        }
+        String stepsValue = getIntent().getStringExtra(Constants.EXTRA_METRIC_VALUE);
+        initializeStepCount(stepsValue);
 
         setupUI();
         setupSensor();
         updateDisplay();
     }
 
+    /**
+     * Initialize step count from intent or default value
+     */
+    private void initializeStepCount(String stepsValue) {
+        if (stepsValue != null) {
+            try {
+                stepCount = Integer.parseInt(stepsValue);
+            } catch (NumberFormatException e) {
+                stepCount = Constants.DEFAULT_STEPS_VALUE;
+            }
+        }
+    }
+
+    /**
+     * Set up UI components
+     */
     private void setupUI() {
         binding.stepsBackButton.setOnClickListener(v -> finish());
         binding.stepsTitle.setText(getString(R.string.steps_tracker_title));
     }
 
+    /**
+     * Set up step counter sensor
+     */
     private void setupSensor() {
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         stepCounterSensor = sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER);
@@ -69,37 +83,62 @@ public class StepsDetailActivity extends AppCompatActivity implements SensorEven
         }
     }
 
+    /**
+     * Update simulated step data
+     */
     private void updateSimulatedSteps() {
-        // Simulate step increase
-        if (Math.random() > 0.7) {
-            stepCount += 1 + random.nextInt(5);
+        // Simulate step increase with probability
+        if (Math.random() > Constants.STEP_UPDATE_PROBABILITY) {
+            stepCount += Constants.STEP_INCREMENT_BASE + random.nextInt(Constants.STEP_INCREMENT_RANGE);
             updateDisplay();
         }
     }
 
+    /**
+     * Update all UI displays
+     */
     private void updateDisplay() {
         binding.stepsValue.setText(String.valueOf(stepCount));
         calculateStats();
     }
 
+    /**
+     * Calculate and display step statistics
+     */
     private void calculateStats() {
-        // Distance in km (average step length 0.0008 km)
-        float distance = stepCount * 0.0008f;
-        binding.distanceValue.setText(String.format("%.2f km", distance));
+        calculateDistance();
+        calculateCalories();
+        calculateActiveMinutes();
+    }
 
-        // Calories burned (approx 0.04 calories per step)
-        int calories = (int) (stepCount * 0.04);
-        binding.caloriesValue.setText(calories + " cal");
+    /**
+     * Calculate distance walked
+     */
+    private void calculateDistance() {
+        float distance = stepCount * Constants.STEP_LENGTH_KM;
+        binding.distanceValue.setText(String.format(Constants.DISTANCE_FORMAT, distance));
+    }
 
-        // Active minutes (approx 1 minute per 100 steps)
-        int activeMinutes = stepCount / 100;
-        binding.activeMinutesValue.setText(activeMinutes + " min");
+    /**
+     * Calculate calories burned
+     */
+    private void calculateCalories() {
+        int calories = (int) (stepCount * Constants.CALORIES_PER_STEP);
+        binding.caloriesValue.setText(calories + Constants.SPACE + Constants.UNIT_CALORIES);
+    }
+
+    /**
+     * Calculate active minutes
+     */
+    private void calculateActiveMinutes() {
+        int activeMinutes = stepCount / Constants.STEPS_PER_MINUTE;
+        binding.activeMinutesValue.setText(activeMinutes + Constants.SPACE + Constants.UNIT_MINUTES);
     }
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        if (event.sensor.getType() == Sensor.TYPE_STEP_COUNTER && event.values.length > 0) {
-            int newStepCount = (int) event.values[0];
+        if (event.sensor.getType() == Sensor.TYPE_STEP_COUNTER && event.values.length > Constants.POSITION_FIRST) {
+            int newStepCount = (int) event.values[Constants.POSITION_FIRST];
             if (newStepCount > stepCount) {
                 stepCount = newStepCount;
                 runOnUiThread(this::updateDisplay);
@@ -109,7 +148,7 @@ public class StepsDetailActivity extends AppCompatActivity implements SensorEven
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
-        // Handle accuracy changes
+        // Handle accuracy changes - no action needed for step counter
     }
 
     @Override

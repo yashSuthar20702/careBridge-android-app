@@ -18,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import com.example.carebridge.wear.databinding.ActivityHeartRateDetailBinding;
+import com.example.carebridge.wear.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +40,7 @@ public class HeartRateDetailActivity extends AppCompatActivity implements Sensor
             if (!isMonitoring) {
                 updateSimulatedData();
             }
-            handler.postDelayed(this, 1000);
+            handler.postDelayed(this, Constants.UPDATE_INTERVAL_FAST);
         }
     };
 
@@ -49,33 +50,46 @@ public class HeartRateDetailActivity extends AppCompatActivity implements Sensor
         binding = ActivityHeartRateDetailBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        String heartRateValue = getIntent().getStringExtra("metric_value");
-        if (heartRateValue != null) {
-            binding.heartRateValue.setText(heartRateValue);
-            try {
-                int initialRate = Integer.parseInt(heartRateValue);
-                // Initialize history with the current value
-                for (int i = 0; i < 10; i++) {
-                    heartRateHistory.add(initialRate);
-                }
-            } catch (NumberFormatException e) {
-                // Initialize with default values
-                for (int i = 0; i < 10; i++) {
-                    heartRateHistory.add(70 + random.nextInt(10));
-                }
-            }
-        } else {
-            // Initialize with default values
-            for (int i = 0; i < 10; i++) {
-                heartRateHistory.add(70 + random.nextInt(10));
-            }
-        }
+        String heartRateValue = getIntent().getStringExtra(Constants.EXTRA_METRIC_VALUE);
+        initializeHeartRateHistory(heartRateValue);
 
         setupUI();
         setupSensor();
         updateStats(getCurrentHeartRate());
     }
 
+    /**
+     * Initialize heart rate history with initial value
+     */
+    private void initializeHeartRateHistory(String heartRateValue) {
+        if (heartRateValue != null) {
+            binding.heartRateValue.setText(heartRateValue);
+            try {
+                int initialRate = Integer.parseInt(heartRateValue);
+                // Initialize history with the current value
+                for (int i = Constants.POSITION_FIRST; i < Constants.INITIAL_HISTORY_SIZE; i++) {
+                    heartRateHistory.add(initialRate);
+                }
+            } catch (NumberFormatException e) {
+                initializeDefaultHistory();
+            }
+        } else {
+            initializeDefaultHistory();
+        }
+    }
+
+    /**
+     * Initialize with default heart rate values
+     */
+    private void initializeDefaultHistory() {
+        for (int i = Constants.POSITION_FIRST; i < Constants.INITIAL_HISTORY_SIZE; i++) {
+            heartRateHistory.add(Constants.DEFAULT_HEART_RATE_HISTORY_BASE + random.nextInt(Constants.DEFAULT_HEART_RATE_HISTORY_RANGE));
+        }
+    }
+
+    /**
+     * Set up UI components
+     */
     private void setupUI() {
         binding.heartRateBackButton.setOnClickListener(v -> finish());
         binding.heartRateTitle.setText(getString(R.string.heart_rate_title));
@@ -87,6 +101,9 @@ public class HeartRateDetailActivity extends AppCompatActivity implements Sensor
                 ContextCompat.getColor(this, R.color.green));
     }
 
+    /**
+     * Set up sensor for heart rate monitoring
+     */
     private void setupSensor() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.BODY_SENSORS)
                 == PackageManager.PERMISSION_GRANTED) {
@@ -100,19 +117,26 @@ public class HeartRateDetailActivity extends AppCompatActivity implements Sensor
                 binding.sensorIndicator.setVisibility(View.VISIBLE);
                 binding.sensorIndicator.setBackgroundColor(ContextCompat.getColor(this, R.color.green));
             } else {
-                binding.sensorStatus.setText(getString(R.string.using_simulated_data));
-                binding.sensorIndicator.setVisibility(View.VISIBLE);
-                binding.sensorIndicator.setBackgroundColor(ContextCompat.getColor(this, R.color.orange));
-                startSimulatedUpdates();
+                handleNoSensorAvailable();
             }
         } else {
-            binding.sensorStatus.setText(getString(R.string.using_simulated_data));
-            binding.sensorIndicator.setVisibility(View.VISIBLE);
-            binding.sensorIndicator.setBackgroundColor(ContextCompat.getColor(this, R.color.orange));
-            startSimulatedUpdates();
+            handleNoSensorAvailable();
         }
     }
 
+    /**
+     * Handle case when no sensor is available
+     */
+    private void handleNoSensorAvailable() {
+        binding.sensorStatus.setText(getString(R.string.using_simulated_data));
+        binding.sensorIndicator.setVisibility(View.VISIBLE);
+        binding.sensorIndicator.setBackgroundColor(ContextCompat.getColor(this, R.color.orange));
+        startSimulatedUpdates();
+    }
+
+    /**
+     * Toggle monitoring state
+     */
     private void toggleMonitoring() {
         if (isMonitoring) {
             stopMonitoring();
@@ -121,6 +145,9 @@ public class HeartRateDetailActivity extends AppCompatActivity implements Sensor
         }
     }
 
+    /**
+     * Start heart rate monitoring
+     */
     private void startMonitoring() {
         isMonitoring = true;
         binding.startMonitoringButton.setText(getString(R.string.stop_monitoring));
@@ -141,6 +168,9 @@ public class HeartRateDetailActivity extends AppCompatActivity implements Sensor
         startPulseAnimation();
     }
 
+    /**
+     * Stop heart rate monitoring
+     */
     private void stopMonitoring() {
         isMonitoring = false;
         binding.startMonitoringButton.setText(getString(R.string.start_monitoring));
@@ -158,46 +188,66 @@ public class HeartRateDetailActivity extends AppCompatActivity implements Sensor
         binding.heartIcon.clearAnimation();
     }
 
+    /**
+     * Start pulse animation for heart icon
+     */
     private void startPulseAnimation() {
         ScaleAnimation pulse = new ScaleAnimation(
-                1.0f, 1.2f, 1.0f, 1.2f,
-                Animation.RELATIVE_TO_SELF, 0.5f,
-                Animation.RELATIVE_TO_SELF, 0.5f
+                Constants.FLOAT_SCALE_START,
+                Constants.FLOAT_SCALE_END,
+                Constants.FLOAT_SCALE_START,
+                Constants.FLOAT_SCALE_END,
+                Animation.RELATIVE_TO_SELF,
+                Constants.FLOAT_CENTER_POSITION,
+                Animation.RELATIVE_TO_SELF,
+                Constants.FLOAT_CENTER_POSITION
         );
-        pulse.setDuration(600);
+        pulse.setDuration(Constants.ANIMATION_DURATION_LONG);
         pulse.setRepeatCount(Animation.INFINITE);
         pulse.setRepeatMode(Animation.REVERSE);
         binding.heartIcon.startAnimation(pulse);
     }
 
+    /**
+     * Start simulated data updates
+     */
     private void startSimulatedUpdates() {
         handler.post(updateRunnable);
     }
 
+    /**
+     * Update simulated heart rate data
+     */
     private void updateSimulatedData() {
-        int heartRate = 65 + random.nextInt(25); // 65-90 BPM
+        int heartRate = Constants.HEART_RATE_SIM_MIN + random.nextInt(Constants.HEART_RATE_SIM_RANGE);
         binding.heartRateValue.setText(String.valueOf(heartRate));
 
         // Update history for statistics calculation
         heartRateHistory.add(heartRate);
-        if (heartRateHistory.size() > 20) {
-            heartRateHistory.remove(0);
+        if (heartRateHistory.size() > Constants.MAX_HISTORY_SIZE) {
+            heartRateHistory.remove(Constants.POSITION_FIRST);
         }
 
         updateStats(heartRate);
     }
 
+    /**
+     * Get current heart rate from history
+     */
     private int getCurrentHeartRate() {
         if (!heartRateHistory.isEmpty()) {
-            return heartRateHistory.get(heartRateHistory.size() - 1);
+            return heartRateHistory.get(heartRateHistory.size() - Constants.INDEX_LAST_ELEMENT);
         }
-        return 72; // Default value
+        return Constants.DEFAULT_HEART_RATE;
     }
 
+    /**
+     * Update statistics display
+     */
     private void updateStats(int currentRate) {
         if (heartRateHistory.isEmpty()) return;
 
-        int sum = 0;
+        int sum = Constants.POSITION_FIRST;
         int min = Integer.MAX_VALUE;
         int max = Integer.MIN_VALUE;
 
@@ -220,11 +270,18 @@ public class HeartRateDetailActivity extends AppCompatActivity implements Sensor
         }
 
         // Update status
+        updateHeartRateStatus(currentRate);
+    }
+
+    /**
+     * Update heart rate status display
+     */
+    private void updateHeartRateStatus(int currentRate) {
         if (binding.heartRateStatus != null) {
-            if (currentRate < 60) {
+            if (currentRate < Constants.HEART_RATE_LOW_THRESHOLD) {
                 binding.heartRateStatus.setText(getString(R.string.heart_rate_low));
                 binding.heartRateStatus.setTextColor(ContextCompat.getColor(this, R.color.blue_500));
-            } else if (currentRate > 100) {
+            } else if (currentRate > Constants.HEART_RATE_HIGH_THRESHOLD) {
                 binding.heartRateStatus.setText(getString(R.string.heart_rate_high));
                 binding.heartRateStatus.setTextColor(ContextCompat.getColor(this, R.color.red));
             } else {
@@ -236,42 +293,56 @@ public class HeartRateDetailActivity extends AppCompatActivity implements Sensor
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        if (event.sensor.getType() == Sensor.TYPE_HEART_RATE && event.values.length > 0) {
-            int heartRate = (int) event.values[0];
+        if (event.sensor.getType() == Sensor.TYPE_HEART_RATE && event.values.length > Constants.POSITION_FIRST) {
+            int heartRate = (int) event.values[Constants.POSITION_FIRST];
             runOnUiThread(() -> {
-                binding.heartRateValue.setText(String.valueOf(heartRate));
-
-                // Update history for statistics calculation
-                heartRateHistory.add(heartRate);
-                if (heartRateHistory.size() > 20) {
-                    heartRateHistory.remove(0);
-                }
-
-                updateStats(heartRate);
+                updateHeartRateFromSensor(heartRate);
             });
         }
+    }
+
+    /**
+     * Update heart rate from sensor reading
+     */
+    private void updateHeartRateFromSensor(int heartRate) {
+        binding.heartRateValue.setText(String.valueOf(heartRate));
+
+        // Update history for statistics calculation
+        heartRateHistory.add(heartRate);
+        if (heartRateHistory.size() > Constants.MAX_HISTORY_SIZE) {
+            heartRateHistory.remove(Constants.POSITION_FIRST);
+        }
+
+        updateStats(heartRate);
     }
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
         // Handle accuracy changes
         runOnUiThread(() -> {
-            switch (accuracy) {
-                case SensorManager.SENSOR_STATUS_ACCURACY_HIGH:
-                    binding.sensorStatus.setText(getString(R.string.high_accuracy));
-                    break;
-                case SensorManager.SENSOR_STATUS_ACCURACY_MEDIUM:
-                    binding.sensorStatus.setText(getString(R.string.medium_accuracy));
-                    break;
-                case SensorManager.SENSOR_STATUS_ACCURACY_LOW:
-                    binding.sensorStatus.setText(getString(R.string.low_accuracy));
-                    break;
-                case SensorManager.SENSOR_STATUS_UNRELIABLE:
-                    binding.sensorStatus.setText(getString(R.string.unreliable));
-                    binding.sensorIndicator.setBackgroundColor(ContextCompat.getColor(this, R.color.orange));
-                    break;
-            }
+            handleSensorAccuracyChange(accuracy);
         });
+    }
+
+    /**
+     * Handle sensor accuracy changes
+     */
+    private void handleSensorAccuracyChange(int accuracy) {
+        switch (accuracy) {
+            case SensorManager.SENSOR_STATUS_ACCURACY_HIGH:
+                binding.sensorStatus.setText(getString(R.string.high_accuracy));
+                break;
+            case SensorManager.SENSOR_STATUS_ACCURACY_MEDIUM:
+                binding.sensorStatus.setText(getString(R.string.medium_accuracy));
+                break;
+            case SensorManager.SENSOR_STATUS_ACCURACY_LOW:
+                binding.sensorStatus.setText(getString(R.string.low_accuracy));
+                break;
+            case SensorManager.SENSOR_STATUS_UNRELIABLE:
+                binding.sensorStatus.setText(getString(R.string.unreliable));
+                binding.sensorIndicator.setBackgroundColor(ContextCompat.getColor(this, R.color.orange));
+                break;
+        }
     }
 
     @Override
