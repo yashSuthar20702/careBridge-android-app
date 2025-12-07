@@ -20,7 +20,7 @@ public class StepsDetailActivity extends AppCompatActivity implements SensorEven
     private SensorManager sensorManager;
     private Sensor stepCounterSensor;
     private int stepCount = 0;
-    private int dailyGoal = 10000;
+    private int dailyGoal = 10000; // Keep for internal calculation
     private Handler handler = new Handler(Looper.getMainLooper());
     private Random random = new Random();
 
@@ -55,9 +55,6 @@ public class StepsDetailActivity extends AppCompatActivity implements SensorEven
     private void setupUI() {
         binding.stepsBackButton.setOnClickListener(v -> finish());
         binding.stepsTitle.setText(getString(R.string.steps_tracker_title));
-
-        // Set goal
-        binding.stepsGoal.setText(String.valueOf(dailyGoal));
     }
 
     private void setupSensor() {
@@ -82,17 +79,6 @@ public class StepsDetailActivity extends AppCompatActivity implements SensorEven
 
     private void updateDisplay() {
         binding.stepsValue.setText(String.valueOf(stepCount));
-
-        // Calculate progress
-        float progress = Math.min((float) stepCount / dailyGoal, 1.0f);
-        int progressPercent = (int) (progress * 100);
-
-        binding.stepsProgress.setText(progressPercent + "%");
-
-        // Update progress bar
-        binding.progressBar.setProgress(progressPercent);
-
-        // Calculate and display stats
         calculateStats();
     }
 

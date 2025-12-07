@@ -73,7 +73,6 @@ public class HeartRateDetailActivity extends AppCompatActivity implements Sensor
 
         setupUI();
         setupSensor();
-        updateGraph();
         updateStats(getCurrentHeartRate());
     }
 
@@ -179,45 +178,13 @@ public class HeartRateDetailActivity extends AppCompatActivity implements Sensor
         int heartRate = 65 + random.nextInt(25); // 65-90 BPM
         binding.heartRateValue.setText(String.valueOf(heartRate));
 
-        // Update history
+        // Update history for statistics calculation
         heartRateHistory.add(heartRate);
         if (heartRateHistory.size() > 20) {
             heartRateHistory.remove(0);
         }
 
-        updateGraph();
         updateStats(heartRate);
-    }
-
-    private void updateGraph() {
-        if (binding.graphContainer == null) return;
-
-        binding.graphContainer.removeAllViews();
-
-        int maxHeight = 80; // dp
-        int minHeartRate = 60;
-        int maxHeartRate = 100;
-
-        for (int i = 0; i < heartRateHistory.size(); i++) {
-            int rate = heartRateHistory.get(i);
-            float percentage = (float) (rate - minHeartRate) / (maxHeartRate - minHeartRate);
-            int height = (int) (maxHeight * percentage);
-
-            // Ensure minimum height
-            if (height < 4) height = 4;
-
-            View bar = new View(this);
-            bar.setBackgroundColor(ContextCompat.getColor(this, R.color.red));
-
-            android.widget.LinearLayout.LayoutParams params =
-                    new android.widget.LinearLayout.LayoutParams(
-                            8, // width in dp
-                            height
-                    );
-            params.setMargins(2, maxHeight - height, 2, 0);
-
-            binding.graphContainer.addView(bar, params);
-        }
     }
 
     private int getCurrentHeartRate() {
@@ -274,13 +241,12 @@ public class HeartRateDetailActivity extends AppCompatActivity implements Sensor
             runOnUiThread(() -> {
                 binding.heartRateValue.setText(String.valueOf(heartRate));
 
-                // Update history
+                // Update history for statistics calculation
                 heartRateHistory.add(heartRate);
                 if (heartRateHistory.size() > 20) {
                     heartRateHistory.remove(0);
                 }
 
-                updateGraph();
                 updateStats(heartRate);
             });
         }

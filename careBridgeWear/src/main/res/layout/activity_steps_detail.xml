@@ -2,256 +2,213 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <ScrollView
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/black"
-        android:fillViewport="true">
+        android:background="@color/black">
 
+        <!-- Fixed Header -->
         <LinearLayout
+            android:id="@+id/header_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="@dimen/padding_large">
+            android:orientation="horizontal"
+            android:background="@color/black"
+            android:elevation="4dp"
+            android:padding="@dimen/padding_medium"
+            android:gravity="center_vertical">
 
-            <!-- Header -->
-            <RelativeLayout
-                android:layout_width="match_parent"
+            <ImageButton
+                android:id="@+id/steps_back_button"
+                android:layout_width="@dimen/button_height_medium"
+                android:layout_height="@dimen/button_height_medium"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_arrow_left"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="@dimen/margin_medium"
+                app:tint="@color/white" />
+
+            <TextView
+                android:id="@+id/steps_title"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/margin_medium">
+                android:layout_weight="1"
+                android:text="@string/steps_tracker_title"
+                android:textColor="@color/white"
+                android:textSize="@dimen/text_size_medium"
+                android:textStyle="bold"
+                android:layout_marginStart="-45dp"
+                android:gravity="center" />
 
-                <ImageButton
-                    android:id="@+id/steps_back_button"
-                    android:layout_width="@dimen/button_height_medium"
-                    android:layout_height="@dimen/button_height_medium"
-                    android:layout_alignParentStart="true"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:src="@drawable/ic_arrow_left"
-                    app:tint="@color/white" />
+        </LinearLayout>
 
-                <TextView
-                    android:id="@+id/steps_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerInParent="true"
-                    android:text="@string/steps_tracker_title"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/text_size_large"
-                    android:textStyle="bold" />
+        <!-- Scrollable Content -->
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/header_container"
+            android:fillViewport="true"
+            android:overScrollMode="never"
+            android:scrollbars="none">
 
-            </RelativeLayout>
-
-            <!-- Steps Icon and Value -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:gravity="center"
-                android:layout_marginBottom="@dimen/margin_xlarge">
+                android:padding="@dimen/padding_large"
+                android:gravity="center_horizontal">
 
-                <ImageView
-                    android:layout_width="@dimen/icon_size_xxlarge"
-                    android:layout_height="@dimen/icon_size_xxlarge"
-                    android:src="@drawable/ic_steps"
-                    app:tint="@color/purple_500" />
+                <!-- Steps Icon and Value -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:layout_marginTop="@dimen/margin_xlarge"
+                    android:layout_marginBottom="@dimen/margin_xlarge">
 
+                    <ImageView
+                        android:layout_width="@dimen/icon_size_xxlarge"
+                        android:layout_height="@dimen/icon_size_xxlarge"
+                        android:src="@drawable/ic_steps"
+                        app:tint="@color/purple_500" />
+
+                    <TextView
+                        android:id="@+id/steps_value"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="3542"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/text_size_xxlarge"
+                        android:textStyle="bold"
+                        android:layout_marginTop="@dimen/margin_medium" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/unit_steps"
+                        android:textColor="@color/gray_400"
+                        android:textSize="@dimen/text_size_large" />
+
+                </LinearLayout>
+
+                <!-- Statistics -->
                 <TextView
-                    android:id="@+id/steps_value"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="3542"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/text_size_xxlarge"
-                    android:textStyle="bold"
-                    android:layout_marginTop="@dimen/margin_medium" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/unit_steps"
-                    android:textColor="@color/gray_400"
-                    android:textSize="@dimen/text_size_large" />
-
-            </LinearLayout>
-
-            <!-- Goal Progress -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/goal_progress"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_size_medium"
-                android:textStyle="bold"
-                android:layout_marginBottom="@dimen/margin_medium" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_marginBottom="@dimen/margin_medium">
-
-                <TextView
-                    android:id="@+id/steps_progress"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="35%"
+                    android:text="@string/statistics"
                     android:textColor="@color/white"
                     android:textSize="@dimen/text_size_medium"
-                    android:layout_marginEnd="@dimen/margin_medium" />
+                    android:textStyle="bold"
+                    android:layout_marginBottom="@dimen/margin_medium" />
 
-                <TextView
-                    android:layout_width="0dp"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/of_daily_goal"
-                    android:textColor="@color/gray_400"
-                    android:textSize="@dimen/text_size_small" />
+                    android:orientation="horizontal"
+                    android:weightSum="3"
+                    android:layout_marginBottom="@dimen/margin_xlarge">
 
-                <TextView
-                    android:id="@+id/steps_goal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="10000"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/text_size_medium" />
+                    <!-- Distance -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:background="@color/gray_800"
+                        android:padding="@dimen/padding_medium"
+                        android:layout_marginEnd="@dimen/spacing_small"
+                        android:backgroundTint="@color/gray_800">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/distance"
+                            android:textColor="@color/gray_400"
+                            android:textSize="@dimen/text_size_xsmall" />
+
+                        <TextView
+                            android:id="@+id/distance_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="2.83 km"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/text_size_xsmall"
+                            android:textStyle="bold"
+                            android:layout_marginTop="@dimen/spacing_small" />
+
+                    </LinearLayout>
+
+                    <!-- Calories -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:background="@color/gray_800"
+                        android:padding="@dimen/padding_medium"
+                        android:layout_marginHorizontal="@dimen/spacing_small"
+                        android:backgroundTint="@color/gray_800">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/calories"
+                            android:textColor="@color/gray_400"
+                            android:textSize="@dimen/text_size_xsmall" />
+
+                        <TextView
+                            android:id="@+id/calories_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="142 cal"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/text_size_xsmall"
+                            android:textStyle="bold"
+                            android:layout_marginTop="@dimen/spacing_small" />
+
+                    </LinearLayout>
+
+                    <!-- Active Minutes -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:background="@color/gray_800"
+                        android:padding="@dimen/padding_medium"
+                        android:layout_marginStart="@dimen/spacing_small"
+                        android:backgroundTint="@color/gray_800">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/active"
+                            android:textColor="@color/gray_400"
+                            android:textSize="@dimen/text_size_xsmall" />
+
+                        <TextView
+                            android:id="@+id/active_minutes_value"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="35 min"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/text_size_xsmall"
+                            android:textStyle="bold"
+                            android:layout_marginTop="@dimen/spacing_small" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
 
             </LinearLayout>
 
-            <!-- Progress Bar -->
-            <ProgressBar
-                android:id="@+id/progress_bar"
-                style="?android:attr/progressBarStyleHorizontal"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/progress_bar_height"
-                android:layout_marginBottom="24dp"
-                android:progress="35"
-                android:progressTint="@color/purple_500"
-                android:backgroundTint="@color/gray_700" />
+        </ScrollView>
 
-            <!-- Statistics -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/statistics"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_size_medium"
-                android:textStyle="bold"
-                android:layout_marginBottom="@dimen/margin_medium" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="3"
-                android:layout_marginBottom="@dimen/margin_xlarge">
-
-                <!-- Distance -->
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:background="@color/gray_800"
-                    android:padding="@dimen/padding_medium"
-                    android:layout_marginEnd="@dimen/spacing_small"
-                    android:backgroundTint="@color/gray_800">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/distance"
-                        android:textColor="@color/gray_400"
-                        android:textSize="8sp" />
-
-                    <TextView
-                        android:id="@+id/distance_value"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="2.83 km"
-                        android:textColor="@color/white"
-                        android:textSize="8sp"
-                        android:textStyle="bold"
-                        android:layout_marginTop="@dimen/spacing_small" />
-
-                </LinearLayout>
-
-                <!-- Calories -->
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:background="@color/gray_800"
-                    android:padding="@dimen/padding_medium"
-                    android:layout_marginHorizontal="@dimen/spacing_small"
-                    android:backgroundTint="@color/gray_800">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/calories"
-                        android:textColor="@color/gray_400"
-                        android:textSize="8sp" />
-
-                    <TextView
-                        android:id="@+id/calories_value"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="142 cal"
-                        android:textColor="@color/white"
-                        android:textSize="8sp"
-                        android:textStyle="bold"
-                        android:layout_marginTop="@dimen/spacing_small" />
-
-                </LinearLayout>
-
-                <!-- Active Minutes -->
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:gravity="center"
-                    android:background="@color/gray_800"
-                    android:padding="@dimen/padding_medium"
-                    android:layout_marginStart="@dimen/spacing_small"
-                    android:backgroundTint="@color/gray_800">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/active"
-                        android:textColor="@color/gray_400"
-                        android:textSize="8sp" />
-
-                    <TextView
-                        android:id="@+id/active_minutes_value"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="35 min"
-                        android:textColor="@color/white"
-                        android:textSize="8sp"
-                        android:textStyle="bold"
-                        android:layout_marginTop="@dimen/spacing_small" />
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <!-- Daily Goal Info -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/daily_goal"
-                android:textColor="@color/gray_400"
-                android:textSize="@dimen/text_size_small"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/margin_medium" />
-
-        </LinearLayout>
-
-    </ScrollView>
+    </RelativeLayout>
 </layout>

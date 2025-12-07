@@ -149,6 +149,13 @@
     <string name="label_placeholder">Label</string>
     <string name="value_placeholder">Value</string>
 
+
+
+    <string name="heart_rate_history">Heart Rate History</string>
+    <string name="heart_rate_history_placeholder">Recent readings will appear here. Tap "Start Monitoring" to begin tracking your heart rate.</string>
+
+    <string name="steps_info">Walking is one of the best exercises for overall health. Aim for consistent daily activity.</string>
+
     <!-- Accessibility -->
     <string name="main_action_button">Main Action Button</string>
     <string name="page_indicator_1">Page 1 indicator</string>
