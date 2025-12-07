@@ -259,16 +259,6 @@ public class HeartRateDetailActivity extends AppCompatActivity implements Sensor
 
         int avg = sum / heartRateHistory.size();
 
-        if (binding.avgHeartRate != null) {
-            binding.avgHeartRate.setText(String.valueOf(avg));
-        }
-        if (binding.minHeartRate != null) {
-            binding.minHeartRate.setText(String.valueOf(min));
-        }
-        if (binding.maxHeartRate != null) {
-            binding.maxHeartRate.setText(String.valueOf(max));
-        }
-
         // Update status
         updateHeartRateStatus(currentRate);
     }
