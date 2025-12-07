@@ -1,81 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.wear.widget.BoxInsetLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:background="@drawable/medicine_pending_bg"
-    android:padding="@dimen/padding_medium"
-    android:layout_marginBottom="@dimen/margin_medium"
-    android:gravity="center_vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="6dp"
+    android:layout_marginBottom="5dp"
+    android:background="@drawable/medicine_pending_bg">
 
-    <!-- Icon -->
-    <ImageView
-        android:id="@+id/medicine_icon"
-        android:layout_width="@dimen/icon_size_large"
-        android:layout_height="@dimen/icon_size_large"
-        android:src="@drawable/ic_pill"
-        android:tint="@color/black"
-        android:layout_marginEnd="@dimen/margin_large" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
 
-    <!-- Left Column -->
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/medicine_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/medicine_name_placeholder"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_size_medium"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/medicine_dosage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/dosage_placeholder"
-            android:textColor="@color/gray_600"
-            android:textSize="@dimen/text_size_small" />
-
-        <!-- MISSING FIELD → NOW FIXED -->
-        <TextView
-            android:id="@+id/medicine_food"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/with_food"
-            android:textColor="@color/gray_600"
-            android:textSize="11sp"
-            android:layout_marginTop="2dp"/>
-    </LinearLayout>
-
-    <!-- Right Column -->
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="end">
-
-        <TextView
-            android:id="@+id/medicine_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/time_placeholder"
-            android:textColor="@color/black"
-            android:textSize="@dimen/text_size_small" />
-
+        <!-- Medicine Icon -->
         <ImageView
-            android:id="@+id/status_icon"
-            android:layout_width="@dimen/icon_size_large"
-            android:layout_height="@dimen/icon_size_large"
-            android:src="@drawable/ic_circle"
-            android:tint="@color/gray_600"
-            android:layout_marginTop="@dimen/spacing_small" />
+            android:id="@+id/medicine_icon"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@drawable/ic_pill"
+            android:layout_marginStart="4dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:tint="@color/black" />
 
-    </LinearLayout>
+        <!-- Name + Dosage + Food -->
+        <LinearLayout
+            android:id="@+id/info_holder"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginStart="6dp"
+            app:layout_constraintStart_toEndOf="@id/medicine_icon"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/right_section">
 
-</LinearLayout>
+            <TextView
+                android:id="@+id/medicine_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/medicine_name_placeholder"
+                android:textColor="@color/black"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:maxLines="1"
+                android:ellipsize="end" />
+
+            <!-- TIME on its own line for clearer visual separation -->
+            <TextView
+                android:id="@+id/medicine_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/time_placeholder"
+                android:textColor="@color/blue_500"
+                android:textSize="10sp"
+                android:textStyle="bold"
+                android:gravity="center" />
+
+            <TextView
+                android:id="@+id/medicine_dosage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/dosage_placeholder"
+                android:textColor="@color/gray_600"
+                android:textSize="11sp"
+                android:maxLines="1"
+                android:ellipsize="end" />
+
+            <TextView
+                android:id="@+id/medicine_food"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/with_food"
+                android:textColor="@color/gray_600"
+                android:textSize="10sp"
+                android:maxLines="1"
+                android:ellipsize="end" />
+        </LinearLayout>
+
+        <!-- Right Section (Time on new line + Status) -->
+        <LinearLayout
+            android:id="@+id/right_section"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <!-- Status Icon -->
+            <ImageView
+                android:id="@+id/status_icon"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:src="@drawable/ic_circle"
+                android:tint="@color/gray_600" />
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.wear.widget.BoxInsetLayout>
