@@ -54,7 +54,7 @@ public class StepsDetailActivity extends AppCompatActivity implements SensorEven
 
     private void setupUI() {
         binding.stepsBackButton.setOnClickListener(v -> finish());
-        binding.stepsTitle.setText("Steps Tracker");
+        binding.stepsTitle.setText(getString(R.string.steps_tracker_title));
 
         // Set goal
         binding.stepsGoal.setText(String.valueOf(dailyGoal));

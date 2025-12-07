@@ -8,20 +8,20 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:background="@color/black"
-        android:padding="10dp">
+        android:padding="@dimen/padding_small">
 
         <!-- Header -->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="34dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginLeft="8dp">
+            android:layout_marginBottom="@dimen/margin_medium"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:layout_marginLeft="@dimen/margin_medium">
 
             <ImageButton
                 android:id="@+id/call_back_button"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="@dimen/button_height_medium"
+                android:layout_height="@dimen/button_height_medium"
                 android:layout_alignParentStart="true"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/ic_arrow_left"
@@ -32,9 +32,9 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:text="Call"
+                android:text="@string/call"
                 android:textColor="@color/white"
-                android:textSize="12sp"
+                android:textSize="@dimen/text_size_small"
                 android:textStyle="bold" />
 
         </RelativeLayout>
@@ -57,8 +57,8 @@
                     android:id="@+id/call_emergency_contact"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="12dp"
-                    app:cardCornerRadius="24dp"
+                    android:layout_marginBottom="@dimen/margin_large"
+                    app:cardCornerRadius="@dimen/card_corner_radius_large"
                     app:cardElevation="4dp"
                     app:cardBackgroundColor="@color/white">
 
@@ -66,14 +66,14 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:padding="16dp"
+                        android:padding="@dimen/padding_large"
                         android:gravity="center_vertical">
 
                         <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
+                            android:layout_width="@dimen/icon_size_xlarge"
+                            android:layout_height="@dimen/icon_size_xlarge"
                             android:src="@drawable/ic_alert"
-                            android:layout_marginEnd="12dp"
+                            android:layout_marginEnd="@dimen/margin_large"
                             app:tint="@color/black" />
 
                         <LinearLayout
@@ -85,23 +85,23 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Emergency"
+                                android:text="@string/emergency"
                                 android:textColor="@color/black"
-                                android:textSize="14sp"
+                                android:textSize="@dimen/text_size_medium"
                                 android:textStyle="bold" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Immediate assistance"
+                                android:text="@string/immediate_assistance"
                                 android:textColor="@color/gray_600"
-                                android:textSize="12sp" />
+                                android:textSize="@dimen/text_size_small" />
 
                         </LinearLayout>
 
                         <ImageView
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
+                            android:layout_width="@dimen/icon_size_large"
+                            android:layout_height="@dimen/icon_size_large"
                             android:src="@drawable/ic_phone"
                             app:tint="@color/gray_600" />
 
@@ -113,19 +113,19 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Contacts"
+                    android:text="@string/contacts"
                     android:textColor="@color/white"
-                    android:textSize="16sp"
+                    android:textSize="@dimen/text_size_large"
                     android:textStyle="bold"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginStart="8dp" />
+                    android:layout_marginBottom="@dimen/margin_medium"
+                    android:layout_marginStart="@dimen/margin_medium" />
 
                 <!-- Guardians RecyclerView -->
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/guardians_recycler_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp" />
+                    android:layout_marginBottom="@dimen/margin_medium" />
 
             </LinearLayout>
 

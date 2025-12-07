@@ -12,18 +12,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="@dimen/padding_large">
 
             <!-- Header -->
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp">
+                android:layout_marginBottom="@dimen/margin_medium">
 
                 <ImageButton
                     android:id="@+id/heart_rate_back_button"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="@dimen/button_height_medium"
+                    android:layout_height="@dimen/button_height_medium"
                     android:layout_alignParentStart="true"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:src="@drawable/ic_arrow_left"
@@ -34,9 +34,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:text="Heart Rate"
+                    android:text="@string/heart_rate_title"
                     android:textColor="@color/white"
-                    android:textSize="16sp"
+                    android:textSize="@dimen/text_size_large"
                     android:textStyle="bold" />
 
             </RelativeLayout>
@@ -47,12 +47,12 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:gravity="center"
-                android:layout_marginBottom="16dp">
+                android:layout_marginBottom="@dimen/margin_xlarge">
 
                 <ImageView
                     android:id="@+id/heart_icon"
-                    android:layout_width="44dp"
-                    android:layout_height="44dp"
+                    android:layout_width="@dimen/icon_size_xxlarge"
+                    android:layout_height="@dimen/icon_size_xxlarge"
                     android:src="@drawable/ic_heart"
                     app:tint="@color/red" />
 
@@ -61,7 +61,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center"
-                    android:layout_marginTop="8dp">
+                    android:layout_marginTop="@dimen/margin_medium">
 
                     <TextView
                         android:id="@+id/heart_rate_value"
@@ -69,16 +69,16 @@
                         android:layout_height="wrap_content"
                         android:text="72"
                         android:textColor="@color/white"
-                        android:textSize="36sp"
+                        android:textSize="@dimen/text_size_xxlarge"
                         android:textStyle="bold" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="BPM"
+                        android:text="@string/unit_bpm"
                         android:textColor="@color/gray_400"
-                        android:textSize="16sp"
-                        android:layout_marginStart="4dp" />
+                        android:textSize="@dimen/text_size_large"
+                        android:layout_marginStart="@dimen/spacing_small" />
 
                 </LinearLayout>
 
@@ -86,10 +86,10 @@
                     android:id="@+id/heart_rate_status"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Normal"
+                    android:text="@string/heart_rate_normal"
                     android:textColor="@color/green"
-                    android:textSize="14sp"
-                    android:layout_marginTop="4dp" />
+                    android:textSize="@dimen/text_size_medium"
+                    android:layout_marginTop="@dimen/spacing_small" />
 
             </LinearLayout>
 
@@ -97,14 +97,14 @@
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/start_monitoring_button"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginHorizontal="32dp"
-                android:layout_marginBottom="16dp"
-                android:text="Start Monitoring"
+                android:layout_height="@dimen/button_height_large"
+                android:layout_marginHorizontal="@dimen/margin_xxlarge"
+                android:layout_marginBottom="@dimen/margin_xlarge"
+                android:text="@string/start_monitoring"
                 android:textColor="@color/white"
-                android:textSize="14sp"
+                android:textSize="@dimen/text_size_medium"
                 android:textStyle="bold"
-                app:cornerRadius="24dp" />
+                app:cornerRadius="@dimen/card_corner_radius_large" />
 
             <!-- Sensor Status -->
             <LinearLayout
@@ -112,23 +112,23 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center"
-                android:layout_marginBottom="16dp">
+                android:layout_marginBottom="@dimen/margin_xlarge">
 
                 <View
                     android:id="@+id/sensor_indicator"
                     android:layout_width="8dp"
                     android:layout_height="8dp"
                     android:background="@drawable/circle_green"
-                    android:layout_marginEnd="8dp"
+                    android:layout_marginEnd="@dimen/margin_medium"
                     android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/sensor_status"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Sensor Status"
+                    android:text="@string/sensor_status"
                     android:textColor="@color/gray_400"
-                    android:textSize="12sp" />
+                    android:textSize="@dimen/text_size_small" />
 
             </LinearLayout>
 
@@ -136,38 +136,38 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Heart Rate Graph"
+                android:text="@string/heart_rate_graph"
                 android:textColor="@color/white"
-                android:textSize="14sp"
+                android:textSize="@dimen/text_size_medium"
                 android:textStyle="bold"
-                android:layout_marginBottom="8dp" />
+                android:layout_marginBottom="@dimen/margin_medium" />
 
             <LinearLayout
                 android:id="@+id/graph_container"
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
+                android:layout_height="@dimen/graph_height"
                 android:orientation="horizontal"
                 android:gravity="bottom|center_horizontal"
                 android:background="@color/gray_800"
-                android:padding="8dp"
-                android:layout_marginBottom="16dp" />
+                android:padding="@dimen/padding_medium"
+                android:layout_marginBottom="@dimen/margin_xlarge" />
 
             <!-- Statistics -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Statistics"
+                android:text="@string/statistics"
                 android:textColor="@color/white"
-                android:textSize="14sp"
+                android:textSize="@dimen/text_size_medium"
                 android:textStyle="bold"
-                android:layout_marginBottom="8dp" />
+                android:layout_marginBottom="@dimen/margin_medium" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:weightSum="3"
-                android:layout_marginBottom="16dp">
+                android:layout_marginBottom="@dimen/margin_xlarge">
 
                 <!-- Average -->
                 <LinearLayout
@@ -177,14 +177,14 @@
                     android:orientation="vertical"
                     android:gravity="center"
                     android:background="@color/gray_800"
-                    android:padding="12dp"
-                    android:layout_marginEnd="4dp"
+                    android:padding="@dimen/padding_medium"
+                    android:layout_marginEnd="@dimen/spacing_small"
                     android:backgroundTint="@color/gray_800">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Avg"
+                        android:text="@string/average"
                         android:textColor="@color/gray_400"
                         android:textSize="8sp" />
 
@@ -196,12 +196,12 @@
                         android:textColor="@color/white"
                         android:textSize="8sp"
                         android:textStyle="bold"
-                        android:layout_marginTop="4dp" />
+                        android:layout_marginTop="@dimen/spacing_small" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="BPM"
+                        android:text="@string/unit_bpm"
                         android:textColor="@color/gray_400"
                         android:textSize="8sp" />
 
@@ -215,14 +215,14 @@
                     android:orientation="vertical"
                     android:gravity="center"
                     android:background="@color/gray_800"
-                    android:padding="12dp"
-                    android:layout_marginHorizontal="4dp"
+                    android:padding="@dimen/padding_medium"
+                    android:layout_marginHorizontal="@dimen/spacing_small"
                     android:backgroundTint="@color/gray_800">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Min"
+                        android:text="@string/min"
                         android:textColor="@color/gray_400"
                         android:textSize="8sp" />
 
@@ -234,12 +234,12 @@
                         android:textColor="@color/blue_500"
                         android:textSize="8sp"
                         android:textStyle="bold"
-                        android:layout_marginTop="4dp" />
+                        android:layout_marginTop="@dimen/spacing_small" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="BPM"
+                        android:text="@string/unit_bpm"
                         android:textColor="@color/gray_400"
                         android:textSize="8sp" />
 
@@ -253,14 +253,14 @@
                     android:orientation="vertical"
                     android:gravity="center"
                     android:background="@color/gray_800"
-                    android:padding="12dp"
-                    android:layout_marginStart="4dp"
+                    android:padding="@dimen/padding_medium"
+                    android:layout_marginStart="@dimen/spacing_small"
                     android:backgroundTint="@color/gray_800">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Max"
+                        android:text="@string/max"
                         android:textColor="@color/gray_400"
                         android:textSize="8sp" />
 
@@ -272,12 +272,12 @@
                         android:textColor="@color/red"
                         android:textSize="8sp"
                         android:textStyle="bold"
-                        android:layout_marginTop="4dp" />
+                        android:layout_marginTop="@dimen/spacing_small" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="BPM"
+                        android:text="@string/unit_bpm"
                         android:textColor="@color/gray_400"
                         android:textSize="8sp" />
 
@@ -289,11 +289,11 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Normal resting heart rate: 60-100 BPM"
+                android:text="@string/normal_heart_rate_range"
                 android:textColor="@color/gray_400"
-                android:textSize="12sp"
+                android:textSize="@dimen/text_size_small"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="8dp" />
+                android:layout_marginTop="@dimen/margin_medium" />
 
         </LinearLayout>
 

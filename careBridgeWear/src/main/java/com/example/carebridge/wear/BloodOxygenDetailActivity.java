@@ -47,13 +47,13 @@ public class BloodOxygenDetailActivity extends AppCompatActivity {
 
     private void setupUI() {
         binding.bloodOxygenBackButton.setOnClickListener(v -> finish());
-        binding.bloodOxygenTitle.setText("Blood Oxygen");
+        binding.bloodOxygenTitle.setText(getString(R.string.blood_oxygen_title));
 
         // Set normal range
-        binding.normalRange.setText("95-100%");
+        binding.normalRange.setText(getString(R.string.blood_oxygen_normal_range));
 
         // Set measurement tip
-        binding.measurementTip.setText("Place your finger on the sensor and keep still for accurate readings");
+        binding.measurementTip.setText(getString(R.string.blood_oxygen_measurement_tip));
     }
 
     private void startUpdates() {
@@ -73,17 +73,17 @@ public class BloodOxygenDetailActivity extends AppCompatActivity {
 
         // Update status
         if (bloodOxygenLevel >= 95) {
-            binding.oxygenStatus.setText("Normal");
+            binding.oxygenStatus.setText(getString(R.string.blood_oxygen_status_normal));
             binding.oxygenStatus.setTextColor(getColor(R.color.green));
-            binding.statusDescription.setText("Your blood oxygen level is within the normal range.");
+            binding.statusDescription.setText(getString(R.string.blood_oxygen_status_normal_desc));
         } else if (bloodOxygenLevel >= 90) {
-            binding.oxygenStatus.setText("Low");
+            binding.oxygenStatus.setText(getString(R.string.blood_oxygen_status_low));
             binding.oxygenStatus.setTextColor(getColor(R.color.orange));
-            binding.statusDescription.setText("Consider consulting a healthcare provider.");
+            binding.statusDescription.setText(getString(R.string.blood_oxygen_status_low_desc));
         } else {
-            binding.oxygenStatus.setText("Very Low");
+            binding.oxygenStatus.setText(getString(R.string.blood_oxygen_status_very_low));
             binding.oxygenStatus.setTextColor(getColor(R.color.red));
-            binding.statusDescription.setText("Please seek medical attention.");
+            binding.statusDescription.setText(getString(R.string.blood_oxygen_status_very_low_desc));
         }
 
         // Update graph

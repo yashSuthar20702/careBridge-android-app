@@ -1,12 +1,155 @@
 <resources>
+    <!-- App Name -->
     <string name="app_name">CareBridgeWear</string>
+
+    <!-- Main Menu Items -->
     <string name="call">Call</string>
     <string name="medicine">Medicine</string>
     <string name="patient_health">Patient Info</string>
     <string name="guardian_info">Guardian Info</string>
     <string name="health_monitor">Health Monitor</string>
+    <string name="logout">Logout</string>
 
-    <!-- New strings for accessibility -->
+    <!-- Login Screen -->
+    <string name="login">LOGIN</string>
+    <string name="logging_in">LOGGING IN...</string>
+    <string name="enter_username">Please enter username</string>
+    <string name="enter_password">Please enter password</string>
+    <string name="login_footer">Enter any credentials to continue</string>
+    <string name="username_hint">Username</string>
+    <string name="password_hint">Password</string>
+    <string name="invalid_credentials">Invalid credentials</string>
+
+    <!-- Health Info Labels -->
+    <string name="label_name">Name</string>
+    <string name="label_blood_group">Blood Group</string>
+    <string name="label_age">Age</string>
+    <string name="label_gender">Gender</string>
+    <string name="label_address">Address</string>
+    <string name="label_contact">Contact</string>
+    <string name="label_email">Email</string>
+    <string name="label_height">Height</string>
+    <string name="label_weight">Weight</string>
+    <string name="label_allergies">Allergies</string>
+    <string name="label_medical_conditions">Medical Conditions</string>
+    <string name="label_past_surgeries">Past Surgeries</string>
+    <string name="label_current_symptoms">Current Symptoms</string>
+    <string name="label_no_data">No Data</string>
+
+    <!-- Units -->
+    <string name="unit_cm">cm</string>
+    <string name="unit_kg">kg</string>
+    <string name="unit_years">years</string>
+    <string name="unit_bpm">BPM</string>
+    <string name="unit_steps">steps</string>
+    <string name="unit_percent">%</string>
+
+    <!-- Health Monitor -->
+    <string name="health_monitor_title">Health Monitor</string>
+    <string name="heart_rate_label">Heart Rate</string>
+    <string name="steps_label">Steps</string>
+    <string name="blood_oxygen_label">Blood Oxygen</string>
+    <string name="heart_rate_desc">Real-time monitoring</string>
+    <string name="steps_desc">Daily activity</string>
+    <string name="blood_oxygen_desc">SpO2 Level</string>
+
+    <!-- Heart Rate Detail -->
+    <string name="heart_rate_title">Heart Rate</string>
+    <string name="start_monitoring">Start Monitoring</string>
+    <string name="stop_monitoring">Stop Monitoring</string>
+    <string name="heart_rate_normal">Normal</string>
+    <string name="heart_rate_low">Low</string>
+    <string name="heart_rate_high">High</string>
+    <string name="normal_heart_rate_range">Normal resting heart rate: 60-100 BPM</string>
+    <string name="heart_rate_graph">Heart Rate Graph</string>
+    <string name="sensor_status">Sensor Status</string>
+
+    <!-- Blood Oxygen Detail -->
+    <string name="blood_oxygen_title">Blood Oxygen</string>
+    <string name="blood_oxygen_normal_range">95-100%</string>
+    <string name="blood_oxygen_measurement_tip">Place your finger on the sensor and keep still for accurate readings</string>
+    <string name="blood_oxygen_status_normal">Normal</string>
+    <string name="blood_oxygen_status_low">Low</string>
+    <string name="blood_oxygen_status_very_low">Very Low</string>
+    <string name="blood_oxygen_status_normal_desc">Your blood oxygen level is within the normal range.</string>
+    <string name="blood_oxygen_status_low_desc">Consider consulting a healthcare provider.</string>
+    <string name="blood_oxygen_status_very_low_desc">Please seek medical attention.</string>
+    <string name="recent_readings">Recent Readings</string>
+    <string name="normal_range">Normal Range</string>
+    <string name="healthy_spo2_levels">Healthy SpO2 levels</string>
+    <string name="measurement_tips">Measurement Tips</string>
+    <string name="blood_oxygen_info">Blood oxygen (SpO2) measures how much oxygen your red blood cells are carrying.</string>
+
+    <!-- Steps Detail -->
+    <string name="steps_tracker_title">Steps Tracker</string>
+    <string name="daily_goal">Daily Goal: 10,000 steps</string>
+    <string name="goal_progress">Goal Progress</string>
+    <string name="of_daily_goal">of daily goal</string>
+    <string name="distance">Distance</string>
+    <string name="calories">Calories</string>
+    <string name="active">Active</string>
+
+    <!-- Sensor Status -->
+    <string name="sensor_available">Sensor Available</string>
+    <string name="using_simulated_data">Using Simulated Data</string>
+    <string name="monitoring_active">Monitoring Active</string>
+    <string name="simulated_monitoring">Simulated Monitoring</string>
+    <string name="high_accuracy">High Accuracy</string>
+    <string name="medium_accuracy">Medium Accuracy</string>
+    <string name="low_accuracy">Low Accuracy</string>
+    <string name="unreliable">Unreliable</string>
+
+    <!-- Call Activity -->
+    <string name="emergency_number">911</string>
+    <string name="emergency">Emergency</string>
+    <string name="immediate_assistance">Immediate assistance</string>
+    <string name="contacts">Contacts</string>
+    <string name="no_guardians_available">No guardians available</string>
+    <string name="no_valid_phone">No valid phone number</string>
+    <string name="call_failed">Failed to start call</string>
+
+    <!-- Guardian -->
+    <string name="unknown">Unknown</string>
+    <string name="guardian">Guardian</string>
+    <string name="caregiver">Caregiver</string>
+    <string name="guardian_name_placeholder">Guardian Name</string>
+    <string name="guardian_details_placeholder">Type • Relation</string>
+    <string name="phone_placeholder">+1 234-567-8900</string>
+
+    <!-- Medicine Activity -->
+    <string name="no_medicine_found">No medicine found</string>
+    <string name="no_internet_connection">No internet connection</string>
+    <string name="failed_load_data">Failed to load data. Try again.</string>
+    <string name="medicine_name_placeholder">Medicine Name</string>
+    <string name="dosage_placeholder">Dosage</string>
+    <string name="with_food">With food</string>
+    <string name="time_placeholder">Time</string>
+
+    <!-- Error Messages -->
+    <string name="error_prefix">Error: </string>
+
+    <!-- Permissions -->
+    <string name="health_monitoring_permission_msg">Health monitoring requires sensor permissions</string>
+    <string name="grant">GRANT</string>
+
+    <!-- Patient Info -->
+    <string name="patient_info_not_available">Patient information not available</string>
+
+    <!-- Statistics -->
+    <string name="statistics">Statistics</string>
+    <string name="average">Avg</string>
+    <string name="min">Min</string>
+    <string name="max">Max</string>
+    <string name="real_time">Real-time</string>
+
+    <!-- Logout -->
+    <string name="logout_confirmation">Do you want to logout?</string>
+
+    <!-- Placeholders -->
+    <string name="label_placeholder">Label</string>
+    <string name="value_placeholder">Value</string>
+
+    <!-- Accessibility -->
     <string name="main_action_button">Main Action Button</string>
     <string name="page_indicator_1">Page 1 indicator</string>
     <string name="page_indicator_2">Page 2 indicator</string>
@@ -14,15 +157,4 @@
     <string name="page_indicator_4">Page 4 indicator</string>
     <string name="page_indicator_5">Page 5 indicator</string>
     <string name="page_indicator_6">Page 6 indicator</string>
-
-    <!-- Health Monitor Strings -->
-    <string name="start_monitoring">Start Monitoring</string>
-    <string name="stop_monitoring">Stop Monitoring</string>
-    <string name="sensors_active">Sensors Active</string>
-    <string name="heart_rate_normal">Normal</string>
-    <string name="heart_rate_low">Low</string>
-    <string name="heart_rate_high">High</string>
-    <string name="activity_low">Low</string>
-    <string name="activity_medium">Medium</string>
-    <string name="activity_high">High</string>
 </resources>

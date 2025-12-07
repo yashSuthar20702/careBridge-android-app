@@ -79,7 +79,7 @@ public class HeartRateDetailActivity extends AppCompatActivity implements Sensor
 
     private void setupUI() {
         binding.heartRateBackButton.setOnClickListener(v -> finish());
-        binding.heartRateTitle.setText("Heart Rate");
+        binding.heartRateTitle.setText(getString(R.string.heart_rate_title));
 
         binding.startMonitoringButton.setOnClickListener(v -> toggleMonitoring());
 
@@ -97,17 +97,17 @@ public class HeartRateDetailActivity extends AppCompatActivity implements Sensor
 
             if (heartRateSensor != null) {
                 // Don't start monitoring immediately, wait for button click
-                binding.sensorStatus.setText("Sensor Available");
+                binding.sensorStatus.setText(getString(R.string.sensor_available));
                 binding.sensorIndicator.setVisibility(View.VISIBLE);
                 binding.sensorIndicator.setBackgroundColor(ContextCompat.getColor(this, R.color.green));
             } else {
-                binding.sensorStatus.setText("Using Simulated Data");
+                binding.sensorStatus.setText(getString(R.string.using_simulated_data));
                 binding.sensorIndicator.setVisibility(View.VISIBLE);
                 binding.sensorIndicator.setBackgroundColor(ContextCompat.getColor(this, R.color.orange));
                 startSimulatedUpdates();
             }
         } else {
-            binding.sensorStatus.setText("Using Simulated Data");
+            binding.sensorStatus.setText(getString(R.string.using_simulated_data));
             binding.sensorIndicator.setVisibility(View.VISIBLE);
             binding.sensorIndicator.setBackgroundColor(ContextCompat.getColor(this, R.color.orange));
             startSimulatedUpdates();
@@ -124,17 +124,17 @@ public class HeartRateDetailActivity extends AppCompatActivity implements Sensor
 
     private void startMonitoring() {
         isMonitoring = true;
-        binding.startMonitoringButton.setText("Stop Monitoring");
+        binding.startMonitoringButton.setText(getString(R.string.stop_monitoring));
         binding.startMonitoringButton.setBackgroundColor(
                 ContextCompat.getColor(this, R.color.red));
 
         if (sensorManager != null && heartRateSensor != null) {
             sensorManager.registerListener(this, heartRateSensor, SensorManager.SENSOR_DELAY_NORMAL);
-            binding.sensorStatus.setText("Monitoring Active");
+            binding.sensorStatus.setText(getString(R.string.monitoring_active));
             binding.sensorIndicator.setBackgroundColor(ContextCompat.getColor(this, R.color.red));
         } else {
             // If no sensor, use simulated data
-            binding.sensorStatus.setText("Simulated Monitoring");
+            binding.sensorStatus.setText(getString(R.string.simulated_monitoring));
             binding.sensorIndicator.setBackgroundColor(ContextCompat.getColor(this, R.color.orange));
         }
 
@@ -144,7 +144,7 @@ public class HeartRateDetailActivity extends AppCompatActivity implements Sensor
 
     private void stopMonitoring() {
         isMonitoring = false;
-        binding.startMonitoringButton.setText("Start Monitoring");
+        binding.startMonitoringButton.setText(getString(R.string.start_monitoring));
         binding.startMonitoringButton.setBackgroundColor(
                 ContextCompat.getColor(this, R.color.green));
 
@@ -152,7 +152,7 @@ public class HeartRateDetailActivity extends AppCompatActivity implements Sensor
             sensorManager.unregisterListener(this);
         }
 
-        binding.sensorStatus.setText("Sensor Available");
+        binding.sensorStatus.setText(getString(R.string.sensor_available));
         binding.sensorIndicator.setBackgroundColor(ContextCompat.getColor(this, R.color.green));
 
         // Stop pulse animation
@@ -255,13 +255,13 @@ public class HeartRateDetailActivity extends AppCompatActivity implements Sensor
         // Update status
         if (binding.heartRateStatus != null) {
             if (currentRate < 60) {
-                binding.heartRateStatus.setText("Low");
+                binding.heartRateStatus.setText(getString(R.string.heart_rate_low));
                 binding.heartRateStatus.setTextColor(ContextCompat.getColor(this, R.color.blue_500));
             } else if (currentRate > 100) {
-                binding.heartRateStatus.setText("High");
+                binding.heartRateStatus.setText(getString(R.string.heart_rate_high));
                 binding.heartRateStatus.setTextColor(ContextCompat.getColor(this, R.color.red));
             } else {
-                binding.heartRateStatus.setText("Normal");
+                binding.heartRateStatus.setText(getString(R.string.heart_rate_normal));
                 binding.heartRateStatus.setTextColor(ContextCompat.getColor(this, R.color.green));
             }
         }
@@ -292,16 +292,16 @@ public class HeartRateDetailActivity extends AppCompatActivity implements Sensor
         runOnUiThread(() -> {
             switch (accuracy) {
                 case SensorManager.SENSOR_STATUS_ACCURACY_HIGH:
-                    binding.sensorStatus.setText("High Accuracy");
+                    binding.sensorStatus.setText(getString(R.string.high_accuracy));
                     break;
                 case SensorManager.SENSOR_STATUS_ACCURACY_MEDIUM:
-                    binding.sensorStatus.setText("Medium Accuracy");
+                    binding.sensorStatus.setText(getString(R.string.medium_accuracy));
                     break;
                 case SensorManager.SENSOR_STATUS_ACCURACY_LOW:
-                    binding.sensorStatus.setText("Low Accuracy");
+                    binding.sensorStatus.setText(getString(R.string.low_accuracy));
                     break;
                 case SensorManager.SENSOR_STATUS_UNRELIABLE:
-                    binding.sensorStatus.setText("Unreliable");
+                    binding.sensorStatus.setText(getString(R.string.unreliable));
                     binding.sensorIndicator.setBackgroundColor(ContextCompat.getColor(this, R.color.orange));
                     break;
             }

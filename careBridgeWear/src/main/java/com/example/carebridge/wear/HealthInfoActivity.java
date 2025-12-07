@@ -98,69 +98,69 @@ public class HealthInfoActivity extends AppCompatActivity {
 
         // Add basic patient information
         if (patientInfo.getFullName() != null && !patientInfo.getFullName().isEmpty()) {
-            healthInfoList.add(new HealthInfo("Name", patientInfo.getFullName(), R.drawable.ic_user));
+            healthInfoList.add(new HealthInfo(getString(R.string.label_name), patientInfo.getFullName(), R.drawable.ic_user));
         }
 
         if (patientInfo.getBloodGroup() != null && !patientInfo.getBloodGroup().isEmpty()) {
-            healthInfoList.add(new HealthInfo("Blood Group", patientInfo.getBloodGroup(), R.drawable.ic_droplet));
+            healthInfoList.add(new HealthInfo(getString(R.string.label_blood_group), patientInfo.getBloodGroup(), R.drawable.ic_droplet));
         }
 
         // Calculate age from DOB if available
         if (patientInfo.getDob() != null && !patientInfo.getDob().isEmpty()) {
             String age = calculateAgeFromDOB(patientInfo.getDob());
-            healthInfoList.add(new HealthInfo("Age", age, R.drawable.ic_calendar));
+            healthInfoList.add(new HealthInfo(getString(R.string.label_age), age, R.drawable.ic_calendar));
         }
 
         if (patientInfo.getGender() != null && !patientInfo.getGender().isEmpty()) {
-            healthInfoList.add(new HealthInfo("Gender", patientInfo.getGender(), R.drawable.ic_user));
+            healthInfoList.add(new HealthInfo(getString(R.string.label_gender), patientInfo.getGender(), R.drawable.ic_user));
         }
 
         if (patientInfo.getAddress() != null && !patientInfo.getAddress().isEmpty()) {
-            healthInfoList.add(new HealthInfo("Address", patientInfo.getAddress(), R.drawable.ic_location));
+            healthInfoList.add(new HealthInfo(getString(R.string.label_address), patientInfo.getAddress(), R.drawable.ic_location));
         }
 
         if (patientInfo.getContactNumber() != null && !patientInfo.getContactNumber().isEmpty()) {
-            healthInfoList.add(new HealthInfo("Contact", patientInfo.getContactNumber(), R.drawable.ic_phone));
+            healthInfoList.add(new HealthInfo(getString(R.string.label_contact), patientInfo.getContactNumber(), R.drawable.ic_phone));
         }
 
         if (patientInfo.getEmail() != null && !patientInfo.getEmail().isEmpty()) {
-            healthInfoList.add(new HealthInfo("Email", patientInfo.getEmail(), R.drawable.ic_mail));
+            healthInfoList.add(new HealthInfo(getString(R.string.label_email), patientInfo.getEmail(), R.drawable.ic_mail));
         }
 
         // Add medical information
         if (patientInfo.getHeightCm() != null && !patientInfo.getHeightCm().isEmpty()) {
-            healthInfoList.add(new HealthInfo("Height", patientInfo.getHeightCm() + " cm", R.drawable.ic_activity));
+            healthInfoList.add(new HealthInfo(getString(R.string.label_height), patientInfo.getHeightCm() + " " + getString(R.string.unit_cm), R.drawable.ic_activity));
         }
 
         if (patientInfo.getWeightKg() != null && !patientInfo.getWeightKg().isEmpty()) {
-            healthInfoList.add(new HealthInfo("Weight", patientInfo.getWeightKg() + " kg", R.drawable.ic_activity));
+            healthInfoList.add(new HealthInfo(getString(R.string.label_weight), patientInfo.getWeightKg() + " " + getString(R.string.unit_kg), R.drawable.ic_activity));
         }
 
         // Add allergies if available
         if (patientInfo.getAllergies() != null && !patientInfo.getAllergies().isEmpty()) {
             String allergies = String.join(", ", patientInfo.getAllergies());
-            healthInfoList.add(new HealthInfo("Allergies", allergies, R.drawable.ic_alert));
+            healthInfoList.add(new HealthInfo(getString(R.string.label_allergies), allergies, R.drawable.ic_alert));
         }
 
         // Add medical conditions if available
         if (patientInfo.getMedicalConditions() != null && !patientInfo.getMedicalConditions().isEmpty()) {
             String conditions = String.join(", ", patientInfo.getMedicalConditions());
-            healthInfoList.add(new HealthInfo("Medical Conditions", conditions, R.drawable.ic_heart));
+            healthInfoList.add(new HealthInfo(getString(R.string.label_medical_conditions), conditions, R.drawable.ic_heart));
         }
 
         // Add past surgeries if available
         if (patientInfo.getPastSurgeries() != null && !patientInfo.getPastSurgeries().isEmpty()) {
-            healthInfoList.add(new HealthInfo("Past Surgeries", patientInfo.getPastSurgeries(), R.drawable.ic_activity));
+            healthInfoList.add(new HealthInfo(getString(R.string.label_past_surgeries), patientInfo.getPastSurgeries(), R.drawable.ic_activity));
         }
 
         // Add current symptoms if available
         if (patientInfo.getCurrentSymptoms() != null && !patientInfo.getCurrentSymptoms().isEmpty()) {
-            healthInfoList.add(new HealthInfo("Current Symptoms", patientInfo.getCurrentSymptoms(), R.drawable.ic_alert));
+            healthInfoList.add(new HealthInfo(getString(R.string.label_current_symptoms), patientInfo.getCurrentSymptoms(), R.drawable.ic_alert));
         }
 
         // If no data was added, show a message
         if (healthInfoList.isEmpty()) {
-            healthInfoList.add(new HealthInfo("No Data", "Patient information not available", R.drawable.ic_user));
+            healthInfoList.add(new HealthInfo(getString(R.string.label_no_data), getString(R.string.patient_info_not_available), R.drawable.ic_user));
         }
     }
 
@@ -173,12 +173,12 @@ public class HealthInfoActivity extends AppCompatActivity {
                 int birthYear = Integer.parseInt(yearStr);
                 int currentYear = java.util.Calendar.getInstance().get(java.util.Calendar.YEAR);
                 int age = currentYear - birthYear;
-                return age + " years";
+                return age + " " + getString(R.string.unit_years);
             }
         } catch (Exception e) {
             Log.e(TAG, "Error calculating age from DOB: " + dob, e);
         }
-        return "Unknown";
+        return getString(R.string.unknown);
     }
 
     private void showLoadingState() {
@@ -204,10 +204,10 @@ public class HealthInfoActivity extends AppCompatActivity {
     private void initializeSampleData() {
         // Fallback to sample data if API fails
         healthInfoList.clear();
-        healthInfoList.add(new HealthInfo("Name", "Yash", R.drawable.ic_user));
-        healthInfoList.add(new HealthInfo("Blood Group", "B+", R.drawable.ic_droplet));
-        healthInfoList.add(new HealthInfo("Age", "29 years", R.drawable.ic_calendar));
-        healthInfoList.add(new HealthInfo("Address", "123 Oak Street, Springfield", R.drawable.ic_location));
+        healthInfoList.add(new HealthInfo(getString(R.string.label_name), "Yash", R.drawable.ic_user));
+        healthInfoList.add(new HealthInfo(getString(R.string.label_blood_group), "B+", R.drawable.ic_droplet));
+        healthInfoList.add(new HealthInfo(getString(R.string.label_age), "29 " + getString(R.string.unit_years), R.drawable.ic_calendar));
+        healthInfoList.add(new HealthInfo(getString(R.string.label_address), "123 Oak Street, Springfield", R.drawable.ic_location));
         adapter.notifyDataSetChanged();
     }
 }

@@ -72,7 +72,7 @@ public class HealthMonitorActivity extends AppCompatActivity implements
 
     private void setupUI() {
         binding.healthMonitorBackButton.setOnClickListener(v -> finish());
-        binding.healthMonitorTitle.setText("Health Monitor");
+        binding.healthMonitorTitle.setText(getString(R.string.health_monitor_title));
     }
 
     private void setupCarousel() {
@@ -180,10 +180,10 @@ public class HealthMonitorActivity extends AppCompatActivity implements
         // Exactly 3 metrics
         healthMetrics.add(new HealthMetric(
                 "heart_rate",
-                "Heart Rate",
+                getString(R.string.heart_rate_label),
                 "72",
-                "BPM",
-                "Real-time monitoring",
+                getString(R.string.unit_bpm),
+                getString(R.string.heart_rate_desc),
                 R.drawable.ic_heart,
                 R.color.red,
                 R.color.heart_rate_start,
@@ -193,10 +193,10 @@ public class HealthMonitorActivity extends AppCompatActivity implements
 
         healthMetrics.add(new HealthMetric(
                 "steps",
-                "Steps",
+                getString(R.string.steps_label),
                 "3542",
-                "steps",
-                "Daily activity",
+                getString(R.string.unit_steps),
+                getString(R.string.steps_desc),
                 R.drawable.ic_steps,
                 R.color.purple_500,
                 R.color.steps_start,
@@ -206,10 +206,10 @@ public class HealthMonitorActivity extends AppCompatActivity implements
 
         healthMetrics.add(new HealthMetric(
                 "blood_oxygen",
-                "Blood Oxygen",
+                getString(R.string.blood_oxygen_label),
                 "98",
-                "%",
-                "SpO2 Level",
+                getString(R.string.unit_percent),
+                getString(R.string.blood_oxygen_desc),
                 R.drawable.ic_droplet,
                 R.color.blue_500,
                 R.color.blood_oxygen_start,
@@ -260,9 +260,9 @@ public class HealthMonitorActivity extends AppCompatActivity implements
                     Manifest.permission.BODY_SENSORS)) {
 
                 Snackbar.make(binding.getRoot(),
-                                "Health monitoring requires sensor permissions",
+                                getString(R.string.health_monitoring_permission_msg),
                                 Snackbar.LENGTH_LONG)
-                        .setAction("GRANT", v -> requestPermissions())
+                        .setAction(getString(R.string.grant), v -> requestPermissions())
                         .show();
             } else {
                 requestPermissions();

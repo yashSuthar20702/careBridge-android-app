@@ -81,12 +81,12 @@ public class LoginActivity extends AppCompatActivity {
         String password = binding.passwordEditText.getText().toString().trim();
 
         if (username.isEmpty()) {
-            showError("Please enter username");
+            showError(getString(R.string.enter_username));
             binding.usernameEditText.requestFocus();
             return;
         }
         if (password.isEmpty()) {
-            showError("Please enter password");
+            showError(getString(R.string.enter_password));
             binding.passwordEditText.requestFocus();
             return;
         }
@@ -96,7 +96,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void performLogin(String username, String password) {
         binding.loginButton.setEnabled(false);
-        binding.loginButton.setText("LOGGING IN...");
+        binding.loginButton.setText(getString(R.string.logging_in));
 
         authController.login(username, password, new AuthController.LoginCallback() {
             @Override
@@ -123,7 +123,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onFailure(String message) {
                 binding.loginButton.setEnabled(true);
-                binding.loginButton.setText("LOGIN");
+                binding.loginButton.setText(getString(R.string.login));
                 showError(message);
             }
         });
@@ -158,7 +158,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         binding.loginButton.setEnabled(true);
-        binding.loginButton.setText("LOGIN");
+        binding.loginButton.setText(getString(R.string.login));
     }
 
     @Override

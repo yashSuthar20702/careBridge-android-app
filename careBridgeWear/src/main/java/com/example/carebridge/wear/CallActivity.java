@@ -52,7 +52,7 @@ public class CallActivity extends AppCompatActivity implements GuardianCallAdapt
 
         binding.callEmergencyContact.setOnClickListener(v -> {
             Log.d(TAG, "Emergency clicked → calling 911");
-            makeCall("911");
+            makeCall(getString(R.string.emergency_number));
         });
     }
 
@@ -106,9 +106,9 @@ public class CallActivity extends AppCompatActivity implements GuardianCallAdapt
 
         for (PatientGuardianInfo p : patientGuardianList) {
             guardianList.add(new Guardian(
-                    p.getFull_name() != null ? p.getFull_name() : "Unknown",
-                    p.getType() != null ? p.getType() : "Guardian",
-                    p.getRole() != null ? p.getRole() : "Caregiver",
+                    p.getFull_name() != null ? p.getFull_name() : getString(R.string.unknown),
+                    p.getType() != null ? p.getType() : getString(R.string.guardian),
+                    p.getRole() != null ? p.getRole() : getString(R.string.caregiver),
                     p.getPhone() != null ? p.getPhone() : ""
             ));
         }
@@ -135,11 +135,11 @@ public class CallActivity extends AppCompatActivity implements GuardianCallAdapt
     }
 
     private void showEmptyState() {
-        Toast.makeText(this, "No guardians available", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getString(R.string.no_guardians_available), Toast.LENGTH_SHORT).show();
     }
 
     private void showErrorState(String message) {
-        Toast.makeText(this, "Error: " + message, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getString(R.string.error_prefix) + message, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -147,7 +147,7 @@ public class CallActivity extends AppCompatActivity implements GuardianCallAdapt
         Log.d(TAG, "Call Click → " + guardian.getName() + " | " + guardian.getPhone());
 
         if (guardian.getPhone() == null || guardian.getPhone().isEmpty()) {
-            Toast.makeText(this, "No valid phone number", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.no_valid_phone), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -163,7 +163,7 @@ public class CallActivity extends AppCompatActivity implements GuardianCallAdapt
             Log.d(TAG, "Dial Intent Launched");
         } catch (Exception e) {
             Log.e(TAG, "Call failed: " + e.getMessage());
-            Toast.makeText(this, "Failed to start call", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.call_failed), Toast.LENGTH_SHORT).show();
         }
     }
 }

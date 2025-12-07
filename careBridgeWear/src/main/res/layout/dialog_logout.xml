@@ -7,7 +7,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="16dp"
+        android:padding="@dimen/padding_large"
         android:background="@drawable/wear_circle_gray"
         android:gravity="center"
         android:backgroundTint="@android:color/transparent">
@@ -22,9 +22,9 @@
                 android:id="@+id/tvMessage"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Do you want to logout?"
+                android:text="@string/logout_confirmation"
                 android:textColor="@color/white"
-                android:textSize="18sp"
+                android:textSize="@dimen/text_size_xlarge"
                 android:textStyle="bold"
                 android:gravity="center"
                 android:paddingBottom="28dp" />
@@ -37,9 +37,9 @@
 
                 <TextView
                     android:id="@+id/btnCancel"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:layout_marginEnd="2dp"
+                    android:layout_width="@dimen/button_width_small"
+                    android:layout_height="@dimen/button_width_small"
+                    android:layout_marginEnd="@dimen/margin_xsmall"
                     android:background="@drawable/wear_button_circle_dark"
                     android:gravity="center"
                     android:includeFontPadding="false"
@@ -50,9 +50,9 @@
 
                 <TextView
                     android:id="@+id/btnConfirm"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:layout_marginStart="8dp"
+                    android:layout_width="@dimen/button_width_small"
+                    android:layout_height="@dimen/button_width_small"
+                    android:layout_marginStart="@dimen/margin_medium"
                     android:background="@drawable/wear_button_circle_light"
                     android:gravity="center"
                     android:includeFontPadding="false"
@@ -60,7 +60,6 @@
                     android:text="✔"
                     android:textSize="28sp"
                     android:textColor="@color/white" />
-
 
             </LinearLayout>
 

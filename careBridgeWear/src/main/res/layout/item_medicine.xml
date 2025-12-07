@@ -5,18 +5,18 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:background="@drawable/medicine_pending_bg"
-    android:padding="12dp"
-    android:layout_marginBottom="8dp"
+    android:padding="@dimen/padding_medium"
+    android:layout_marginBottom="@dimen/margin_medium"
     android:gravity="center_vertical">
 
     <!-- Icon -->
     <ImageView
         android:id="@+id/medicine_icon"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
+        android:layout_width="@dimen/icon_size_large"
+        android:layout_height="@dimen/icon_size_large"
         android:src="@drawable/ic_pill"
         android:tint="@color/black"
-        android:layout_marginEnd="12dp" />
+        android:layout_marginEnd="@dimen/margin_large" />
 
     <!-- Left Column -->
     <LinearLayout
@@ -29,25 +29,25 @@
             android:id="@+id/medicine_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Medicine Name"
+            android:text="@string/medicine_name_placeholder"
             android:textColor="@color/black"
-            android:textSize="14sp"
+            android:textSize="@dimen/text_size_medium"
             android:textStyle="bold" />
 
         <TextView
             android:id="@+id/medicine_dosage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Dosage"
+            android:text="@string/dosage_placeholder"
             android:textColor="@color/gray_600"
-            android:textSize="12sp" />
+            android:textSize="@dimen/text_size_small" />
 
         <!-- MISSING FIELD → NOW FIXED -->
         <TextView
             android:id="@+id/medicine_food"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="With food"
+            android:text="@string/with_food"
             android:textColor="@color/gray_600"
             android:textSize="11sp"
             android:layout_marginTop="2dp"/>
@@ -64,17 +64,17 @@
             android:id="@+id/medicine_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Time"
+            android:text="@string/time_placeholder"
             android:textColor="@color/black"
-            android:textSize="12sp" />
+            android:textSize="@dimen/text_size_small" />
 
         <ImageView
             android:id="@+id/status_icon"
-            android:layout_width="16dp"
-            android:layout_height="16dp"
+            android:layout_width="@dimen/icon_size_large"
+            android:layout_height="@dimen/icon_size_large"
             android:src="@drawable/ic_circle"
             android:tint="@color/gray_600"
-            android:layout_marginTop="4dp" />
+            android:layout_marginTop="@dimen/spacing_small" />
 
     </LinearLayout>
 

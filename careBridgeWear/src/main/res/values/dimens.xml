@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Text Sizes -->
+    <dimen name="text_size_xsmall">8sp</dimen>
+    <dimen name="text_size_small">12sp</dimen>
+    <dimen name="text_size_medium">14sp</dimen>
+    <dimen name="text_size_large">16sp</dimen>
+    <dimen name="text_size_xlarge">18sp</dimen>
+    <dimen name="text_size_xxlarge">36sp</dimen>
+
+    <!-- Spacing -->
+    <dimen name="spacing_xsmall">2dp</dimen>
+    <dimen name="spacing_small">4dp</dimen>
+    <dimen name="spacing_medium">6dp</dimen>
+    <dimen name="spacing_large">8dp</dimen>
+    <dimen name="spacing_xlarge">12dp</dimen>
+
+    <!-- Padding -->
+    <dimen name="padding_xsmall">4dp</dimen>
+    <dimen name="padding_small">8dp</dimen>
+    <dimen name="padding_medium">10dp</dimen>
+    <dimen name="padding_large">16dp</dimen>
+    <dimen name="padding_xlarge">20dp</dimen>
+
+    <!-- Margin -->
+    <dimen name="margin_xsmall">2dp</dimen>
+    <dimen name="margin_small">4dp</dimen>
+    <dimen name="margin_medium">8dp</dimen>
+    <dimen name="margin_large">12dp</dimen>
+    <dimen name="margin_xlarge">16dp</dimen>
+    <dimen name="margin_xxlarge">20dp</dimen>
+
+    <!-- Button Sizes -->
+    <dimen name="button_height_xsmall">28dp</dimen>
+    <dimen name="button_height_small">32dp</dimen>
+    <dimen name="button_height_medium">40dp</dimen>
+    <dimen name="button_height_large">48dp</dimen>
+    <dimen name="button_width_small">60dp</dimen>
+    <dimen name="button_width_medium">70dp</dimen>
+    <dimen name="button_width_large">80dp</dimen>
+
+    <!-- Icon Sizes -->
+    <dimen name="icon_size_xsmall">8dp</dimen>
+    <dimen name="icon_size_small">12dp</dimen>
+    <dimen name="icon_size_medium">16dp</dimen>
+    <dimen name="icon_size_large">20dp</dimen>
+    <dimen name="icon_size_xlarge">24dp</dimen>
+    <dimen name="icon_size_xxlarge">44dp</dimen>
+
+    <!-- Graph/Chart Dimensions -->
+    <dimen name="graph_height">80dp</dimen>
+    <dimen name="graph_bar_width">8dp</dimen>
+    <dimen name="graph_bar_margin">2dp</dimen>
+
+    <!-- Card/Container Dimensions -->
+    <dimen name="card_corner_radius_small">16dp</dimen>
+    <dimen name="card_corner_radius_medium">20dp</dimen>
+    <dimen name="card_corner_radius_large">24dp</dimen>
+    <dimen name="container_height_metric">70dp</dimen>
+    <dimen name="container_width_metric">160dp</dimen>
+
+    <!-- Progress Bar -->
+    <dimen name="progress_bar_height">8dp</dimen>
+
+    <!-- Selection Cursor -->
+    <dimen name="cursor_width">3dp</dimen>
+
+    <!-- Indicator Sizes -->
+    <dimen name="indicator_size">10dp</dimen>
+    <dimen name="indicator_margin">8dp</dimen>
+
+    <!-- Input Field Heights -->
+    <dimen name="input_height_small">32dp</dimen>
+    <dimen name="input_height_medium">40dp</dimen>
+    <dimen name="input_height_large">48dp</dimen>
+
+    <!-- User Icon -->
+    <dimen name="user_icon_size">64dp</dimen>
+    <dimen name="user_icon_padding">16dp</dimen>
+
+    <!-- Wear Specific -->
+    <dimen name="wear_button_height">42dp</dimen>
+    <dimen name="wear_button_corner_radius">16dp</dimen>
+    <dimen name="wear_input_margin_horizontal">20dp</dimen>
+</resources>

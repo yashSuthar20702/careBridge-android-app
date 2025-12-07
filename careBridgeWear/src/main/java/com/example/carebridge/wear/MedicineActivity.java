@@ -60,7 +60,7 @@ public class MedicineActivity extends AppCompatActivity {
 
         // If no internet, show message
         if (!isInternetAvailable()) {
-            showNoMedicine("No internet connection");
+            showNoMedicine(getString(R.string.no_internet_connection));
             return;
         }
 
@@ -78,7 +78,7 @@ public class MedicineActivity extends AppCompatActivity {
                 }
 
                 if (medicineList.isEmpty()) {
-                    showNoMedicine("No medicine found");
+                    showNoMedicine(getString(R.string.no_medicine_found));
                 } else {
                     showList();
                 }
@@ -88,7 +88,7 @@ public class MedicineActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(String errorMessage) {
-                showNoMedicine("Failed to load data. Try again.");
+                showNoMedicine(getString(R.string.failed_load_data));
             }
         });
     }

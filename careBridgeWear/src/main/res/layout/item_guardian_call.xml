@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="10dp"
-    app:cardCornerRadius="28dp"
+    app:cardCornerRadius="@dimen/card_corner_radius_large"
     app:cardUseCompatPadding="true"
     app:cardElevation="3dp"
     android:foreground="?android:attr/selectableItemBackground"
@@ -21,10 +21,10 @@
         android:gravity="center_vertical">
 
         <ImageView
-            android:layout_width="28dp"
-            android:layout_height="28dp"
+            android:layout_width="@dimen/icon_size_xlarge"
+            android:layout_height="@dimen/icon_size_xlarge"
             android:src="@drawable/ic_shield"
-            android:layout_marginRight="12dp"
+            android:layout_marginRight="@dimen/margin_large"
             app:tint="@color/black" />
 
         <LinearLayout
@@ -46,14 +46,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/gray_600"
-                android:textSize="12sp" />
+                android:textSize="@dimen/text_size_small" />
 
             <TextView
                 android:id="@+id/guardian_phone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/gray_600"
-                android:textSize="12sp" />
+                android:textSize="@dimen/text_size_small" />
 
         </LinearLayout>
 

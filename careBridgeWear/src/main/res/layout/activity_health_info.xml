@@ -8,19 +8,19 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:background="@color/black"
-        android:padding="10dp">
+        android:padding="@dimen/padding_small">
 
         <!-- Header -->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:paddingStart="12dp">
+            android:layout_marginBottom="@dimen/margin_medium"
+            android:paddingStart="@dimen/padding_medium">
 
             <ImageButton
                 android:id="@+id/health_info_back_button"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="@dimen/button_height_medium"
+                android:layout_height="@dimen/button_height_medium"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/ic_arrow_left"
                 android:tint="@color/white"
@@ -29,9 +29,9 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Patient Info"
+                android:text="@string/patient_health"
                 android:textColor="@color/white"
-                android:textSize="12sp"
+                android:textSize="@dimen/text_size_small"
                 android:textStyle="bold"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"/>
@@ -46,7 +46,7 @@
             android:layout_weight="1"
             android:clipToPadding="false"
             android:paddingTop="5dp"
-            android:paddingBottom="8dp" />
+            android:paddingBottom="@dimen/padding_medium" />
 
     </LinearLayout>
 </layout>

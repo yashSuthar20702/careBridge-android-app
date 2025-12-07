@@ -65,12 +65,12 @@ public class HomePagerFragment extends Fragment {
         };
 
         String[] buttonLabels = {
-                "Call",
-                "Medicine",
-                "Patient Info",
-                "Guardian Info",
-                "Health Monitor",  // New label
-                "Logout"
+                getString(R.string.call),
+                getString(R.string.medicine),
+                getString(R.string.patient_health),
+                getString(R.string.guardian_info),
+                getString(R.string.health_monitor),  // New label
+                getString(R.string.logout)
         };
 
         binding.homeMainButton.setImageResource(buttonIcons[position]);

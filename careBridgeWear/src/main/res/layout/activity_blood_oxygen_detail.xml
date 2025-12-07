@@ -12,18 +12,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="@dimen/padding_large">
 
             <!-- Header -->
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp">
+                android:layout_marginBottom="@dimen/margin_medium">
 
                 <ImageButton
                     android:id="@+id/blood_oxygen_back_button"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="@dimen/button_height_medium"
+                    android:layout_height="@dimen/button_height_medium"
                     android:layout_alignParentStart="true"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:src="@drawable/ic_arrow_left"
@@ -34,9 +34,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:text="Blood Oxygen"
+                    android:text="@string/blood_oxygen_title"
                     android:textColor="@color/white"
-                    android:textSize="16sp"
+                    android:textSize="@dimen/text_size_large"
                     android:textStyle="bold" />
 
             </RelativeLayout>
@@ -47,11 +47,11 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:gravity="center"
-                android:layout_marginBottom="16dp">
+                android:layout_marginBottom="@dimen/margin_xlarge">
 
                 <ImageView
-                    android:layout_width="44dp"
-                    android:layout_height="44dp"
+                    android:layout_width="@dimen/icon_size_xxlarge"
+                    android:layout_height="@dimen/icon_size_xxlarge"
                     android:src="@drawable/ic_droplet"
                     app:tint="@color/blue_500" />
 
@@ -60,7 +60,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center"
-                    android:layout_marginTop="8dp">
+                    android:layout_marginTop="@dimen/margin_medium">
 
                     <TextView
                         android:id="@+id/blood_oxygen_value"
@@ -68,16 +68,16 @@
                         android:layout_height="wrap_content"
                         android:text="98"
                         android:textColor="@color/white"
-                        android:textSize="36sp"
+                        android:textSize="@dimen/text_size_xxlarge"
                         android:textStyle="bold" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="%"
+                        android:text="@string/unit_percent"
                         android:textColor="@color/gray_400"
-                        android:textSize="16sp"
-                        android:layout_marginStart="4dp" />
+                        android:textSize="@dimen/text_size_large"
+                        android:layout_marginStart="@dimen/spacing_small" />
 
                 </LinearLayout>
 
@@ -85,10 +85,10 @@
                     android:id="@+id/oxygen_status"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Normal"
+                    android:text="@string/blood_oxygen_status_normal"
                     android:textColor="@color/green"
-                    android:textSize="14sp"
-                    android:layout_marginTop="4dp" />
+                    android:textSize="@dimen/text_size_medium"
+                    android:layout_marginTop="@dimen/spacing_small" />
 
             </LinearLayout>
 
@@ -97,66 +97,66 @@
                 android:id="@+id/status_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Your blood oxygen level is within the normal range."
+                android:text="@string/blood_oxygen_status_normal_desc"
                 android:textColor="@color/gray_400"
-                android:textSize="12sp"
+                android:textSize="@dimen/text_size_small"
                 android:gravity="center"
-                android:layout_marginBottom="16dp"
-                android:paddingHorizontal="16dp" />
+                android:layout_marginBottom="@dimen/margin_xlarge"
+                android:paddingHorizontal="@dimen/padding_large" />
 
             <!-- Graph -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Recent Readings"
+                android:text="@string/recent_readings"
                 android:textColor="@color/white"
-                android:textSize="14sp"
+                android:textSize="@dimen/text_size_medium"
                 android:textStyle="bold"
-                android:layout_marginBottom="8dp" />
+                android:layout_marginBottom="@dimen/margin_medium" />
 
             <LinearLayout
                 android:id="@+id/graph_container"
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
+                android:layout_height="@dimen/graph_height"
                 android:orientation="horizontal"
                 android:gravity="bottom|center_horizontal"
                 android:background="@color/gray_800"
-                android:padding="8dp"
-                android:layout_marginBottom="16dp" />
+                android:padding="@dimen/padding_medium"
+                android:layout_marginBottom="@dimen/margin_xlarge" />
 
             <!-- Normal Range -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Normal Range"
+                android:text="@string/normal_range"
                 android:textColor="@color/white"
-                android:textSize="14sp"
+                android:textSize="@dimen/text_size_medium"
                 android:textStyle="bold"
-                android:layout_marginBottom="8dp" />
+                android:layout_marginBottom="@dimen/margin_medium" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
-                android:layout_marginBottom="16dp">
+                android:layout_marginBottom="@dimen/margin_xlarge">
 
                 <TextView
                     android:id="@+id/normal_range"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="95-100%"
+                    android:text="@string/blood_oxygen_normal_range"
                     android:textColor="@color/white"
-                    android:textSize="14sp"
-                    android:layout_marginEnd="8dp" />
+                    android:textSize="@dimen/text_size_medium"
+                    android:layout_marginEnd="@dimen/margin_medium" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Healthy SpO2 levels"
+                    android:text="@string/healthy_spo2_levels"
                     android:textColor="@color/gray_400"
-                    android:textSize="12sp" />
+                    android:textSize="@dimen/text_size_small" />
 
             </LinearLayout>
 
@@ -164,21 +164,21 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Measurement Tips"
+                android:text="@string/measurement_tips"
                 android:textColor="@color/white"
-                android:textSize="14sp"
+                android:textSize="@dimen/text_size_medium"
                 android:textStyle="bold"
-                android:layout_marginBottom="8dp" />
+                android:layout_marginBottom="@dimen/margin_medium" />
 
             <TextView
                 android:id="@+id/measurement_tip"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Place your finger on the sensor and keep still for accurate readings."
+                android:text="@string/blood_oxygen_measurement_tip"
                 android:textColor="@color/gray_400"
-                android:textSize="12sp"
-                android:lineSpacingExtra="4dp"
-                android:padding="12dp"
+                android:textSize="@dimen/text_size_small"
+                android:lineSpacingExtra="@dimen/spacing_small"
+                android:padding="@dimen/padding_medium"
                 android:background="@color/gray_800"
                 android:backgroundTint="@color/gray_800" />
 
@@ -186,12 +186,12 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Blood oxygen (SpO2) measures how much oxygen your red blood cells are carrying."
+                android:text="@string/blood_oxygen_info"
                 android:textColor="@color/gray_400"
-                android:textSize="12sp"
+                android:textSize="@dimen/text_size_small"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="16dp"
-                android:paddingHorizontal="16dp"
+                android:layout_marginTop="@dimen/margin_xlarge"
+                android:paddingHorizontal="@dimen/padding_large"
                 android:gravity="center" />
 
         </LinearLayout>

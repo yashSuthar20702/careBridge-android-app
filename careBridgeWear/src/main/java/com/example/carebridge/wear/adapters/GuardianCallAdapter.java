@@ -59,9 +59,6 @@ public class GuardianCallAdapter extends RecyclerView.Adapter<GuardianCallAdapte
         return count;
     }
 
-    // -----------------------------------------------------------
-    //                     VIEW HOLDER
-    // -----------------------------------------------------------
     static class GuardianCallViewHolder extends RecyclerView.ViewHolder {
 
         private final TextView guardianName;
