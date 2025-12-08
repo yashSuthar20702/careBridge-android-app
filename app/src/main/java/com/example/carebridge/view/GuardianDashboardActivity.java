@@ -75,7 +75,7 @@ public class GuardianDashboardActivity extends AppCompatActivity {
         }
 
         // 🔥 FIX: Enable logout click
-        btnLogout.setOnClickListener(v -> openLogoutDialog());
+        btnLogout.setOnClickListener(v -> showLogoutDialog());
 
         // Setup ViewPager + Bottom Nav
         viewPager.setAdapter(new GuardianDashboardPagerAdapter(this));
@@ -121,12 +121,12 @@ public class GuardianDashboardActivity extends AppCompatActivity {
     }
 
     /** Custom Logout Dialog */
-    private void openLogoutDialog() {
+    private void showLogoutDialog() {
         View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_logout, null);
         MaterialButton btnCancel = dialogView.findViewById(R.id.btnCancel);
         MaterialButton btnLogout = dialogView.findViewById(R.id.btnLogout);
 
-        btnLogout.setBackgroundTintList(getColorStateList(R.color.accent_blue));
+        btnLogout.setBackgroundTintList(getColorStateList(R.color.status_active));
 
         AlertDialog dialog = new AlertDialog.Builder(this, R.style.CustomDialogStyle)
                 .setView(dialogView)
@@ -137,10 +137,9 @@ public class GuardianDashboardActivity extends AppCompatActivity {
             dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
 
         btnCancel.setOnClickListener(v -> dialog.dismiss());
-
         btnLogout.setOnClickListener(v -> {
             dialog.dismiss();
-            authController.logout();
+            authController.logout(false);
             Intent intent = new Intent(this, LoginActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);

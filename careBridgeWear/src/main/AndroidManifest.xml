@@ -33,7 +33,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CareBridgeWear">
 
-        <!-- Standalone Wear App requirement -->
+        <!-- Standalone Wear App -->
         <meta-data
             android:name="com.google.android.wearable.standalone"
             android:value="true" />
@@ -88,20 +88,19 @@
             android:taskAffinity="${applicationId}"
             android:theme="@style/Theme.CareBridgeWear.NoActionBar" />
 
-        <!-- Firebase Messaging Service -->
+        <!-- FIXED: Firebase Messaging Service -->
         <service
             android:name=".service.WearFirebaseMessagingService"
-            android:exported="false">
+            android:exported="true">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
 
-        <!-- Notification Action Receiver (Taken / Not Taken) -->
+        <!-- FIXED: Removed invalid permission -->
         <receiver
             android:name=".service.WearNotificationReceiver"
-            android:exported="true"
-            android:permission="com.google.android.c2dm.permission.RECEIVE">
+            android:exported="true">
             <intent-filter>
                 <action android:name="WEAR_MED_TAKEN" />
                 <action android:name="WEAR_MED_NOT_TAKEN" />

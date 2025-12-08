@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ScrollView;
 import android.widget.Toast;
@@ -19,8 +20,8 @@ import com.example.carebridge.shared.model.User;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.firebase.messaging.FirebaseMessaging;
 
-/** Login activity handling user authentication with animated UI and input validation */
 public class LoginActivity extends AppCompatActivity {
 
     private ScrollView scrollView;
@@ -45,11 +46,10 @@ public class LoginActivity extends AppCompatActivity {
 
         // Redirect to dashboard if user is already authenticated
         if (authController.isLoggedIn()) {
-            redirectToDashboard(authController.getCurrentUser());
+            handleSuccessfulLogin(authController.getCurrentUser());
         }
     }
 
-    /** Initialize all UI component references from layout */
     private void initializeViews() {
         scrollView = findViewById(R.id.scrollView);
         etUsername = findViewById(R.id.etUsername);
@@ -60,7 +60,6 @@ public class LoginActivity extends AppCompatActivity {
         successAnimation = findViewById(R.id.successAnimation);
     }
 
-    /** Setup entrance animations for login card */
     private void setupAnimations() {
         View loginCard = findViewById(R.id.loginCard);
         loginCard.setAlpha(0f);
@@ -68,22 +67,25 @@ public class LoginActivity extends AppCompatActivity {
         loginCard.animate().alpha(1f).translationY(0f).setDuration(800).start();
     }
 
-    /** Configure click listeners for login button and input fields */
     private void setupClickListeners() {
         btnLogin.setOnClickListener(v -> attemptLogin());
-        etUsername.setOnFocusChangeListener((v, hasFocus) -> { if (hasFocus) scrollToView(etUsername); else validateUsername(); });
-        etPassword.setOnFocusChangeListener((v, hasFocus) -> { if (hasFocus) scrollToView(etPassword); else validatePassword(); });
-    }
-
-    /** Handle back button press to exit app */
-    private void setupBackPressedHandler() {
-        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() { finish(); }
+        etUsername.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) scrollToView(etUsername); else validateUsername();
+        });
+        etPassword.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus) scrollToView(etPassword); else validatePassword();
         });
     }
 
-    /** Auto-scroll when keyboard appears to keep fields visible */
+    private void setupBackPressedHandler() {
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                finish();
+            }
+        });
+    }
+
     private void setupKeyboardScroll() {
         final View rootView = findViewById(android.R.id.content);
         rootView.getViewTreeObserver().addOnGlobalLayoutListener(() -> {
@@ -98,12 +100,10 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    /** Smooth scroll to make specified view visible */
     private void scrollToView(View view) {
         scrollView.post(() -> scrollView.smoothScrollTo(0, view.getTop() - 100));
     }
 
-    /** Validate credentials and initiate login process */
     private void attemptLogin() {
         if (!validateInputs()) return;
 
@@ -113,7 +113,9 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin.setEnabled(false);
         authController.login(username, password, new AuthController.LoginCallback() {
             @Override
-            public void onSuccess(User user) { handleSuccessfulLogin(user); }
+            public void onSuccess(User user) {
+                handleSuccessfulLogin(user);
+            }
 
             @Override
             public void onFailure(String message) {
@@ -123,28 +125,48 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    /** Validate both username and password inputs */
-    private boolean validateInputs() { return validateUsername() & validatePassword(); }
+    private boolean validateInputs() {
+        return validateUsername() & validatePassword();
+    }
 
-    /** Validate username field for empty input */
     private boolean validateUsername() {
         String username = etUsername.getText().toString().trim();
-        if (username.isEmpty()) { tilUsername.setError(getString(R.string.error_username_required)); return false; }
-        else { tilUsername.setError(null); return true; }
+        if (username.isEmpty()) {
+            tilUsername.setError(getString(R.string.error_username_required));
+            return false;
+        } else {
+            tilUsername.setError(null);
+            return true;
+        }
     }
 
-    /** Validate password field for empty input and minimum length */
     private boolean validatePassword() {
         String password = etPassword.getText().toString();
-        if (password.isEmpty()) { tilPassword.setError(getString(R.string.error_password_required)); return false; }
-        else if (password.length() < 6) { tilPassword.setError(getString(R.string.error_password_length)); return false; }
-        else { tilPassword.setError(null); return true; }
+        if (password.isEmpty()) {
+            tilPassword.setError(getString(R.string.error_password_required));
+            return false;
+        } else if (password.length() < 6) {
+            tilPassword.setError(getString(R.string.error_password_length));
+            return false;
+        } else {
+            tilPassword.setError(null);
+            return true;
+        }
     }
 
-    /** Handle successful login by redirecting to appropriate dashboard */
-    private void handleSuccessfulLogin(User user) { redirectToDashboard(user); }
+    /** Handle login success: update mobile FCM token and redirect */
+    private void handleSuccessfulLogin(User user) {
+        // Update only mobile FCM token
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        authController.sendFcmTokenToServer(user.getId(), task.getResult(), false);
+                    }
+                    // Redirect to dashboard after token update
+                    redirectToDashboard(user);
+                });
+    }
 
-    /** Redirect to patient or guardian dashboard based on user role */
     private void redirectToDashboard(User user) {
         Intent intent = getString(R.string.patient_role).equals(user.getRole()) ?
                 new Intent(this, PatientDashboardActivity.class) :

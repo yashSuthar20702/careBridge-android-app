@@ -1,6 +1,9 @@
 package com.example.carebridge.wear;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -8,30 +11,23 @@ import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.example.carebridge.shared.controller.AuthController;
 import com.example.carebridge.shared.model.User;
 import com.example.carebridge.wear.databinding.ActivityLoginBinding;
 import com.example.carebridge.wear.utils.Constants;
 import com.example.carebridge.wear.utils.WearSharedPrefManager;
-import com.example.carebridge.shared.utils.ApiConstants;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.messaging.FirebaseMessaging;
 
-import org.json.JSONObject;
-
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
-
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -41,7 +37,16 @@ public class LoginActivity extends AppCompatActivity {
 
     private final Handler timeHandler = new Handler(Looper.getMainLooper());
     private final SimpleDateFormat timeFormat = new SimpleDateFormat(Constants.TIME_FORMAT_HH_MM_A, Locale.getDefault());
-    private final OkHttpClient client = new OkHttpClient();
+
+    // Notification permission launcher for Android 13+
+    private final ActivityResultLauncher<String> requestNotificationPermission =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                if (isGranted) {
+                    Log.d(Constants.TAG_LOGIN_ACTIVITY, "✅ Notification permission granted");
+                } else {
+                    Log.w(Constants.TAG_LOGIN_ACTIVITY, "⚠️ Notification permission denied");
+                }
+            });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,9 +70,6 @@ public class LoginActivity extends AppCompatActivity {
         startClockUpdater();
     }
 
-    /**
-     * Initialize UI components and set up listeners
-     */
     private void initializeViews() {
         binding.loginButton.setOnClickListener(v -> attemptLogin());
 
@@ -80,9 +82,6 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    /**
-     * Validate and attempt user login
-     */
     private void attemptLogin() {
         String username = binding.usernameEditText.getText().toString().trim();
         String password = binding.passwordEditText.getText().toString().trim();
@@ -99,9 +98,6 @@ public class LoginActivity extends AppCompatActivity {
         performLogin(username, password);
     }
 
-    /**
-     * Perform login operation with provided credentials
-     */
     private void performLogin(String username, String password) {
         binding.loginButton.setEnabled(false);
         binding.loginButton.setText(R.string.logging_in);
@@ -121,11 +117,14 @@ public class LoginActivity extends AppCompatActivity {
 
                                 wearSharedPrefManager.saveReferenceId(token);
 
-                                // Send FCM token to backend
-                                sendFcmTokenToServer(user.getId(), token);
+                                // Send Wear FCM token to backend
+                                authController.sendFcmTokenToServer(user.getId(), token, true);
                             } else {
                                 Log.w(Constants.TAG_LOGIN_ACTIVITY, Constants.LOG_EMOJI_ERROR + " FCM token fetch failed", task.getException());
                             }
+
+                            // ✅ Request notification permission after login success
+                            requestNotificationPermissionIfNeeded();
 
                             redirectToDashboard(user);
                         });
@@ -140,53 +139,23 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    /**
-     * Send FCM token to backend server
-     */
-    private void sendFcmTokenToServer(int userId, String fcmToken) {
-        try {
-            JSONObject json = new JSONObject();
-            json.put(Constants.KEY_USER_ID, userId);
-            json.put(Constants.KEY_FCM_TOKEN, fcmToken);
-
-            RequestBody body = RequestBody.create(
-                    json.toString(),
-                    MediaType.get(Constants.HTTP_CONTENT_TYPE_JSON_CHARSET)
-            );
-
-            Request request = new Request.Builder()
-                    .url(ApiConstants.getUpdateWearFcmTokenUrl())
-                    .post(body)
-                    .build();
-
-            client.newCall(request).enqueue(new okhttp3.Callback() {
-                @Override
-                public void onFailure(okhttp3.Call call, IOException e) {
-                    Log.e(Constants.TAG_LOGIN_ACTIVITY, Constants.LOG_EMOJI_ERROR + " Wear failed to update FCM token: " + e.getMessage());
-                }
-
-                @Override
-                public void onResponse(okhttp3.Call call, Response response) throws IOException {
-                    Log.d(Constants.TAG_LOGIN_ACTIVITY, Constants.LOG_EMOJI_SUCCESS + " Wear FCM token update response: " + response.body().string());
-                }
-            });
-        } catch (Exception e) {
-            Log.e(Constants.TAG_LOGIN_ACTIVITY, Constants.LOG_EMOJI_ERROR + " FCM token JSON building error: " + e.getMessage());
+    private void requestNotificationPermissionIfNeeded() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+                    != PackageManager.PERMISSION_GRANTED) {
+                requestNotificationPermission.launch(Manifest.permission.POST_NOTIFICATIONS);
+            } else {
+                Log.d(Constants.TAG_LOGIN_ACTIVITY, "✅ Notification permission already granted");
+            }
         }
     }
 
-    /**
-     * Display error message to user
-     */
     private void showError(String msg) {
         binding.errorText.setText(msg);
         binding.errorText.setVisibility(View.VISIBLE);
         binding.errorText.postDelayed(() -> binding.errorText.setVisibility(View.GONE), Constants.UPDATE_INTERVAL_MEDIUM);
     }
 
-    /**
-     * Redirect to main dashboard after successful login
-     */
     private void redirectToDashboard(User user) {
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra(Constants.EXTRA_USER, user);
@@ -194,9 +163,6 @@ public class LoginActivity extends AppCompatActivity {
         finish();
     }
 
-    /**
-     * Start updating clock display
-     */
     private void startClockUpdater() {
         timeHandler.post(new Runnable() {
             @Override

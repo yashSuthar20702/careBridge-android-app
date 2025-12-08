@@ -9,7 +9,6 @@ import com.example.carebridge.shared.model.User;
 import com.example.carebridge.shared.model.PatientInfo;
 import com.example.carebridge.shared.utils.ApiConstants;
 import com.example.carebridge.shared.utils.SharedPrefManager;
-import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.gson.Gson;
 
 import org.json.JSONException;
@@ -35,15 +34,11 @@ public class AuthController {
     }
 
     public void login(String username, String password, LoginCallback callback) {
-        Log.d(TAG, "Login request started...");
-
         JSONObject json = new JSONObject();
         try {
             json.put("username", username);
             json.put("password", password);
-            Log.d(TAG, "Login JSON body: " + json.toString());
         } catch (JSONException e) {
-            Log.e(TAG, "Error creating login JSON: " + e.getMessage());
             callback.onFailure("Error building JSON");
             return;
         }
@@ -58,35 +53,26 @@ public class AuthController {
                 .post(body)
                 .build();
 
-        Log.d(TAG, "Login API URL: " + ApiConstants.getLoginUrl());
-
         client.newCall(request).enqueue(new Callback() {
             final Handler handler = new Handler(Looper.getMainLooper());
 
             @Override
             public void onFailure(Call call, IOException e) {
-                Log.e(TAG, "Login API FAILED: " + e.getMessage());
                 handler.post(() -> callback.onFailure("Network error"));
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String responseStr = response.body().string();
-                Log.d(TAG, "Login API Response: " + responseStr);
-
                 handler.post(() -> {
                     try {
                         JSONObject res = new JSONObject(responseStr);
-
                         if (!"success".equalsIgnoreCase(res.optString("status"))) {
-                            Log.e(TAG, "Login failed: " + res.optString("message"));
                             callback.onFailure(res.optString("message", "Login failed"));
                             return;
                         }
 
                         JSONObject userJson = res.getJSONObject("user");
-                        Log.d(TAG, "User JSON received: " + userJson.toString());
-
                         User user = new User();
                         user.setId(userJson.getInt("user_id"));
                         user.setUsername(userJson.getString("username"));
@@ -98,12 +84,10 @@ public class AuthController {
                         String caseIdToStore;
 
                         if (linked != null && linked.length() > 0) {
-                            Log.d(TAG, "Linked data found: " + linked.toString());
                             PatientInfo pi = new Gson().fromJson(linked.toString(), PatientInfo.class);
                             user.setPatientInfo(pi);
                             caseIdToStore = pi.getCaseId() != null ? pi.getCaseId() : user.getReferenceId();
                         } else {
-                            Log.d(TAG, "No linked data found.");
                             user.setPatientInfo(new PatientInfo());
                             caseIdToStore = user.getReferenceId();
                         }
@@ -112,14 +96,9 @@ public class AuthController {
                         sharedPrefManager.saveCaseId(caseIdToStore);
                         sharedPrefManager.saveReferenceId(user.getReferenceId());
 
-                        Log.d(TAG, "User session saved successfully.");
                         callback.onSuccess(user);
 
-                        // --- Send FCM token to server ---
-                        sendFcmTokenToServer(user);
-
                     } catch (Exception e) {
-                        Log.e(TAG, "Error parsing login response: " + e.getMessage());
                         callback.onFailure("Invalid response");
                     }
                 });
@@ -127,71 +106,66 @@ public class AuthController {
         });
     }
 
-    private void sendFcmTokenToServer(User user) {
-        FirebaseMessaging.getInstance().getToken()
-                .addOnCompleteListener(task -> {
-                    if (!task.isSuccessful()) {
-                        Log.w(TAG, "Fetching FCM token failed", task.getException());
-                        return;
-                    }
+    /** Update FCM token on server (mobile or Wear) */
+    public void sendFcmTokenToServer(int userId, String fcmToken, boolean isWearToken) {
+        try {
+            JSONObject json = new JSONObject();
+            json.put("user_id", userId);
+            if (isWearToken) json.put("wear_os_fcm_token", fcmToken);
+            else json.put("fcm_token", fcmToken);
 
-                    String fcmToken = task.getResult();
-                    Log.d(TAG, "FCM Token: " + fcmToken);
+            String url = isWearToken ? ApiConstants.getUpdateWearFcmTokenUrl() : ApiConstants.getUpdateFcmTokenUrl();
 
-                    JSONObject json = new JSONObject();
-                    try {
-                        json.put("user_id", user.getId());
-                        json.put("fcm_token", fcmToken);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                        return;
-                    }
+            RequestBody body = RequestBody.create(json.toString(), MediaType.get("application/json; charset=utf-8"));
+            Request request = new Request.Builder().url(url).post(body).build();
 
-                    RequestBody body = RequestBody.create(
-                            json.toString(),
-                            MediaType.get("application/json; charset=utf-8")
-                    );
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    Log.e(TAG, "Failed to update token: " + e.getMessage());
+                }
 
-                    Request request = new Request.Builder()
-                            .url(ApiConstants.getUpdateFcmTokenUrl())
-                            .post(body)
-                            .build();
-
-                    client.newCall(request).enqueue(new Callback() {
-                        @Override
-                        public void onFailure(Call call, IOException e) {
-                            Log.e(TAG, "Failed to update FCM token: " + e.getMessage());
-                        }
-
-                        @Override
-                        public void onResponse(Call call, Response response) throws IOException {
-                            String res = response.body().string();
-                            Log.d(TAG, "FCM token update response: " + res);
-                        }
-                    });
-                });
-    }
-
-    public boolean isLoggedIn() {
-        return sharedPrefManager.isLoggedIn();
-    }
-
-    public User getCurrentUser() {
-        return sharedPrefManager.getCurrentUser();
-    }
-
-    public void logout() {
-        Log.d(TAG, "Logout started...");
-        User user = sharedPrefManager.getCurrentUser();
-
-        if (user == null) {
-            Log.e(TAG, "No user found in session.");
-            return;
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    Log.d(TAG, "Token update response: " + response.body().string());
+                }
+            });
+        } catch (Exception e) {
+            Log.e(TAG, "Token JSON error: " + e.getMessage());
         }
+    }
+
+    /** Delete token from server */
+    public void deleteFcmTokenFromServer(User user, boolean isWearToken) {
+        try {
+            JSONObject json = new JSONObject();
+            json.put("user_id", user.getId());
+
+            String url = isWearToken ? ApiConstants.getDeleteWearFcmTokenUrl() : ApiConstants.getDeleteFcmTokenUrl();
+            if (isWearToken) json.put("wear_os_fcm_token", ""); else json.put("fcm_token", "");
+
+            RequestBody body = RequestBody.create(json.toString(), MediaType.get("application/json; charset=utf-8"));
+            Request request = new Request.Builder().url(url).post(body).build();
+
+            client.newCall(request).enqueue(new Callback() {
+                @Override
+                public void onFailure(Call call, IOException e) { Log.e(TAG, "Failed to delete token: " + e.getMessage()); }
+                @Override
+                public void onResponse(Call call, Response response) throws IOException { Log.d(TAG, "Token delete response: " + response.body().string()); }
+            });
+        } catch (Exception e) { Log.e(TAG, "Delete token JSON error: " + e.getMessage()); }
+    }
+
+    public boolean isLoggedIn() { return sharedPrefManager.isLoggedIn(); }
+    public User getCurrentUser() { return sharedPrefManager.getCurrentUser(); }
+
+    /** Logout & delete token */
+    public void logout(boolean isWearDevice) {
+        User user = getCurrentUser();
+        if (user != null) deleteFcmTokenFromServer(user, isWearDevice);
 
         sharedPrefManager.clearSession();
         sharedPrefManager.clearCaseId();
         sharedPrefManager.clearReferenceId();
-        Log.d(TAG, "Local SharedPref session cleared.");
     }
 }

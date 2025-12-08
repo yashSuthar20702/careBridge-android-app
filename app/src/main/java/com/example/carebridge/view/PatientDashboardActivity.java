@@ -129,7 +129,7 @@ public class PatientDashboardActivity extends AppCompatActivity {
         btnCancel.setOnClickListener(v -> dialog.dismiss());
         btnLogout.setOnClickListener(v -> {
             dialog.dismiss();
-            authController.logout();
+            authController.logout(false);
             Intent intent = new Intent(this, LoginActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
