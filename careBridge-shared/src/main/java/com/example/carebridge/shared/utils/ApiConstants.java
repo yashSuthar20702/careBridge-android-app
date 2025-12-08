@@ -18,7 +18,7 @@ public class ApiConstants {
      * Set to true during development to use Android Emulator's localhost
      * Set to false for production or testing on physical devices
      */
-    public static final boolean USE_LOCALHOST = true;
+    public static final boolean USE_LOCALHOST = false;
 
     /**
      * Localhost IP for Android Emulator (10.0.2.2 points to host machine's localhost)
