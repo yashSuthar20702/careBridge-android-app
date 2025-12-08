@@ -80,4 +80,10 @@ public class ApiConstants {
         return "http://" + getBaseHost() + API_ROOT + "medicine_log/get.php?case_id=" + caseId;
     }
 
+    public static String getDailyTipsUrl() {
+        return "http://" + getBaseHost() + API_ROOT + "daily_tips/get_tips.php";  // whatever your php file path is
+    }
+
+
+
 }
