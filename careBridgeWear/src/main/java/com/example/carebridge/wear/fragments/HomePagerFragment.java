@@ -72,12 +72,12 @@ public class HomePagerFragment extends Fragment {
      */
     private int[] getButtonIcons() {
         return new int[]{
-                R.drawable.ic_phone,
-                R.drawable.ic_pill,
-                R.drawable.ic_activity,
-                R.drawable.ic_user,
-                R.drawable.ic_heart,
-                R.drawable.ic_logout
+                R.drawable.ic_phone_scaled,
+                R.drawable.ic_pill_scaled,
+                R.drawable.ic_activity_scaled,
+                R.drawable.ic_user_scaled,
+                R.drawable.ic_heart_scaled,
+                R.drawable.ic_logout_scaled
         };
     }
 

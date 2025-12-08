@@ -10,6 +10,8 @@
     <string name="health_monitor">Health Monitor</string>
     <string name="logout">Logout</string>
 
+    <string name="enter_credentials">Please enter username and password</string>
+
     <!-- Login Screen -->
     <string name="login">LOGIN</string>
     <string name="logging_in">LOGGING IN...</string>
