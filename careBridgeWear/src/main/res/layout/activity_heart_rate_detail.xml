@@ -22,7 +22,6 @@
                 android:id="@+id/heart_rate_back_button"
                 android:layout_width="@dimen/button_height_medium"
                 android:layout_height="@dimen/button_height_medium"
-                android:layout_marginEnd="@dimen/margin_xlarge"
                 android:layout_marginStart="22dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/ic_arrow_left"

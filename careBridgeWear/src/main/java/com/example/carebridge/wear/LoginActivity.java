@@ -7,9 +7,13 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -67,31 +71,129 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         initializeViews();
+        setupKeyboardListeners();
         startClockUpdater();
     }
 
     private void initializeViews() {
         binding.loginButton.setOnClickListener(v -> attemptLogin());
 
-        binding.passwordEditText.setOnEditorActionListener((v, actionId, event) -> {
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                attemptLogin();
-                return true;
+        // Set IME options for cross (cancel) button on username
+        binding.usernameEditText.setImeOptions(EditorInfo.IME_ACTION_NEXT | EditorInfo.IME_FLAG_NO_ENTER_ACTION);
+
+        // Set IME options for check (done) button on password
+        binding.passwordEditText.setImeOptions(EditorInfo.IME_ACTION_DONE | EditorInfo.IME_FLAG_NO_ENTER_ACTION);
+    }
+
+    private void setupKeyboardListeners() {
+        // Username field - press Next (cross button) to go to password
+        binding.usernameEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_NEXT) {
+                    // Move focus to password field when cross button is pressed
+                    binding.passwordEditText.requestFocus();
+                    return true;
+                }
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    // This shouldn't happen, but just in case
+                    binding.passwordEditText.requestFocus();
+                    return true;
+                }
+                // Also handle hardware Enter key
+                if (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER &&
+                        event.getAction() == KeyEvent.ACTION_DOWN) {
+                    binding.passwordEditText.requestFocus();
+                    return true;
+                }
+                return false;
             }
-            return false;
         });
+
+        // Password field - press Done (check button) to login
+        binding.passwordEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_DONE) {
+                    attemptLogin();
+                    return true;
+                }
+                if (actionId == EditorInfo.IME_ACTION_NEXT) {
+                    // This shouldn't happen, but just in case
+                    attemptLogin();
+                    return true;
+                }
+                // Handle hardware Enter key
+                if (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER &&
+                        event.getAction() == KeyEvent.ACTION_DOWN) {
+                    attemptLogin();
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        // Alternative: Use key listener for hardware keyboard
+        binding.usernameEditText.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
+                    binding.passwordEditText.requestFocus();
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        binding.passwordEditText.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (event.getAction() == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
+                    attemptLogin();
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        // Add click listener to handle keyboard dismiss when tapping outside
+        binding.getRoot().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Hide keyboard when tapping outside input fields
+                hideKeyboard();
+            }
+        });
+    }
+
+    private void hideKeyboard() {
+        View focusedView = getCurrentFocus();
+        if (focusedView != null) {
+            android.view.inputmethod.InputMethodManager imm = (android.view.inputmethod.InputMethodManager)
+                    getSystemService(INPUT_METHOD_SERVICE);
+            if (imm != null) {
+                imm.hideSoftInputFromWindow(focusedView.getWindowToken(), 0);
+            }
+            focusedView.clearFocus();
+        }
     }
 
     private void attemptLogin() {
         String username = binding.usernameEditText.getText().toString().trim();
         String password = binding.passwordEditText.getText().toString().trim();
 
-        if (username.isEmpty()) {
+        // Clear previous error
+        binding.errorText.setVisibility(View.GONE);
+
+        if (TextUtils.isEmpty(username)) {
             showError(getString(R.string.enter_username));
+            binding.usernameEditText.requestFocus();
             return;
         }
-        if (password.isEmpty()) {
+
+        if (TextUtils.isEmpty(password)) {
             showError(getString(R.string.enter_password));
+            binding.passwordEditText.requestFocus();
             return;
         }
 
@@ -99,6 +201,9 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void performLogin(String username, String password) {
+        // Clear focus to hide keyboard
+        hideKeyboard();
+
         binding.loginButton.setEnabled(false);
         binding.loginButton.setText(R.string.logging_in);
 
@@ -132,9 +237,17 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(String message) {
-                binding.loginButton.setEnabled(true);
-                binding.loginButton.setText(R.string.login);
-                showError(message);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        binding.loginButton.setEnabled(true);
+                        binding.loginButton.setText(R.string.login);
+                        showError(message);
+
+                        // Refocus on password field for retry
+                        binding.passwordEditText.requestFocus();
+                    }
+                });
             }
         });
     }
@@ -153,7 +266,6 @@ public class LoginActivity extends AppCompatActivity {
     private void showError(String msg) {
         binding.errorText.setText(msg);
         binding.errorText.setVisibility(View.VISIBLE);
-        binding.errorText.postDelayed(() -> binding.errorText.setVisibility(View.GONE), Constants.UPDATE_INTERVAL_MEDIUM);
     }
 
     private void redirectToDashboard(User user) {
