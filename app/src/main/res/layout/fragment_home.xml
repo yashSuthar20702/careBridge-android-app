@@ -106,7 +106,7 @@
                                 android:id="@+id/tvTotalMedicines"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="6"
+                                android:text="0"
                                 android:textColor="@color/text_primary"
                                 android:textSize="22sp"
                                 android:textStyle="bold" />
@@ -135,7 +135,7 @@
                                 android:id="@+id/tvTakenMedicines"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="3"
+                                android:text="0"
                                 android:textColor="@color/status_active"
                                 android:textSize="22sp"
                                 android:textStyle="bold" />
@@ -164,7 +164,7 @@
                                 android:id="@+id/tvRemainingMedicines"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="3"
+                                android:text="0"
                                 android:textColor="@color/error_red"
                                 android:textSize="22sp"
                                 android:textStyle="bold" />
