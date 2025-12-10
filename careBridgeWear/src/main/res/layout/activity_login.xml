@@ -12,24 +12,31 @@
             android:layout_height="match_parent"
             android:padding="@dimen/padding_large"
             android:background="@color/wear_black"
-            android:fillViewport="true">
+            android:fillViewport="true"
+            android:scrollbars="vertical"
+            android:fadeScrollbars="false">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:gravity="center_horizontal">
+                android:gravity="center_horizontal"
+                android:paddingBottom="40dp">
 
                 <!-- Time -->
                 <TextView
                     android:id="@+id/tvLiveTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/text_size_xlarge"
-                    android:letterSpacing="0.05"
-                    android:layout_marginBottom="10dp"
-                    android:text="12:00" />
+                    android:text="12:00"
+                    android:textColor="#97E248"
+                    android:textSize="@dimen/text_size_medium"
+                    android:textStyle="bold"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="@dimen/padding_medium" />
 
                 <!-- User Icon -->
                 <ImageView
@@ -37,8 +44,7 @@
                     android:layout_height="64dp"
                     android:src="@drawable/ic_carebridge"
                     android:padding="@dimen/padding_large"
-                    android:layout_marginBottom="@dimen/margin_large"
-                    />
+                    android:layout_marginBottom="@dimen/margin_large" />
 
                 <!-- Title -->
                 <TextView
@@ -59,18 +65,23 @@
                     android:textColor="@color/wear_error_red"
                     android:textSize="@dimen/text_size_small"
                     android:visibility="gone"
-                    android:layout_marginBottom="10dp" />
+                    android:layout_marginBottom="10dp"
+                    android:maxLines="2"
+                    android:gravity="center" />
 
                 <!-- Username -->
                 <EditText
                     android:id="@+id/username_edit_text"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
-                    android:layout_marginHorizontal="@dimen/margin_xxlarge"
+                    android:layout_marginHorizontal="@dimen/margin_medium"
                     android:background="@drawable/wear_input"
                     android:hint="@string/username_hint"
                     android:paddingStart="14dp"
+                    android:paddingEnd="14dp"
                     android:inputType="text|textNoSuggestions"
+                    android:imeOptions="actionNext"
+                    android:singleLine="true"
                     android:textColor="@color/white"
                     android:textColorHint="@color/gray_400"
                     android:layout_marginBottom="10dp" />
@@ -80,13 +91,16 @@
                     android:id="@+id/password_edit_text"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
-                    android:layout_marginHorizontal="@dimen/margin_xxlarge"
+                    android:layout_marginHorizontal="@dimen/margin_medium"
                     android:background="@drawable/wear_input"
                     android:hint="@string/password_hint"
                     android:paddingStart="14dp"
+                    android:paddingEnd="14dp"
                     android:textColor="@color/white"
                     android:textColorHint="@color/gray_400"
                     android:inputType="textPassword"
+                    android:imeOptions="actionDone"
+                    android:singleLine="true"
                     android:layout_marginBottom="@dimen/margin_xlarge"
                     tools:ignore="WearPasswordInput" />
 
@@ -95,7 +109,7 @@
                     android:id="@+id/login_button"
                     android:layout_width="match_parent"
                     android:layout_height="42dp"
-                    android:layout_marginHorizontal="@dimen/margin_xxlarge"
+                    android:layout_marginHorizontal="@dimen/margin_medium"
                     android:layout_marginBottom="14dp"
                     android:background="@drawable/wear_button_primary"
                     android:backgroundTint="@null"

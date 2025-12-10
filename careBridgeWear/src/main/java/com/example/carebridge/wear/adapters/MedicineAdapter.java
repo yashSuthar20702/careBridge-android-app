@@ -34,11 +34,7 @@ public class MedicineAdapter extends RecyclerView.Adapter<MedicineAdapter.Medici
     public void onBindViewHolder(@NonNull MedicineViewHolder holder, int position) {
         Medication medicine = medicineList.get(position);
         holder.bind(medicine);
-
-        holder.itemView.setOnClickListener(v -> {
-            medicine.setTaken(!medicine.isTaken());
-            notifyItemChanged(position);
-        });
+        // No click listener - medicine items are read-only
     }
 
     @Override
@@ -49,7 +45,6 @@ public class MedicineAdapter extends RecyclerView.Adapter<MedicineAdapter.Medici
     static class MedicineViewHolder extends RecyclerView.ViewHolder {
 
         private TextView medicineName, medicineDosage, medicineTime, medicineFood;
-        private ImageView statusIcon;
         private View itemView;
 
         public MedicineViewHolder(@NonNull View itemView) {
@@ -61,29 +56,25 @@ public class MedicineAdapter extends RecyclerView.Adapter<MedicineAdapter.Medici
             medicineDosage = itemView.findViewById(R.id.medicine_dosage);
             medicineTime = itemView.findViewById(R.id.medicine_time);
             medicineFood = itemView.findViewById(R.id.medicine_food);
-            statusIcon = itemView.findViewById(R.id.status_icon);
+            // Status icon reference removed
         }
 
         public void bind(Medication medicine) {
-
             medicineName.setText(medicine.getMedicineName());
             medicineDosage.setText(medicine.getDosage());
             medicineTime.setText(medicine.getTimeSummary());
             medicineFood.setText(medicine.getFoodInstructionText());
 
-            if (medicine.isTaken()) {
-                itemView.setBackgroundResource(R.drawable.medicine_taken_bg);
-                statusIcon.setImageResource(R.drawable.ic_check);
+            // Remove status-based styling since we no longer have status icon
+            // All items will use the same styling
 
+            if (medicine.isTaken()) {
+                // Optional: You can still show taken status through text or color if needed
                 medicineName.setAlpha(0.6f);
                 medicineDosage.setAlpha(0.6f);
                 medicineTime.setAlpha(0.6f);
                 medicineFood.setAlpha(0.6f);
-
             } else {
-                itemView.setBackgroundResource(R.drawable.medicine_pending_bg);
-                statusIcon.setImageResource(R.drawable.ic_circle);
-
                 medicineName.setAlpha(1f);
                 medicineDosage.setAlpha(1f);
                 medicineTime.setAlpha(1f);

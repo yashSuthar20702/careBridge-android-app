@@ -41,6 +41,8 @@ public class MedicineActivity extends AppCompatActivity {
         adapter = new MedicineAdapter(medicineList);
         binding.medicineRecyclerView.setAdapter(adapter);
         binding.medicineRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        // Remove click listener from adapter level - users can no longer toggle status
     }
 
     private boolean isInternetAvailable() {
@@ -57,7 +59,6 @@ public class MedicineActivity extends AppCompatActivity {
     }
 
     private void loadMedicineData() {
-
         // If no internet, show message
         if (!isInternetAvailable()) {
             showNoMedicine(getString(R.string.no_internet_connection));
@@ -68,7 +69,6 @@ public class MedicineActivity extends AppCompatActivity {
         controller.fetchPrescriptions(new PrescriptionController.PrescriptionCallback() {
             @Override
             public void onSuccess(List<Prescription> prescriptions) {
-
                 medicineList.clear();
 
                 for (Prescription p : prescriptions) {
