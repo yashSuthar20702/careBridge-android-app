@@ -15,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp"
+            android:padding="@dimen/padding_medium"
             android:gravity="center_horizontal">
 
             <!-- 🕒 DATE & TIME HEADER -->
@@ -25,90 +25,90 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:gravity="center"
-                android:paddingVertical="16dp"
+                android:paddingVertical="@dimen/padding_medium"
                 android:background="@drawable/bg_gradient_header"
-                android:paddingHorizontal="20dp"
-                android:elevation="4dp"
-                android:layout_marginBottom="16dp"
+                android:paddingHorizontal="@dimen/header_padding_horizontal"
+                android:elevation="@dimen/elevation_small"
+                android:layout_marginBottom="@dimen/margin_medium"
                 android:clipToOutline="true">
 
                 <TextView
                     android:id="@+id/tvCurrentDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Wednesday, Nov 05 2025"
+                    android:text="@string/date_placeholder"
                     android:textColor="@color/white"
-                    android:textSize="18sp"
+                    android:textSize="@dimen/text_size_large"
                     android:fontFamily="sans-serif-medium" />
 
                 <TextView
                     android:id="@+id/tvCurrentTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="11:42 AM"
+                    android:text="@string/time_placeholder"
                     android:textColor="@color/white"
-                    android:textSize="36sp"
+                    android:textSize="@dimen/text_size_xxlarge"
                     android:textStyle="bold"
-                    android:layout_marginTop="4dp" />
+                    android:layout_marginTop="@dimen/margin_xsmall" />
             </LinearLayout>
 
             <!-- 💊 TODAY'S MEDICINES -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="6dp"
-                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="@dimen/corner_radius_large"
+                app:cardElevation="@dimen/elevation_medium"
+                android:layout_marginBottom="@dimen/margin_medium"
                 app:cardBackgroundColor="@color/input_background">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="16dp">
+                    android:padding="@dimen/padding_medium">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Today's Medicines"
+                        android:text="@string/todays_medicines"
                         android:textColor="@color/status_active"
-                        android:textSize="18sp"
+                        android:textSize="@dimen/text_size_large"
                         android:textStyle="bold"
-                        android:layout_marginBottom="12dp" />
+                        android:layout_marginBottom="@dimen/margin_small" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:weightSum="3"
+                        android:weightSum="@integer/weight_three"
                         android:gravity="center">
 
                         <!-- Assigned -->
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
+                            android:layout_weight="@integer/weight_one"
                             android:gravity="center"
                             android:orientation="vertical">
                             <ImageView
-                                android:layout_width="32dp"
-                                android:layout_height="32dp"
+                                android:layout_width="@dimen/icon_size_large"
+                                android:layout_height="@dimen/icon_size_large"
                                 android:src="@drawable/ic_pill"
                                 app:tint="@color/text_secondary"
-                                android:layout_marginBottom="4dp" />
+                                android:layout_marginBottom="@dimen/margin_xsmall" />
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Assigned"
+                                android:text="@string/assigned_label"
                                 android:textColor="@color/text_secondary"
-                                android:textSize="14sp" />
+                                android:textSize="@dimen/text_size_small" />
                             <TextView
                                 android:id="@+id/tvTotalMedicines"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="0"
+                                android:text="@string/zero_count"
                                 android:textColor="@color/text_primary"
-                                android:textSize="22sp"
+                                android:textSize="@dimen/text_size_xlarge"
                                 android:textStyle="bold" />
                         </LinearLayout>
 
@@ -116,28 +116,28 @@
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
+                            android:layout_weight="@integer/weight_one"
                             android:gravity="center"
                             android:orientation="vertical">
                             <ImageView
-                                android:layout_width="32dp"
-                                android:layout_height="32dp"
+                                android:layout_width="@dimen/icon_size_large"
+                                android:layout_height="@dimen/icon_size_large"
                                 android:src="@drawable/ic_check"
                                 app:tint="@color/status_active"
-                                android:layout_marginBottom="4dp" />
+                                android:layout_marginBottom="@dimen/margin_xsmall" />
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Taken"
+                                android:text="@string/taken_label"
                                 android:textColor="@color/text_secondary"
-                                android:textSize="14sp" />
+                                android:textSize="@dimen/text_size_small" />
                             <TextView
                                 android:id="@+id/tvTakenMedicines"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="0"
+                                android:text="@string/zero_count"
                                 android:textColor="@color/status_active"
-                                android:textSize="22sp"
+                                android:textSize="@dimen/text_size_xlarge"
                                 android:textStyle="bold" />
                         </LinearLayout>
 
@@ -145,28 +145,28 @@
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
+                            android:layout_weight="@integer/weight_one"
                             android:gravity="center"
                             android:orientation="vertical">
                             <ImageView
-                                android:layout_width="32dp"
-                                android:layout_height="32dp"
+                                android:layout_width="@dimen/icon_size_large"
+                                android:layout_height="@dimen/icon_size_large"
                                 android:src="@drawable/ic_warning"
                                 app:tint="@color/error_red"
-                                android:layout_marginBottom="4dp" />
+                                android:layout_marginBottom="@dimen/margin_xsmall" />
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Remaining"
+                                android:text="@string/remaining_label"
                                 android:textColor="@color/text_secondary"
-                                android:textSize="14sp" />
+                                android:textSize="@dimen/text_size_small" />
                             <TextView
                                 android:id="@+id/tvRemainingMedicines"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="0"
+                                android:text="@string/zero_count"
                                 android:textColor="@color/error_red"
-                                android:textSize="22sp"
+                                android:textSize="@dimen/text_size_xlarge"
                                 android:textStyle="bold" />
                         </LinearLayout>
                     </LinearLayout>
@@ -177,34 +177,34 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="6dp"
-                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="@dimen/corner_radius_large"
+                app:cardElevation="@dimen/elevation_medium"
+                android:layout_marginBottom="@dimen/margin_medium"
                 app:cardBackgroundColor="@color/input_background">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="16dp">
+                    android:padding="@dimen/padding_medium">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Upcoming Medications"
+                        android:text="@string/upcoming_medications_title"
                         android:textColor="@color/status_active"
-                        android:textSize="18sp"
+                        android:textSize="@dimen/text_size_large"
                         android:textStyle="bold"
-                        android:layout_marginBottom="8dp" />
+                        android:layout_marginBottom="@dimen/margin_small" />
 
                     <TextView
                         android:id="@+id/tvNoMedicines"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="No medicines scheduled for now."
+                        android:text="@string/no_medicines_scheduled"
                         android:textColor="@color/text_secondary"
                         android:gravity="center"
-                        android:padding="12dp"
+                        android:padding="@dimen/padding_small"
                         android:visibility="gone" />
 
                     <androidx.recyclerview.widget.RecyclerView
@@ -212,17 +212,17 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:clipToPadding="false"
-                        android:paddingBottom="8dp" />
+                        android:paddingBottom="@dimen/padding_small" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
             <!-- 🗺️ NEARBY CARE MAP -->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="250dp"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="6dp"
-                android:layout_marginBottom="16dp"
+                android:layout_height="@dimen/map_card_height"
+                app:cardCornerRadius="@dimen/corner_radius_large"
+                app:cardElevation="@dimen/elevation_medium"
+                android:layout_marginBottom="@dimen/margin_medium"
                 app:cardBackgroundColor="@color/input_background">
 
                 <FrameLayout
@@ -237,13 +237,13 @@
                     <Button
                         android:id="@+id/btnOpenFullMap"
                         android:layout_width="match_parent"
-                        android:layout_height="48dp"
+                        android:layout_height="@dimen/button_height_standard"
                         android:layout_gravity="bottom"
-                        android:text="View Full Map"
+                        android:text="@string/view_full_map"
                         android:backgroundTint="@color/status_active"
                         android:textColor="@color/white"
                         android:fontFamily="sans-serif-medium"
-                        android:layout_margin="12dp"/>
+                        android:layout_margin="@dimen/margin_small"/>
                 </FrameLayout>
             </androidx.cardview.widget.CardView>
 
@@ -251,22 +251,21 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Mental Wellness &amp; Tips"
+                android:text="@string/mental_wellness_tips"
                 android:textColor="@color/status_active"
                 android:textStyle="bold"
-                android:textSize="18sp"
-                android:layout_marginBottom="8dp"
+                android:textSize="@dimen/text_size_large"
+                android:layout_marginBottom="@dimen/margin_small"
                 android:layout_gravity="start" />
-
 
             <!-- 💡 DAILY TIP / VIDEO CARD -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardDailyTip"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardCornerRadius="20dp"
-                app:cardElevation="8dp"
+                android:layout_marginBottom="@dimen/margin_medium"
+                app:cardCornerRadius="@dimen/corner_radius_large"
+                app:cardElevation="@dimen/elevation_large"
                 app:cardBackgroundColor="@color/input_background"
                 android:visibility="gone">
 
@@ -274,7 +273,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="16dp">
+                    android:padding="@dimen/padding_medium">
 
                     <!-- Header -->
                     <LinearLayout
@@ -285,19 +284,19 @@
 
                         <ImageView
                             android:id="@+id/imgDailyType"
-                            android:layout_width="36dp"
-                            android:layout_height="36dp"
+                            android:layout_width="@dimen/icon_size_large"
+                            android:layout_height="@dimen/icon_size_large"
                             android:src="@drawable/ic_lightbulb"
                             app:tint="@color/status_active"
-                            android:layout_marginEnd="12dp" />
+                            android:layout_marginEnd="@dimen/margin_small" />
 
                         <TextView
                             android:id="@+id/tvDailyHeader"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Daily Tip"
+                            android:text="@string/daily_tip_title"
                             android:textColor="@color/status_active"
-                            android:textSize="16sp"
+                            android:textSize="@dimen/text_size_medium"
                             android:textStyle="bold" />
                     </LinearLayout>
 
@@ -306,33 +305,31 @@
                         android:id="@+id/tvDailyMessage"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Stay hydrated, it improves energy &amp; focus."
+                        android:text="@string/daily_tip_default"
                         android:textColor="@color/text_primary"
-                        android:textSize="16sp"
-                        android:layout_marginTop="8dp"
-                        android:lineSpacingExtra="2dp" />
+                        android:textSize="@dimen/text_size_medium"
+                        android:layout_marginTop="@dimen/margin_small"
+                        android:lineSpacingExtra="@dimen/line_spacing_medium" />
 
-                    <!-- Video Player -->
                     <!-- Video Player -->
                     <com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
                         android:id="@+id/youtubePlayerView"
                         android:layout_width="match_parent"
-                        android:layout_height="200dp"
-                        android:layout_marginTop="12dp"
+                        android:layout_height="@dimen/video_player_height"
+                        android:layout_marginTop="@dimen/margin_small"
                         android:visibility="gone"
                         android:clipToOutline="true"
                         android:foreground="?attr/selectableItemBackground"/>
-
 
                     <!-- Tip Action / Optional Button -->
                     <LinearLayout
                         android:id="@+id/btnActionTip"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
+                        android:layout_marginTop="@dimen/margin_small"
                         android:orientation="horizontal"
-                        android:paddingHorizontal="14dp"
-                        android:paddingVertical="6dp"
+                        android:paddingHorizontal="@dimen/padding_medium"
+                        android:paddingVertical="@dimen/padding_xsmall"
                         android:background="@drawable/bg_chip"
                         android:gravity="center"
                         android:visibility="gone">
@@ -340,9 +337,9 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Learn More"
+                            android:text="@string/learn_more"
                             android:textColor="@color/white"
-                            android:textSize="14sp"
+                            android:textSize="@dimen/text_size_small"
                             android:fontFamily="sans-serif-medium" />
                     </LinearLayout>
                 </LinearLayout>

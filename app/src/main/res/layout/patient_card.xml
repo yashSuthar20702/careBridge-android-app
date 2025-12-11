@@ -5,18 +5,18 @@
     android:id="@+id/patientCard"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:cardCornerRadius="16dp"
+    app:cardCornerRadius="@dimen/patient_card_corner_radius"
     app:cardBackgroundColor="@color/input_background"
     app:strokeColor="@color/accent_blue"
-    app:strokeWidth="2dp"
-    app:cardElevation="6dp"
+    app:strokeWidth="@dimen/patient_card_stroke_width"
+    app:cardElevation="@dimen/patient_card_elevation"
     android:layout_marginBottom="@dimen/padding_medium">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="@dimen/patient_card_padding">
 
         <!-- Header: Name + Status -->
         <LinearLayout
@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:paddingBottom="8dp">
+            android:paddingBottom="@dimen/patient_name_padding_bottom">
 
             <TextView
                 android:id="@+id/tvPatientName"
@@ -32,7 +32,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:textColor="@color/text_primary"
-                android:textSize="20sp"
+                android:textSize="@dimen/patient_name_text_size"
                 android:textStyle="bold"
                 android:textAllCaps="false"/>
 
@@ -40,9 +40,9 @@
                 android:id="@+id/tvPatientStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingHorizontal="16dp"
-                android:paddingVertical="8dp"
-                android:textSize="14sp"
+                android:paddingHorizontal="@dimen/status_padding_horizontal"
+                android:paddingVertical="@dimen/status_padding_vertical"
+                android:textSize="@dimen/status_text_size"
                 android:textStyle="bold"
                 android:textColor="@color/white"
                 android:gravity="center"
@@ -59,8 +59,8 @@
             android:layout_height="wrap_content"
             android:textStyle="italic"
             android:textColor="@color/accent_purple"
-            android:textSize="16sp"
-            android:paddingBottom="12dp"/>
+            android:textSize="@dimen/role_text_size"
+            android:paddingBottom="@dimen/role_padding_bottom"/>
 
         <!-- Info Section -->
         <LinearLayout
@@ -68,138 +68,143 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- Info Row Template -->
+            <!-- Age Row -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:paddingVertical="4dp">
+                android:paddingVertical="@dimen/info_padding_vertical">
 
                 <TextView
-                    android:layout_width="120dp"
+                    android:layout_width="@dimen/info_label_width"
                     android:layout_height="wrap_content"
                     android:textColor="@color/text_primary"
                     android:textStyle="bold"
-                    android:textSize="16sp"
-                    android:text="Age:"/>
+                    android:textSize="@dimen/info_text_size"
+                    android:text="@string/patient_card_age_label"/>
 
                 <TextView
                     android:id="@+id/tvPatientAge"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/text_secondary"
-                    android:textSize="16sp"/>
+                    android:textSize="@dimen/info_text_size"/>
             </LinearLayout>
 
+            <!-- Gender Row -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:paddingVertical="4dp">
+                android:paddingVertical="@dimen/info_padding_vertical">
 
                 <TextView
-                    android:layout_width="120dp"
+                    android:layout_width="@dimen/info_label_width"
                     android:layout_height="wrap_content"
                     android:textColor="@color/text_primary"
                     android:textStyle="bold"
-                    android:textSize="16sp"
-                    android:text="Gender:"/>
+                    android:textSize="@dimen/info_text_size"
+                    android:text="@string/patient_card_gender_label"/>
 
                 <TextView
                     android:id="@+id/tvPatientGender"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/text_secondary"
-                    android:textSize="16sp"/>
+                    android:textSize="@dimen/info_text_size"/>
             </LinearLayout>
 
+            <!-- Contact Row -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:paddingVertical="4dp">
+                android:paddingVertical="@dimen/info_padding_vertical">
 
                 <TextView
-                    android:layout_width="120dp"
+                    android:layout_width="@dimen/info_label_width"
                     android:layout_height="wrap_content"
                     android:textColor="@color/text_primary"
                     android:textStyle="bold"
-                    android:textSize="16sp"
-                    android:text="Contact:"/>
+                    android:textSize="@dimen/info_text_size"
+                    android:text="@string/patient_card_contact_label"/>
 
                 <TextView
                     android:id="@+id/tvPatientContact"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/text_secondary"
-                    android:textSize="16sp"/>
+                    android:textSize="@dimen/info_text_size"/>
             </LinearLayout>
 
+            <!-- Email Row -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:paddingVertical="4dp">
+                android:paddingVertical="@dimen/info_padding_vertical">
 
                 <TextView
-                    android:layout_width="120dp"
+                    android:layout_width="@dimen/info_label_width"
                     android:layout_height="wrap_content"
                     android:textColor="@color/text_primary"
                     android:textStyle="bold"
-                    android:textSize="16sp"
-                    android:text="Email:"/>
+                    android:textSize="@dimen/info_text_size"
+                    android:text="@string/patient_card_email_label"/>
 
                 <TextView
                     android:id="@+id/tvPatientEmail"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/text_secondary"
-                    android:textSize="16sp"/>
+                    android:textSize="@dimen/info_text_size"/>
             </LinearLayout>
 
+            <!-- Assigned Date Row -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:paddingVertical="4dp">
+                android:paddingVertical="@dimen/info_padding_vertical">
 
                 <TextView
-                    android:layout_width="120dp"
+                    android:layout_width="@dimen/info_label_width"
                     android:layout_height="wrap_content"
                     android:textColor="@color/text_primary"
                     android:textStyle="bold"
-                    android:textSize="16sp"
-                    android:text="Assigned:"/>
+                    android:textSize="@dimen/info_text_size"
+                    android:text="@string/patient_card_assigned_label"/>
 
                 <TextView
                     android:id="@+id/tvPatientAssignedDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/accent_purple"
-                    android:textSize="16sp"
+                    android:textSize="@dimen/info_text_size"
                     android:textStyle="italic"/>
             </LinearLayout>
 
+            <!-- Notes Row -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:paddingVertical="4dp">
+                android:paddingVertical="@dimen/info_padding_vertical">
 
                 <TextView
-                    android:layout_width="120dp"
+                    android:layout_width="@dimen/info_label_width"
                     android:layout_height="wrap_content"
                     android:textColor="@color/text_primary"
                     android:textStyle="bold"
-                    android:textSize="16sp"
-                    android:text="Notes:"/>
+                    android:textSize="@dimen/info_text_size"
+                    android:text="@string/patient_card_notes_label"/>
 
                 <TextView
                     android:id="@+id/tvPatientNotes"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/text_secondary"
-                    android:textSize="16sp"
+                    android:textSize="@dimen/info_text_size"
                     android:textStyle="italic"/>
             </LinearLayout>
 
@@ -208,17 +213,17 @@
                 android:id="@+id/btnAddMeal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Add Meal"
+                android:text="@string/add_meal_button"
                 android:textAllCaps="false"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="@dimen/add_meal_button_margin_top"
                 app:icon="@drawable/ic_add"
-                app:iconPadding="12dp"
+                app:iconPadding="@dimen/add_meal_button_icon_padding"
                 app:iconTint="@color/white"
                 app:iconGravity="textStart"
                 android:backgroundTint="@color/accent_blue"
                 android:textColor="@color/white"
-                app:cornerRadius="16dp"
-                android:paddingVertical="14dp"/>
+                app:cornerRadius="@dimen/add_meal_button_corner_radius"
+                android:paddingVertical="@dimen/add_meal_button_padding_vertical"/>
 
         </LinearLayout>
     </LinearLayout>

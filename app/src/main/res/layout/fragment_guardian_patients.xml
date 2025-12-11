@@ -27,7 +27,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/margin_small"
                 app:shimmer_auto_start="true"
-                app:shimmer_duration="1200">
+                app:shimmer_duration="@integer/shimmer_duration">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -60,7 +60,7 @@
                 android:orientation="horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:weightSum="2"
+                android:weightSum="@integer/weight_sum_two"
                 android:layout_marginBottom="@dimen/margin_large">
 
                 <!-- Assigned Patients Card: Shows total patients under care -->
@@ -68,7 +68,7 @@
                     android:id="@+id/cardAssignedPatients"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="@integer/weight_one"
                     android:layout_marginEnd="@dimen/margin_small"
                     app:cardCornerRadius="@dimen/corner_radius_large"
                     app:cardElevation="@dimen/elevation_medium"
@@ -108,7 +108,7 @@
                     android:id="@+id/cardActivePatients"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="@integer/weight_one"
                     android:layout_marginStart="@dimen/margin_small"
                     app:cardCornerRadius="@dimen/corner_radius_large"
                     app:cardElevation="@dimen/elevation_medium"
@@ -176,7 +176,7 @@
                 android:visibility="gone"
                 app:cardCornerRadius="@dimen/corner_radius_xlarge"
                 app:cardBackgroundColor="@color/input_background"
-                app:strokeWidth="1dp">
+                app:strokeWidth="@dimen/dialog_stroke_width">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -197,7 +197,7 @@
                         android:id="@+id/tvWarningMessage"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:layout_weight="@integer/weight_one"
                         android:textColor="@color/text_primary"
                         android:textSize="@dimen/text_size_medium"
                         android:text="@string/network_error_message" />

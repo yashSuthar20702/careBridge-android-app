@@ -6,17 +6,17 @@
     android:layout_marginBottom="@dimen/margin_medium"
     android:layout_marginStart="@dimen/margin_small"
     android:layout_marginEnd="@dimen/margin_small"
-    app:cardCornerRadius="20dp"
-    app:cardElevation="6dp"
+    app:cardCornerRadius="@dimen/corner_radius_large"
+    app:cardElevation="@dimen/elevation_medium"
     app:strokeColor="@color/accent_blue"
-    app:strokeWidth="2dp"
+    app:strokeWidth="@dimen/elevation_small"
     app:cardBackgroundColor="@color/input_background">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="20dp">
+        android:padding="@dimen/padding_large">
 
         <!-- Header: Guardian Name -->
         <TextView
@@ -24,9 +24,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="@color/text_primary"
-            android:textSize="26sp"
+            android:textSize="@dimen/text_size_xlarge"
             android:textStyle="bold"
-            android:layout_marginBottom="12dp" />
+            android:layout_marginBottom="@dimen/margin_small" />
 
         <!-- Info Section -->
         <LinearLayout
@@ -39,22 +39,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:paddingVertical="4dp">
+                android:paddingVertical="@dimen/padding_xsmall">
 
                 <TextView
-                    android:layout_width="120dp"
+                    android:layout_width="@dimen/label_width"
                     android:layout_height="wrap_content"
-                    android:text="Relationship:"
+                    android:text="@string/relationship_label"
                     android:textStyle="bold"
                     android:textColor="@color/text_primary"
-                    android:textSize="16sp"/>
+                    android:textSize="@dimen/text_size_medium"/>
 
                 <TextView
                     android:id="@+id/tvGuardianRelationship"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/text_secondary"
-                    android:textSize="16sp"/>
+                    android:textSize="@dimen/text_size_medium"/>
             </LinearLayout>
 
             <!-- Phone Row -->
@@ -62,22 +62,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:paddingVertical="4dp">
+                android:paddingVertical="@dimen/padding_xsmall">
 
                 <TextView
-                    android:layout_width="120dp"
+                    android:layout_width="@dimen/label_width"
                     android:layout_height="wrap_content"
-                    android:text="Phone:"
+                    android:text="@string/phone_label"
                     android:textStyle="bold"
                     android:textColor="@color/text_primary"
-                    android:textSize="16sp"/>
+                    android:textSize="@dimen/text_size_medium"/>
 
                 <TextView
                     android:id="@+id/tvGuardianPhone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/text_secondary"
-                    android:textSize="16sp"/>
+                    android:textSize="@dimen/text_size_medium"/>
             </LinearLayout>
 
             <!-- Email Row -->
@@ -85,23 +85,23 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:paddingVertical="4dp"
-                android:layout_marginBottom="12dp">
+                android:paddingVertical="@dimen/padding_xsmall"
+                android:layout_marginBottom="@dimen/margin_small">
 
                 <TextView
-                    android:layout_width="120dp"
+                    android:layout_width="@dimen/label_width"
                     android:layout_height="wrap_content"
-                    android:text="Email:"
+                    android:text="@string/email_label"
                     android:textStyle="bold"
                     android:textColor="@color/text_primary"
-                    android:textSize="16sp"/>
+                    android:textSize="@dimen/text_size_medium"/>
 
                 <TextView
                     android:id="@+id/tvGuardianEmail"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/text_secondary"
-                    android:textSize="16sp"/>
+                    android:textSize="@dimen/text_size_medium"/>
             </LinearLayout>
 
         </LinearLayout>
@@ -111,16 +111,16 @@
             android:id="@+id/btnCallGuardian"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Call Guardian"
+            android:text="@string/call_guardian_button"
             android:textAllCaps="false"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="@dimen/margin_small"
             app:icon="@drawable/ic_call"
-            app:iconPadding="12dp"
+            app:iconPadding="@dimen/padding_small"
             app:iconTint="@color/white"
             app:iconGravity="textStart"
             android:backgroundTint="@color/status_active"
             android:textColor="@color/white"
-            app:cornerRadius="16dp"
-            android:paddingVertical="12dp"/>
+            app:cornerRadius="@dimen/corner_radius_large"
+            android:paddingVertical="@dimen/padding_small"/>
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

@@ -20,7 +20,7 @@ public class ApiConstants {
      * true  → Android Emulator (10.0.2.2)
      * false → Physical device or production server IP
      */
-    public static final boolean USE_LOCALHOST = false;
+    public static final boolean USE_LOCALHOST = true;
 
     private static final String LOCALHOST_IP = "10.0.2.2";
     private static final String DEVICE_SERVER_IP = "10.0.0.165";

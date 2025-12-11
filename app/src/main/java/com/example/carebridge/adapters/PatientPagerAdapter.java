@@ -34,7 +34,6 @@ public class PatientPagerAdapter extends RecyclerView.Adapter<PatientPagerAdapte
     public void onBindViewHolder(@NonNull PatientViewHolder holder, int position) {
         PatientInfo patient = patients.get(position);
 
-        // ✅ FIXED: Changed from getFull_name() to getFullName()
         holder.tvPatientName.setText(patient.getFullName());
 
         int total = patient.getTotalMedicines();

@@ -37,7 +37,7 @@
             android:textSize="@dimen/text_size_xxlarge"
             android:textStyle="bold"
             android:textColor="@color/login_text_white"
-            android:letterSpacing="0.02"
+            android:letterSpacing="@dimen/letter_spacing_small"
             android:layout_marginBottom="@dimen/margin_small" />
 
         <!-- Tagline -->
@@ -48,7 +48,7 @@
             android:text="@string/app_tagline"
             android:textSize="@dimen/text_size_small"
             android:textColor="@color/login_text_white"
-            android:alpha="0.85"
+            android:alpha="@dimen/text_alpha_secondary"
             android:layout_marginBottom="@dimen/margin_xlarge" />
 
         <!-- Login Card -->

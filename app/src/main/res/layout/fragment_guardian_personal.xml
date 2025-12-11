@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
     <ScrollView
-        android:padding="16dp"
+        android:padding="@dimen/padding_medium"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/background_light">
@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:layout_marginBottom="16dp">
+            android:layout_marginBottom="@dimen/margin_medium">
 
             <!-- ✅ Shimmer Placeholder -->
             <com.facebook.shimmer.ShimmerFrameLayout
@@ -24,40 +24,40 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:shimmer_auto_start="true"
-                app:shimmer_duration="1200">
+                app:shimmer_duration="@integer/shimmer_duration">
 
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    app:cardCornerRadius="24dp"
-                    app:cardElevation="12dp"
+                    android:layout_marginBottom="@dimen/margin_medium"
+                    app:cardCornerRadius="@dimen/corner_radius_xlarge"
+                    app:cardElevation="@dimen/elevation_large"
                     app:strokeColor="@color/accent_blue"
-                    app:strokeWidth="1dp"
+                    app:strokeWidth="@dimen/dialog_stroke_width"
                     app:cardBackgroundColor="@color/white">
 
                     <LinearLayout
-                        android:padding="20dp"
+                        android:padding="@dimen/padding_large"
                         android:orientation="vertical"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
                         <View
                             android:layout_width="match_parent"
-                            android:layout_height="24dp"
-                            android:layout_marginBottom="14dp"
+                            android:layout_height="@dimen/shimmer_bar_height"
+                            android:layout_marginBottom="@dimen/margin_medium"
                             android:background="@color/shimmer_placeholder"/>
 
                         <View
                             android:layout_width="match_parent"
-                            android:layout_height="24dp"
-                            android:layout_marginBottom="14dp"
+                            android:layout_height="@dimen/shimmer_bar_height"
+                            android:layout_marginBottom="@dimen/margin_medium"
                             android:background="@color/shimmer_placeholder"/>
 
                         <View
                             android:layout_width="match_parent"
-                            android:layout_height="24dp"
-                            android:layout_marginBottom="14dp"
+                            android:layout_height="@dimen/shimmer_bar_height"
+                            android:layout_marginBottom="@dimen/margin_medium"
                             android:background="@color/shimmer_placeholder"/>
 
                     </LinearLayout>
@@ -69,34 +69,34 @@
                 android:id="@+id/cardWarning"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="@dimen/margin_medium"
                 android:visibility="gone"
-                app:cardCornerRadius="20dp"
-                app:strokeWidth="1dp"
+                app:cardCornerRadius="@dimen/corner_radius_large"
+                app:strokeWidth="@dimen/dialog_stroke_width"
                 app:cardBackgroundColor="@color/input_background">
 
                 <LinearLayout
-                    android:padding="16dp"
+                    android:padding="@dimen/padding_medium"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
                     <ImageView
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
+                        android:layout_width="@dimen/icon_size_large"
+                        android:layout_height="@dimen/icon_size_large"
                         android:src="@drawable/ic_warning"
-                        android:layout_marginEnd="12dp"
+                        android:layout_marginEnd="@dimen/margin_small"
                         app:tint="@color/warning_yellow"/>
 
                     <TextView
                         android:id="@+id/tvWarningMessage"
-                        android:text="Unable to load guardian info. Please check your connection and swipe down to retry."
-                        android:textSize="16sp"
+                        android:text="@string/guardian_load_error_message"
+                        android:textSize="@dimen/text_size_medium"
                         android:textColor="@color/text_primary"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"/>
+                        android:layout_weight="@integer/weight_one"/>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -112,47 +112,47 @@
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    app:cardCornerRadius="24dp"
-                    app:cardElevation="4dp"
+                    android:layout_marginBottom="@dimen/margin_medium"
+                    app:cardCornerRadius="@dimen/corner_radius_xlarge"
+                    app:cardElevation="@dimen/elevation_small"
                     app:strokeColor="@color/accent_blue"
-                    app:strokeWidth="1dp"
+                    app:strokeWidth="@dimen/dialog_stroke_width"
                     app:cardBackgroundColor="@color/input_background">
 
                     <LinearLayout
-                        android:padding="20dp"
+                        android:padding="@dimen/padding_large"
                         android:orientation="vertical"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
                         <TextView
-                            android:text="Personal Info"
-                            android:textSize="20sp"
+                            android:text="@string/personal_info_title"
+                            android:textSize="@dimen/text_size_xlarge"
                             android:textStyle="bold"
                             android:textColor="@color/accent_blue"
-                            android:layout_marginBottom="20dp"
+                            android:layout_marginBottom="@dimen/margin_large"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"/>
 
                         <!-- ✅ Row: Name -->
                         <LinearLayout
                             android:orientation="horizontal"
-                            android:paddingVertical="6dp"
+                            android:paddingVertical="@dimen/padding_xsmall"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
 
                             <TextView
-                                android:text="Name:"
+                                android:text="@string/full_name_label"
                                 android:textStyle="bold"
                                 android:textColor="@color/text_primary"
-                                android:textSize="16sp"
-                                android:layout_width="120dp"
+                                android:textSize="@dimen/text_size_medium"
+                                android:layout_width="@dimen/label_width"
                                 android:layout_height="wrap_content"/>
 
                             <TextView
                                 android:id="@+id/tvName"
                                 android:textColor="@color/text_secondary"
-                                android:textSize="16sp"
+                                android:textSize="@dimen/text_size_medium"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"/>
                         </LinearLayout>
@@ -160,22 +160,22 @@
                         <!-- ✅ Row: Type -->
                         <LinearLayout
                             android:orientation="horizontal"
-                            android:paddingVertical="6dp"
+                            android:paddingVertical="@dimen/padding_xsmall"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
 
                             <TextView
-                                android:text="Type:"
+                                android:text="@string/type_label"
                                 android:textStyle="bold"
                                 android:textColor="@color/text_primary"
-                                android:textSize="16sp"
-                                android:layout_width="120dp"
+                                android:textSize="@dimen/text_size_medium"
+                                android:layout_width="@dimen/label_width"
                                 android:layout_height="wrap_content"/>
 
                             <TextView
                                 android:id="@+id/tvType"
                                 android:textColor="@color/text_secondary"
-                                android:textSize="16sp"
+                                android:textSize="@dimen/text_size_medium"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"/>
                         </LinearLayout>
@@ -183,22 +183,22 @@
                         <!-- ✅ Row: Occupation -->
                         <LinearLayout
                             android:orientation="horizontal"
-                            android:paddingVertical="6dp"
+                            android:paddingVertical="@dimen/padding_xsmall"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
 
                             <TextView
-                                android:text="Occupation:"
+                                android:text="@string/occupation_label"
                                 android:textStyle="bold"
                                 android:textColor="@color/text_primary"
-                                android:textSize="16sp"
-                                android:layout_width="120dp"
+                                android:textSize="@dimen/text_size_medium"
+                                android:layout_width="@dimen/label_width"
                                 android:layout_height="wrap_content"/>
 
                             <TextView
                                 android:id="@+id/tvOccupation"
                                 android:textColor="@color/text_secondary"
-                                android:textSize="16sp"
+                                android:textSize="@dimen/text_size_medium"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"/>
                         </LinearLayout>
@@ -206,22 +206,22 @@
                         <!-- ✅ Row: Availability -->
                         <LinearLayout
                             android:orientation="horizontal"
-                            android:paddingVertical="6dp"
+                            android:paddingVertical="@dimen/padding_xsmall"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
 
                             <TextView
-                                android:text="Availability:"
+                                android:text="@string/availability_label"
                                 android:textStyle="bold"
                                 android:textColor="@color/text_primary"
-                                android:textSize="16sp"
-                                android:layout_width="120dp"
+                                android:textSize="@dimen/text_size_medium"
+                                android:layout_width="@dimen/label_width"
                                 android:layout_height="wrap_content"/>
 
                             <TextView
                                 android:id="@+id/tvAvailability"
                                 android:textColor="@color/text_secondary"
-                                android:textSize="16sp"
+                                android:textSize="@dimen/text_size_medium"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"/>
                         </LinearLayout>
@@ -229,22 +229,22 @@
                         <!-- ✅ Row: Notes -->
                         <LinearLayout
                             android:orientation="horizontal"
-                            android:paddingVertical="6dp"
+                            android:paddingVertical="@dimen/padding_xsmall"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
 
                             <TextView
-                                android:text="Notes:"
+                                android:text="@string/notes_label"
                                 android:textStyle="bold"
                                 android:textColor="@color/text_primary"
-                                android:textSize="16sp"
-                                android:layout_width="120dp"
+                                android:textSize="@dimen/text_size_medium"
+                                android:layout_width="@dimen/label_width"
                                 android:layout_height="wrap_content"/>
 
                             <TextView
                                 android:id="@+id/tvNotes"
                                 android:textColor="@color/text_secondary"
-                                android:textSize="16sp"
+                                android:textSize="@dimen/text_size_medium"
                                 android:textStyle="italic"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"/>
@@ -257,47 +257,47 @@
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    app:cardCornerRadius="24dp"
-                    app:cardElevation="4dp"
+                    android:layout_marginBottom="@dimen/margin_medium"
+                    app:cardCornerRadius="@dimen/corner_radius_xlarge"
+                    app:cardElevation="@dimen/elevation_small"
                     app:strokeColor="@color/accent_purple"
-                    app:strokeWidth="1dp"
+                    app:strokeWidth="@dimen/dialog_stroke_width"
                     app:cardBackgroundColor="@color/input_background">
 
                     <LinearLayout
-                        android:padding="20dp"
+                        android:padding="@dimen/padding_large"
                         android:orientation="vertical"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
                         <TextView
-                            android:text="Contact Info"
-                            android:textSize="20sp"
+                            android:text="@string/contact_info_title"
+                            android:textSize="@dimen/text_size_xlarge"
                             android:textStyle="bold"
                             android:textColor="@color/accent_purple"
-                            android:layout_marginBottom="20dp"
+                            android:layout_marginBottom="@dimen/margin_large"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"/>
 
                         <!-- ✅ Row: Phone -->
                         <LinearLayout
                             android:orientation="horizontal"
-                            android:paddingVertical="6dp"
+                            android:paddingVertical="@dimen/padding_xsmall"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
 
                             <TextView
-                                android:text="Phone:"
+                                android:text="@string/phone_label"
                                 android:textStyle="bold"
                                 android:textColor="@color/text_primary"
-                                android:textSize="16sp"
-                                android:layout_width="120dp"
+                                android:textSize="@dimen/text_size_medium"
+                                android:layout_width="@dimen/label_width"
                                 android:layout_height="wrap_content"/>
 
                             <TextView
                                 android:id="@+id/tvPhone"
                                 android:textColor="@color/text_secondary"
-                                android:textSize="16sp"
+                                android:textSize="@dimen/text_size_medium"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"/>
                         </LinearLayout>
@@ -305,22 +305,22 @@
                         <!-- ✅ Row: Email -->
                         <LinearLayout
                             android:orientation="horizontal"
-                            android:paddingVertical="6dp"
+                            android:paddingVertical="@dimen/padding_xsmall"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
 
                             <TextView
-                                android:text="Email:"
+                                android:text="@string/email_label"
                                 android:textStyle="bold"
                                 android:textColor="@color/text_primary"
-                                android:textSize="16sp"
-                                android:layout_width="120dp"
+                                android:textSize="@dimen/text_size_medium"
+                                android:layout_width="@dimen/label_width"
                                 android:layout_height="wrap_content"/>
 
                             <TextView
                                 android:id="@+id/tvEmail"
                                 android:textColor="@color/text_secondary"
-                                android:textSize="16sp"
+                                android:textSize="@dimen/text_size_medium"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"/>
                         </LinearLayout>
@@ -328,22 +328,22 @@
                         <!-- ✅ Row: Address -->
                         <LinearLayout
                             android:orientation="horizontal"
-                            android:paddingVertical="6dp"
+                            android:paddingVertical="@dimen/padding_xsmall"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
 
                             <TextView
-                                android:text="Address:"
+                                android:text="@string/address_label"
                                 android:textStyle="bold"
                                 android:textColor="@color/text_primary"
-                                android:textSize="16sp"
-                                android:layout_width="120dp"
+                                android:textSize="@dimen/text_size_medium"
+                                android:layout_width="@dimen/label_width"
                                 android:layout_height="wrap_content"/>
 
                             <TextView
                                 android:id="@+id/tvAddress"
                                 android:textColor="@color/text_secondary"
-                                android:textSize="16sp"
+                                android:textSize="@dimen/text_size_medium"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"/>
                         </LinearLayout>

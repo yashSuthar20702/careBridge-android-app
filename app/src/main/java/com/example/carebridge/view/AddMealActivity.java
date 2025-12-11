@@ -44,15 +44,15 @@ public class AddMealActivity extends AppCompatActivity {
         String patientId = getIntent().getStringExtra("PATIENT_ID");
         String patientName = getIntent().getStringExtra("PATIENT_NAME");
 
-        Log.d(TAG, "Received Patient ID: " + patientId);
-        Log.d(TAG, "Received Patient Name: " + patientName);
+        Log.d(TAG, String.format(getString(R.string.patient_id_log_format), patientId));
+        Log.d(TAG, String.format(getString(R.string.patient_name_log_format), patientName));
 
         initViews();
 
         if (patientName != null) tvPatientName.setText(patientName);
 
-        formattedDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
-        String displayDate = new SimpleDateFormat("EEEE, MMM dd, yyyy", Locale.getDefault()).format(new Date());
+        formattedDate = new SimpleDateFormat(getString(R.string.date_format_storage), Locale.getDefault()).format(new Date());
+        String displayDate = new SimpleDateFormat(getString(R.string.date_format_display), Locale.getDefault()).format(new Date());
         tvMealDate.setText(displayDate);
 
         setupClickListeners(patientId);
@@ -89,7 +89,7 @@ public class AddMealActivity extends AppCompatActivity {
     // --------------------------
     private void fetchCurrentMealPlan(String patientId) {
         ProgressDialog progress = new ProgressDialog(this);
-        progress.setMessage("Loading current meal plan...");
+        progress.setMessage(getString(R.string.loading_current_meal_plan));
         progress.setCancelable(false);
         progress.show();
 
@@ -100,14 +100,18 @@ public class AddMealActivity extends AppCompatActivity {
                 try {
                     cardCurrentMeal.setVisibility(View.VISIBLE);
 
-                    tvMorningCurrent.setText("Morning: " + mealPlan.optString("morning_meal", "-"));
-                    tvAfternoonCurrent.setText("Afternoon: " + mealPlan.optString("afternoon_meal", "-"));
-                    tvEveningCurrent.setText("Evening: " + mealPlan.optString("evening_meal", "-"));
-                    tvNightCurrent.setText("Night: " + mealPlan.optString("night_meal", "-"));
+                    tvMorningCurrent.setText(String.format(getString(R.string.morning_meal_format),
+                            mealPlan.optString("morning_meal", "-")));
+                    tvAfternoonCurrent.setText(String.format(getString(R.string.afternoon_meal_format),
+                            mealPlan.optString("afternoon_meal", "-")));
+                    tvEveningCurrent.setText(String.format(getString(R.string.evening_meal_format),
+                            mealPlan.optString("evening_meal", "-")));
+                    tvNightCurrent.setText(String.format(getString(R.string.night_meal_format),
+                            mealPlan.optString("night_meal", "-")));
 
-                    Log.d(TAG, "Current meal plan loaded: " + mealPlan);
+                    Log.d(TAG, String.format(getString(R.string.current_meal_plan_loaded), mealPlan));
                 } catch (Exception e) {
-                    Log.e(TAG, "Error parsing meal plan JSON", e);
+                    Log.e(TAG, getString(R.string.error_parsing_meal_plan), e);
                 }
             }
 
@@ -115,8 +119,10 @@ public class AddMealActivity extends AppCompatActivity {
             public void onFailure(String message) {
                 progress.dismiss();
                 cardCurrentMeal.setVisibility(View.GONE);
-                Log.w(TAG, "Failed to load meal plan: " + message);
-                Toast.makeText(AddMealActivity.this, "No existing meal plan found", Toast.LENGTH_SHORT).show();
+                Log.w(TAG, String.format(getString(R.string.failed_to_load_meal_plan), message));
+                Toast.makeText(AddMealActivity.this,
+                        getString(R.string.no_existing_meal_plan_found),
+                        Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -126,7 +132,9 @@ public class AddMealActivity extends AppCompatActivity {
     // --------------------------
     private void saveMealData(String patientId) {
         if (patientId == null || patientId.isEmpty()) {
-            Toast.makeText(this, "Patient ID missing!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,
+                    getString(R.string.patient_id_missing_error),
+                    Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -136,19 +144,23 @@ public class AddMealActivity extends AppCompatActivity {
         String night = etNight.getText().toString().trim();
 
         if (morning.isEmpty() && afternoon.isEmpty() && evening.isEmpty() && night.isEmpty()) {
-            Toast.makeText(this, "Please enter at least one meal entry", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,
+                    getString(R.string.enter_at_least_one_meal_error),
+                    Toast.LENGTH_SHORT).show();
             return;
         }
 
         SharedPrefManager sharedPref = new SharedPrefManager(this);
         String guardianId = sharedPref.getReferenceId();
         if (guardianId == null || guardianId.isEmpty()) {
-            Toast.makeText(this, "Reference ID not found!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,
+                    getString(R.string.reference_id_not_found_error),
+                    Toast.LENGTH_SHORT).show();
             return;
         }
 
         ProgressDialog progress = new ProgressDialog(this);
-        progress.setMessage("Saving meal plan...");
+        progress.setMessage(getString(R.string.saving_meal_plan));
         progress.setCancelable(false);
         progress.show();
 
@@ -165,14 +177,18 @@ public class AddMealActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(String message) {
                         progress.dismiss();
-                        Toast.makeText(AddMealActivity.this, message, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AddMealActivity.this,
+                                getString(R.string.meal_plan_save_success),
+                                Toast.LENGTH_SHORT).show();
                         finish();
                     }
 
                     @Override
                     public void onFailure(String message) {
                         progress.dismiss();
-                        Toast.makeText(AddMealActivity.this, "Failed: " + message, Toast.LENGTH_LONG).show();
+                        Toast.makeText(AddMealActivity.this,
+                                String.format(getString(R.string.save_failed_with_message), message),
+                                Toast.LENGTH_LONG).show();
                     }
                 }
         );

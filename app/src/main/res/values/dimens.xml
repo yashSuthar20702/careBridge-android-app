@@ -72,4 +72,131 @@
 
     <!-- Additional dimension values for medication card -->
     <dimen name="time_circle_size">50dp</dimen>
+
+    <!-- Typography spacing -->
+    <dimen name="letter_spacing_small">0.02</dimen>
+    <dimen name="letter_spacing_medium">0.04</dimen>
+    <dimen name="letter_spacing_large">0.06</dimen>
+
+    <!-- Text alpha values -->
+    <dimen name="text_alpha_primary">1.0</dimen>
+    <dimen name="text_alpha_secondary">0.85</dimen>
+    <dimen name="text_alpha_disabled">0.38</dimen>
+    <dimen name="text_alpha_hint">0.60</dimen>
+
+
+    <!-- Map Activity Dimensions -->
+    <dimen name="map_bottom_sheet_height">300dp</dimen>
+    <dimen name="map_camera_zoom">15</dimen>
+    <dimen name="map_camera_zoom_close">17</dimen>
+    <dimen name="map_radius_meters">10000</dimen>
+    <dimen name="header_height">56dp</dimen>
+    <!-- Layout weight values -->
+    <integer name="weight_one">1</integer>
+    <integer name="weight_two">2</integer>
+    <integer name="weight_three">3</integer>
+
+    <!-- Dialog Dimensions -->
+    <dimen name="dialog_padding_outer">36dp</dimen>
+    <dimen name="dialog_padding_inner">24dp</dimen>
+    <dimen name="dialog_corner_radius">28dp</dimen>
+    <dimen name="dialog_elevation">14dp</dimen>
+    <dimen name="dialog_stroke_width">1dp</dimen>
+
+    <!-- Dialog Text Dimensions -->
+    <dimen name="dialog_title_text_size">24sp</dimen>
+    <dimen name="dialog_message_text_size">18sp</dimen>
+    <dimen name="dialog_title_padding_bottom">12dp</dimen>
+    <dimen name="dialog_message_padding_bottom">32dp</dimen>
+    <dimen name="dialog_line_spacing">4dp</dimen>
+
+    <!-- Dialog Button Dimensions -->
+    <dimen name="dialog_button_height">60dp</dimen>
+    <dimen name="dialog_button_corner_radius">24dp</dimen>
+    <dimen name="dialog_button_stroke_width">1dp</dimen>
+    <dimen name="dialog_button_spacing">20dp</dimen>
+    <!-- Guardian Home Fragment Dimensions -->
+    <dimen name="viewpager_height">180dp</dimen>
+    <dimen name="map_card_height">250dp</dimen>
+    <dimen name="wellness_image_height">180dp</dimen>
+    <dimen name="header_padding_horizontal">20dp</dimen>
+
+    <!-- Layout weight values -->
+    <integer name="weight_sum_two">2</integer>
+
+    <!-- Animation durations -->
+    <integer name="shimmer_duration">1200</integer>
+    <integer name="animation_duration_short">300</integer>
+    <integer name="animation_duration_medium">500</integer>
+    <integer name="animation_duration_long">800</integer>
+
+    <!-- Form Layout Dimensions -->
+    <dimen name="label_width">120dp</dimen>
+    <dimen name="form_row_padding_vertical">6dp</dimen>
+    <dimen name="video_player_height">200dp</dimen>
+
+    <!-- Place Card Dimensions -->
+    <dimen name="place_card_margin_bottom">10dp</dimen>
+    <dimen name="button_height_small">40dp</dimen>
+    <dimen name="place_card_padding">12dp</dimen>
+
+    <!-- Place Card Dimensions -->
+
+    <dimen name="place_card_text_margin_top">4dp</dimen>
+    <dimen name="place_card_button_margin_top">6dp</dimen>
+
+    <!-- Patient Card Dimensions -->
+    <dimen name="patient_card_corner_radius">16dp</dimen>
+    <dimen name="patient_card_stroke_width">2dp</dimen>
+    <dimen name="patient_card_elevation">6dp</dimen>
+    <dimen name="patient_card_padding">16dp</dimen>
+
+    <!-- Patient Card Header -->
+    <dimen name="patient_name_text_size">20sp</dimen>
+    <dimen name="patient_name_padding_bottom">8dp</dimen>
+    <dimen name="status_padding_horizontal">16dp</dimen>
+    <dimen name="status_padding_vertical">8dp</dimen>
+    <dimen name="status_text_size">14sp</dimen>
+
+    <!-- Patient Card Role -->
+    <dimen name="role_text_size">16sp</dimen>
+    <dimen name="role_padding_bottom">12dp</dimen>
+
+    <!-- Patient Card Info Rows -->
+    <dimen name="info_label_width">120dp</dimen>
+    <dimen name="info_text_size">16sp</dimen>
+    <dimen name="info_padding_vertical">4dp</dimen>
+
+    <!-- Add Meal Button -->
+    <dimen name="add_meal_button_margin_top">12dp</dimen>
+    <dimen name="add_meal_button_icon_padding">12dp</dimen>
+    <dimen name="add_meal_button_padding_vertical">14dp</dimen>
+    <dimen name="add_meal_button_corner_radius">16dp</dimen>
+
+    <!-- Additional padding/margin values if not already defined -->
+    <dimen name="label_width_standard">120dp</dimen>
+
+    <!-- Empty Medicine Card Dimensions -->
+    <dimen name="empty_medicine_card_margin">12dp</dimen>
+    <dimen name="empty_medicine_card_corner_radius">16dp</dimen>
+    <dimen name="empty_medicine_card_elevation">4dp</dimen>
+    <dimen name="empty_medicine_card_stroke_width">1dp</dimen>
+    <dimen name="empty_medicine_card_padding">24dp</dimen>
+
+    <!-- Empty Medicine Card Icon -->
+    <dimen name="empty_medicine_icon_width">64dp</dimen>
+    <dimen name="empty_medicine_icon_height">72dp</dimen>
+    <dimen name="empty_medicine_icon_margin_bottom">12dp</dimen>
+
+    <!-- Empty Medicine Card Text -->
+    <dimen name="empty_medicine_text_size">15sp</dimen>
+
+    <!-- Note: Most of these dimensions already exist in your dimens.xml:
+         @dimen/padding_small (8dp) - using this instead of 12dp for consistency
+         @dimen/margin_xsmall (2dp)
+         @dimen/text_size_medium (16sp)
+         @dimen/text_size_small (14sp)
+         @dimen/text_size_xsmall (13sp)
+    -->
+
 </resources>

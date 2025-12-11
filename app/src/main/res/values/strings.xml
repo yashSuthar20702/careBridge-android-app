@@ -70,6 +70,7 @@
     <string name="patient_allergies_placeholder">Allergies: Penicillin, Shellfish</string>
     <string name="patient_conditions_placeholder">Conditions: Hypertension, Diabetes</string>
     <string name="hello_world">Hello World!</string>
+
     <!-- Dashboard card titles -->
     <string name="upcoming_medicines_title">Upcoming Medicines</string>
     <string name="medicine_status_title">Medicine Status</string>
@@ -79,6 +80,7 @@
     <string name="upcoming_medicines_content">John: 8:00 AM - Paracetamol\nSarah: 10:30 AM - Vitamin D</string>
     <string name="medicine_status_content">John: ✅ Taken\nSarah: ⚠️ Missed</string>
     <string name="tips_tricks_content">💡 Encourage patients to drink enough water.\n💡 Keep medicine boxes organized by time.\n💡 Track sleep and food intake regularly.</string>
+
     <!-- Dashboard labels and titles -->
     <string name="assigned_patients_label">Assigned Patients</string>
     <string name="active_patients_label">Active Patients</string>
@@ -123,26 +125,21 @@
     <string name="medication_time_placeholder">08:00 AM</string>
 
     <!-- Patient card field labels -->
-
     <string name="gender_label">Gender: </string>
     <string name="contact_label">Contact: </string>
-
     <string name="assigned_label">Assigned: </string>
     <string name="notes_label">Notes: </string>
-
 
     <!-- Error and status messages -->
     <string name="no_patients_assigned_message">No patients are currently assigned to you.</string>
     <string name="patient_data_load_error">Failed to load patient data. Please check your internet and swipe down to retry.</string>
     <string name="not_available_text">N/A</string>
 
-
     <!-- Guardian personal info labels -->
     <string name="full_name_label">Full Name:</string>
     <string name="type_label">Type:</string>
     <string name="occupation_label">Occupation:</string>
     <string name="availability_label">Availability:</string>
-
     <string name="address_label">Address:</string>
 
     <!-- Error messages -->
@@ -150,21 +147,19 @@
     <string name="guardian_fetch_failed_prefix">Failed to fetch guardian info: </string>
 
     <!-- Patient info labels -->
-
     <string name="height_label">Height:</string>
     <string name="weight_label">Weight:</string>
     <string name="past_surgeries_label">Past Surgeries:</string>
     <string name="current_symptoms_label">Current Symptoms:</string>
     <string name="status_label">Status:</string>
 
-
     <!-- Error messages -->
     <string name="no_patient_data_found">⚠️ No patient data found. Swipe down to retry.</string>
-
 
     <!-- Measurement units -->
     <string name="cm_unit"> cm</string>
     <string name="kg_unit"> kg</string>
+
     <!-- Log messages -->
     <string name="log_btn_logout_not_found">⚠️ btnHeaderLogout not found!</string>
     <string name="log_tv_name_not_found">⚠️ tvGuardianName not found!</string>
@@ -198,6 +193,134 @@
     <string name="submit">Submit</string>
     <string name="clear">Clear</string>
     <string name="back">Back</string>
+
+    <!-- NEW STRINGS FROM LAYOUT -->
+    <string name="date_label">Date:</string>
+    <string name="current_meal_plan">Current Meal Plan</string>
+    <string name="morning_current_format">Morning: %s</string>
+    <string name="afternoon_current_format">Afternoon: %s</string>
+    <string name="evening_current_format">Evening: %s</string>
+    <string name="night_current_format">Night: %s</string>
+    <string name="no_meal_plan_found">No existing meal plan found</string>
+    <string name="loading_meal_plan">Loading current meal plan...</string>
+    <string name="saving_meal_plan">Saving meal plan...</string>
+    <string name="meal_save_success">Meal plan saved successfully</string>
+    <string name="meal_save_failure">Failed to save meal plan</string>
+    <string name="enter_at_least_one_meal">Please enter at least one meal entry</string>
+    <string name="patient_id_missing">Patient ID missing!</string>
+    <string name="reference_id_not_found">Reference ID not found!</string>
+    <string name="nearby_places">Nearby Places</string>
+
+    <string name="nearby_hospitals_medical_stores">Nearby Hospitals &amp; Medical Stores</string>
+
+    <!-- Guardian Home Fragment Strings -->
+    <string name="date_placeholder">Wednesday, Nov 05 2025</string>
+    <string name="time_placeholder">11:42 AM</string>
+    <string name="todays_medicines">Today\'s Medicines</string>
+    <string name="no_medicines_scheduled">No medicines scheduled for now.</string>
+    <string name="mental_wellness_tips">Mental Wellness &amp; Tips</string>
+    <string name="daily_mindfulness_practice">Daily Mindfulness Practice</string>
+    <string name="mindfulness_tip_content">Start your day with a 5-min meditation to boost focus and reduce stress.</string>
+    <string name="view_full_map">View Full Map</string>
+    <string name="no_patients_assigned">No patients assigned</string>
+    <string name="loading_patients">Loading patients...</string>
+    <string name="loading_medicines">Loading medicines...</string>
+    <string name="failed_to_load_patients">Failed to load patients</string>
+    <string name="failed_to_load_medicines">Failed to load medicines</string>
+    <string name="no_medicines_for_patient">No medicines for this patient</string>
+    <!-- Patient Home Fragment Strings -->
+
+    <string name="taken_label">Taken</string>
+    <string name="remaining_label">Remaining</string>
+
+    <string name="daily_tip_title">Daily Tip</string>
+    <string name="daily_tip_default">Stay hydrated, it improves energy &amp; focus.</string>
+    <string name="learn_more">Learn More</string>
+    <string name="health_video_title">Health Video</string>
+    <string name="no_internet_connection">No internet connection</string>
+    <string name="failed_to_load_prescriptions">Failed to load prescriptions</string>
+    <string name="failed_to_load_logs">Failed to load medicine logs</string>
+    <string name="loading_prescriptions">Loading prescriptions...</string>
+    <string name="loading_medicine_logs">Loading medicine logs...</string>
+    <!-- Medication Card Strings -->
+    <string name="duration_placeholder">For 5 days</string>
+    <string name="instructions_placeholder">Take with warm water (With food)</string>
+    <string name="dosage_format">%s (%s)</string>
+    <string name="time_summary_format">Take at: %s</string>
+    <string name="duration_format">For %s days</string>
+    <string name="instructions_format">Instructions: %s • %s</string>
+    <string name="with_food">With food</string>
+    <string name="without_food">Without food</string>
+    <string name="na">N/A</string>
+
+    <!-- Patient Summary Card Strings -->
+    <string name="medicine_count_placeholder">0</string>
+    <string name="medicine_count_format">%d</string>
+    <string name="patient_summary_title">Medicine Summary</string>
+    <string name="loading_patient_summary">Loading patient summary...</string>
+    <string name="failed_to_load_summary">Failed to load patient summary</string>
+
+    <!-- Nearby Places Card Strings -->
+    <string name="place_name_placeholder">Hospital Name</string>
+    <string name="distance_placeholder">1.3 km away</string>
+    <string name="address_placeholder">Address here</string>
+    <string name="navigate">Navigate</string>
+    <string name="km_away_format">%.1f km away</string>
+    <string name="m_away_format">%.0f m away</string>
+    <string name="place_name_not_available">Place name not available</string>
+    <string name="address_not_available">Address not available</string>
+    <string name="distance_calculating">Calculating distance...</string>
+    <!-- NEW STRINGS FOR PLACE CARD -->
+    <string name="place_card_default_name">Hospital Name</string>
+    <string name="place_card_default_distance">1.3 km away</string>
+    <string name="place_card_default_address">Address here</string>
+
+    <!-- Existing strings... -->
+
+    <!-- Patient Card Labels -->
+    <string name="patient_card_age_label">Age:</string>
+    <string name="patient_card_gender_label">Gender:</string>
+    <string name="patient_card_contact_label">Contact:</string>
+    <string name="patient_card_email_label">Email:</string>
+    <string name="patient_card_assigned_label">Assigned:</string>
+    <string name="patient_card_notes_label">Notes:</string>
+
+    <!-- Add Meal Button -->
+    <string name="add_meal_button">Add Meal</string>
+
+    <!-- Padding and Margin Strings -->
+    <string name="padding_16dp">16dp</string>
+    <string name="padding_8dp">8dp</string>
+    <string name="padding_4dp">4dp</string>
+    <string name="margin_12dp">12dp</string>
+
+    <!-- Medicine Card Strings -->
+    <string name="empty_medicine_card_message">No medicines assigned by the doctor yet</string>
+    <!-- Add Meal Activity Strings -->
+    <string name="add_meal_activity_tag">AddMealActivity</string>
+    <string name="patient_id_log_format">Received Patient ID: %s</string>
+    <string name="patient_name_log_format">Received Patient Name: %s</string>
+    <string name="loading_current_meal_plan">Loading current meal plan...</string>
+    <string name="current_meal_plan_loaded">Current meal plan loaded: %s</string>
+    <string name="error_parsing_meal_plan">Error parsing meal plan JSON</string>
+    <string name="failed_to_load_meal_plan">Failed to load meal plan: %s</string>
+    <string name="no_existing_meal_plan_found">No existing meal plan found</string>
+    <string name="meal_plan_save_success">Meal plan saved successfully</string>
+    <string name="meal_plan_save_failed">Failed to save meal plan</string>
+    <string name="patient_id_missing_error">Patient ID missing!</string>
+    <string name="enter_at_least_one_meal_error">Please enter at least one meal entry</string>
+    <string name="reference_id_not_found_error">Reference ID not found!</string>
+    <string name="save_failed_with_message">Failed: %s</string>
+
+    <!-- Meal Plan Display Format Strings -->
+    <string name="morning_meal_format">Morning: %s</string>
+    <string name="afternoon_meal_format">Afternoon: %s</string>
+    <string name="evening_meal_format">Evening: %s</string>
+    <string name="night_meal_format">Night: %s</string>
+
+    <!-- Date Format Strings -->
+    <string name="date_format_storage">yyyy-MM-dd</string>
+    <string name="date_format_display">EEEE, MMM dd, yyyy</string>
 
 
 </resources>

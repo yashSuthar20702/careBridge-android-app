@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:shimmer_auto_start="true"
-            app:shimmer_duration="1000"
+            app:shimmer_duration="@integer/animation_duration_medium"
             android:layout_marginBottom="@dimen/margin_medium">
 
             <LinearLayout
@@ -56,7 +56,7 @@
             android:layout_marginBottom="@dimen/margin_medium"
             android:visibility="gone"
             app:cardCornerRadius="@dimen/corner_radius_xlarge"
-            app:strokeWidth="1dp"
+            app:strokeWidth="@dimen/dialog_stroke_width"
             app:cardBackgroundColor="@color/input_background">
 
             <LinearLayout
@@ -78,7 +78,7 @@
                     android:id="@+id/tvWarningMessage"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="@integer/weight_one"
                     android:text="@string/guardian_load_error_message"
                     android:textColor="@color/text_primary"
                     android:textSize="@dimen/text_size_medium" />

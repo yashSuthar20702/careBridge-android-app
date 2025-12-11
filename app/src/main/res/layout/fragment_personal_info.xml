@@ -27,7 +27,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:shimmer_auto_start="true"
-                app:shimmer_duration="1200">
+                app:shimmer_duration="@integer/shimmer_duration">
 
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
@@ -36,7 +36,7 @@
                     app:cardCornerRadius="@dimen/corner_radius_xlarge"
                     app:cardElevation="@dimen/elevation_large"
                     app:strokeColor="@color/accent_blue"
-                    app:strokeWidth="1dp"
+                    app:strokeWidth="@dimen/dialog_stroke_width"
                     app:cardBackgroundColor="@color/input_background">
 
                     <LinearLayout
@@ -75,7 +75,7 @@
                 android:layout_marginBottom="@dimen/margin_medium"
                 android:visibility="gone"
                 app:cardCornerRadius="@dimen/corner_radius_xlarge"
-                app:strokeWidth="1dp"
+                app:strokeWidth="@dimen/dialog_stroke_width"
                 app:cardBackgroundColor="@color/input_background">
 
                 <LinearLayout
@@ -97,7 +97,7 @@
                         android:id="@+id/tvWarningMessage"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:layout_weight="@integer/weight_one"
                         android:text="@string/network_error_retry_message"
                         android:textColor="@color/text_primary"
                         android:textSize="@dimen/text_size_medium" />
@@ -120,7 +120,7 @@
                     app:cardCornerRadius="@dimen/corner_radius_xlarge"
                     app:cardElevation="@dimen/elevation_small"
                     app:strokeColor="@color/accent_blue"
-                    app:strokeWidth="1dp"
+                    app:strokeWidth="@dimen/dialog_stroke_width"
                     app:cardBackgroundColor="@color/input_background">
 
                     <LinearLayout
@@ -175,7 +175,7 @@
                     app:cardCornerRadius="@dimen/corner_radius_xlarge"
                     app:cardElevation="@dimen/elevation_small"
                     app:strokeColor="@color/accent_green"
-                    app:strokeWidth="1dp"
+                    app:strokeWidth="@dimen/dialog_stroke_width"
                     app:cardBackgroundColor="@color/input_background">
 
                     <LinearLayout
@@ -243,7 +243,7 @@
                     app:cardCornerRadius="@dimen/corner_radius_xlarge"
                     app:cardElevation="@dimen/elevation_small"
                     app:strokeColor="@color/accent_purple"
-                    app:strokeWidth="1dp"
+                    app:strokeWidth="@dimen/dialog_stroke_width"
                     app:cardBackgroundColor="@color/input_background">
 
                     <LinearLayout
