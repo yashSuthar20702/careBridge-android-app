@@ -33,13 +33,17 @@ public class HomeFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view,
+                              @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         initIndicators();
@@ -48,7 +52,7 @@ public class HomeFragment extends Fragment {
     }
 
     /**
-     * Initialize page indicators
+     * ✅ Initialize page indicators
      */
     private void initIndicators() {
         indicators = new View[]{
@@ -57,35 +61,41 @@ public class HomeFragment extends Fragment {
                 binding.homeIndicator2,
                 binding.homeIndicator3,
                 binding.homeIndicator4,
-                binding.homeIndicator5
+                binding.homeIndicator5,
+                binding.homeIndicator6
         };
 
         for (int i = Constants.POSITION_FIRST; i < indicators.length; i++) {
             int index = i;
-            indicators[i].setOnClickListener(v -> binding.viewPager.setCurrentItem(index, true));
+            indicators[i].setOnClickListener(v ->
+                    binding.viewPager.setCurrentItem(index, true)
+            );
         }
     }
 
     /**
-     * Set up ViewPager with adapter and page change listener
+     * ✅ FIXED: Set up ViewPager with correct Activity-based adapter
      */
     private void setupViewPager() {
-        HomePagerAdapter adapter = new HomePagerAdapter(this);
+        // ✅ THIS FIXES YOUR CRASH
+        HomePagerAdapter adapter = new HomePagerAdapter(requireActivity());
         binding.viewPager.setAdapter(adapter);
 
-        binding.viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-            @Override
-            public void onPageSelected(int position) {
-                super.onPageSelected(position);
-                updateIndicators(position);
-            }
-        });
+        binding.viewPager.registerOnPageChangeCallback(
+                new ViewPager2.OnPageChangeCallback() {
+                    @Override
+                    public void onPageSelected(int position) {
+                        super.onPageSelected(position);
+                        updateIndicators(position);
+                    }
+                }
+        );
 
         updateIndicators(Constants.POSITION_FIRST);
     }
 
     /**
-     * Update indicator appearance based on active position
+     * ✅ Update indicator appearance based on active position
      */
     private void updateIndicators(int activePos) {
         for (int i = Constants.POSITION_FIRST; i < indicators.length; i++) {
@@ -104,46 +114,68 @@ public class HomeFragment extends Fragment {
     }
 
     /**
-     * Animate active indicator with scale up
+     * ✅ Animate active indicator with scale up
      */
     private void animateActive(View view) {
-        PropertyValuesHolder scaleX = PropertyValuesHolder.ofFloat(View.SCALE_X,
-                Constants.FLOAT_SCALE_INACTIVE, Constants.FLOAT_SCALE_ACTIVE);
-        PropertyValuesHolder scaleY = PropertyValuesHolder.ofFloat(View.SCALE_Y,
-                Constants.FLOAT_SCALE_INACTIVE, Constants.FLOAT_SCALE_ACTIVE);
+        PropertyValuesHolder scaleX = PropertyValuesHolder.ofFloat(
+                View.SCALE_X,
+                Constants.FLOAT_SCALE_INACTIVE,
+                Constants.FLOAT_SCALE_ACTIVE
+        );
 
-        ObjectAnimator anim = ObjectAnimator.ofPropertyValuesHolder(view, scaleX, scaleY);
+        PropertyValuesHolder scaleY = PropertyValuesHolder.ofFloat(
+                View.SCALE_Y,
+                Constants.FLOAT_SCALE_INACTIVE,
+                Constants.FLOAT_SCALE_ACTIVE
+        );
+
+        ObjectAnimator anim =
+                ObjectAnimator.ofPropertyValuesHolder(view, scaleX, scaleY);
+
         anim.setDuration(Constants.ANIMATION_DURATION_MEDIUM);
         anim.setInterpolator(new AccelerateDecelerateInterpolator());
         anim.start();
     }
 
     /**
-     * Animate inactive indicator with scale down
+     * ✅ Animate inactive indicator with scale down
      */
     private void animateInactive(View view) {
-        PropertyValuesHolder scaleX = PropertyValuesHolder.ofFloat(View.SCALE_X,
-                Constants.FLOAT_SCALE_ACTIVE, Constants.FLOAT_SCALE_INACTIVE);
-        PropertyValuesHolder scaleY = PropertyValuesHolder.ofFloat(View.SCALE_Y,
-                Constants.FLOAT_SCALE_ACTIVE, Constants.FLOAT_SCALE_INACTIVE);
+        PropertyValuesHolder scaleX = PropertyValuesHolder.ofFloat(
+                View.SCALE_X,
+                Constants.FLOAT_SCALE_ACTIVE,
+                Constants.FLOAT_SCALE_INACTIVE
+        );
 
-        ObjectAnimator anim = ObjectAnimator.ofPropertyValuesHolder(view, scaleX, scaleY);
+        PropertyValuesHolder scaleY = PropertyValuesHolder.ofFloat(
+                View.SCALE_Y,
+                Constants.FLOAT_SCALE_ACTIVE,
+                Constants.FLOAT_SCALE_INACTIVE
+        );
+
+        ObjectAnimator anim =
+                ObjectAnimator.ofPropertyValuesHolder(view, scaleX, scaleY);
+
         anim.setDuration(Constants.ANIMATION_DURATION_SHORT);
         anim.setInterpolator(new AccelerateDecelerateInterpolator());
         anim.start();
     }
 
     /**
-     * Animate margin changes for indicators
+     * ✅ Animate margin changes for indicators
      */
     private void animateMargin(View view, boolean isActive) {
-        ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) view.getLayoutParams();
+        ViewGroup.MarginLayoutParams params =
+                (ViewGroup.MarginLayoutParams) view.getLayoutParams();
 
         int start = params.leftMargin;
-        int end = isActive ? Constants.INDICATOR_MARGIN_ACTIVE : Constants.INDICATOR_MARGIN_INACTIVE;
+        int end = isActive
+                ? Constants.INDICATOR_MARGIN_ACTIVE
+                : Constants.INDICATOR_MARGIN_INACTIVE;
 
         ValueAnimator animator = ValueAnimator.ofInt(start, end);
         animator.setDuration(Constants.ANIMATION_DURATION_MEDIUM);
+
         animator.addUpdateListener(animation -> {
             int marginValue = (int) animation.getAnimatedValue();
             params.leftMargin = marginValue;
@@ -155,36 +187,48 @@ public class HomeFragment extends Fragment {
     }
 
     /**
-     * Start time update handler
+     * ✅ Start time update handler
      */
     private void startTimeUpdates() {
         timeHandler = new Handler();
+
         timeRunnable = new Runnable() {
             @Override
             public void run() {
                 updateTime();
-                timeHandler.postDelayed(this, Constants.UPDATE_INTERVAL_FAST);
+                timeHandler.postDelayed(
+                        this,
+                        Constants.UPDATE_INTERVAL_FAST
+                );
             }
         };
+
         timeHandler.post(timeRunnable);
     }
 
     /**
-     * Update time display
+     * ✅ Update time display
      */
     private void updateTime() {
         if (binding == null) return;
 
-        SimpleDateFormat sdf = new SimpleDateFormat(Constants.TIME_FORMAT_HH_MM, Locale.getDefault());
+        SimpleDateFormat sdf =
+                new SimpleDateFormat(
+                        Constants.TIME_FORMAT_HH_MM,
+                        Locale.getDefault()
+                );
+
         binding.homeTime.setText(sdf.format(new Date()));
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+
         if (timeHandler != null) {
             timeHandler.removeCallbacks(timeRunnable);
         }
+
         binding = null;
     }
 }

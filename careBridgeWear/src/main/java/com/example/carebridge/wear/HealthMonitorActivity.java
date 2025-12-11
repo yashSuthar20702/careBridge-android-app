@@ -72,7 +72,6 @@ public class HealthMonitorActivity extends AppCompatActivity implements
      * Set up UI components
      */
     private void setupUI() {
-        binding.healthMonitorBackButton.setOnClickListener(v -> finish());
         binding.healthMonitorTitle.setText(getString(R.string.health_monitor_title));
     }
 

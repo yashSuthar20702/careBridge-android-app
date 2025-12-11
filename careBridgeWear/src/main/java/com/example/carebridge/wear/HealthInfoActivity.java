@@ -37,7 +37,6 @@ public class HealthInfoActivity extends AppCompatActivity {
         wearSharedPrefManager = new WearSharedPrefManager(this);
 
         setupRecyclerView();
-        setupClickListeners();
         fetchPatientData();
     }
 
@@ -52,13 +51,6 @@ public class HealthInfoActivity extends AppCompatActivity {
 
         // Show loading state initially
         showLoadingState();
-    }
-
-    /**
-     * Set up click listeners for UI elements
-     */
-    private void setupClickListeners() {
-        binding.healthInfoBackButton.setOnClickListener(v -> finish());
     }
 
     /**

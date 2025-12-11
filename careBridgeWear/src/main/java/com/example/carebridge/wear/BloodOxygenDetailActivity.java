@@ -46,7 +46,6 @@ public class BloodOxygenDetailActivity extends AppCompatActivity {
     }
 
     private void setupUI() {
-        binding.bloodOxygenBackButton.setOnClickListener(v -> finish());
         binding.bloodOxygenTitle.setText(getString(R.string.blood_oxygen_title));
 
         // Set normal range

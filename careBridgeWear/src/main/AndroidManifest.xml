@@ -90,6 +90,13 @@
 
 
 
+        <!-- ✅✅✅ ONLY ADDITION: Meal Planner Wear Activity -->
+        <activity
+            android:name=".MealPlannerWearActivity"
+            android:taskAffinity="${applicationId}"
+            android:theme="@style/Theme.CareBridgeWear.NoActionBar" />
+        <!-- ✅✅✅ NOTHING ELSE MODIFIED -->
+
         <!-- FIXED: Firebase Messaging Service -->
         <service
             android:name=".service.WearFirebaseMessagingService"

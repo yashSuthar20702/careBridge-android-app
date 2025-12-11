@@ -166,4 +166,28 @@
     <string name="page_indicator_4">Page 4 indicator</string>
     <string name="page_indicator_5">Page 5 indicator</string>
     <string name="page_indicator_6">Page 6 indicator</string>
+
+
+        <string name="meal_planner">Meal Planner</string>
+        <string name="back_button">Back</string>
+
+
+        <string name="meal_time_sample">Morning</string>
+        <string name="meal_name_sample">Oats and Milk</string>
+    <string name="evening_meal">Evening Meal</string>
+
+    <string name="breakfast">Breakfast</string>
+    <string name="lunch">Lunch</string>
+    <string name="evening">Evening</string>
+    <string name="dinner">Dinner</string>
+
+    <string name="sample_breakfast_desc">Oats and  Fruits</string>
+    <string name="sample_lunch_desc">Rice and  Dal</string>
+    <string name="sample_evening_desc">Tea and  Snacks</string>
+    <string name="sample_dinner_desc">Chapati and  Curry</string>
+
+
+
+
 </resources>
+

@@ -12,8 +12,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.carebridge.R;
 import com.example.carebridge.shared.controller.MealController;
 import com.example.carebridge.shared.utils.SharedPrefManager;
-import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.textfield.TextInputEditText;
 
 import org.json.JSONObject;
 
@@ -30,7 +30,7 @@ public class AddMealActivity extends AppCompatActivity {
     private MaterialCardView cardCurrentMeal;
     private TextView tvMorningCurrent, tvAfternoonCurrent, tvEveningCurrent, tvNightCurrent;
 
-    private String formattedDate; // YYYY-MM-DD (API format)
+    private String formattedDate;
     private MealController mealController;
 
     @Override
@@ -40,7 +40,7 @@ public class AddMealActivity extends AppCompatActivity {
 
         mealController = new MealController();
 
-        // Get patient data
+        // Retrieve patient data from Intent
         String patientId = getIntent().getStringExtra("PATIENT_ID");
         String patientName = getIntent().getStringExtra("PATIENT_NAME");
 
@@ -49,19 +49,15 @@ public class AddMealActivity extends AppCompatActivity {
 
         initViews();
 
-        if (patientName != null && !patientName.isEmpty()) {
-            tvPatientName.setText(patientName);
-        }
+        if (patientName != null) tvPatientName.setText(patientName);
 
         formattedDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
         String displayDate = new SimpleDateFormat("EEEE, MMM dd, yyyy", Locale.getDefault()).format(new Date());
         tvMealDate.setText(displayDate);
 
-        findViewById(R.id.btnBack).setOnClickListener(v -> onBackPressed());
-        findViewById(R.id.btnSubmit).setOnClickListener(v -> saveMealData(patientId));
-        findViewById(R.id.btnClear).setOnClickListener(v -> clearForm());
+        setupClickListeners(patientId);
 
-        if (patientId != null) {
+        if (patientId != null && !patientId.isEmpty()) {
             fetchCurrentMealPlan(patientId);
         }
     }
@@ -71,6 +67,7 @@ public class AddMealActivity extends AppCompatActivity {
         etAfternoon = findViewById(R.id.etAfternoon);
         etEvening = findViewById(R.id.etEvening);
         etNight = findViewById(R.id.etNight);
+
         tvPatientName = findViewById(R.id.tvPatientName);
         tvMealDate = findViewById(R.id.tvMealDate);
 
@@ -79,25 +76,28 @@ public class AddMealActivity extends AppCompatActivity {
         tvAfternoonCurrent = findViewById(R.id.tvAfternoonCurrent);
         tvEveningCurrent = findViewById(R.id.tvEveningCurrent);
         tvNightCurrent = findViewById(R.id.tvNightCurrent);
-
-        Log.d(TAG, "UI Views initialized successfully");
     }
 
-    private void fetchCurrentMealPlan(String patientId) {
-        SharedPrefManager sharedPref = new SharedPrefManager(this);
-        String guardianId = sharedPref.getReferenceId();
+    private void setupClickListeners(String patientId) {
+        findViewById(R.id.btnBack).setOnClickListener(v -> onBackPressed());
+        findViewById(R.id.btnSubmit).setOnClickListener(v -> saveMealData(patientId));
+        findViewById(R.id.btnClear).setOnClickListener(v -> clearForm());
+    }
 
+    // --------------------------
+    // Fetch Current Meal Plan using new API
+    // --------------------------
+    private void fetchCurrentMealPlan(String patientId) {
         ProgressDialog progress = new ProgressDialog(this);
         progress.setMessage("Loading current meal plan...");
         progress.setCancelable(false);
         progress.show();
 
-        mealController.fetchMealPlan(patientId, formattedDate, new MealController.MealFetchCallback() {
+        mealController.fetchMealPlanByCaseId(patientId, new MealController.MealFetchCallback() {
             @Override
             public void onSuccess(JSONObject mealPlan) {
                 progress.dismiss();
                 try {
-                    // Show the Current Meal Plan card
                     cardCurrentMeal.setVisibility(View.VISIBLE);
 
                     tvMorningCurrent.setText("Morning: " + mealPlan.optString("morning_meal", "-"));
@@ -105,24 +105,27 @@ public class AddMealActivity extends AppCompatActivity {
                     tvEveningCurrent.setText("Evening: " + mealPlan.optString("evening_meal", "-"));
                     tvNightCurrent.setText("Night: " + mealPlan.optString("night_meal", "-"));
 
-                    Log.d(TAG, "Current meal plan loaded successfully: " + mealPlan.toString());
+                    Log.d(TAG, "Current meal plan loaded: " + mealPlan);
                 } catch (Exception e) {
-                    Log.e(TAG, "Error parsing meal plan JSON: " + e.getMessage(), e);
+                    Log.e(TAG, "Error parsing meal plan JSON", e);
                 }
             }
 
             @Override
             public void onFailure(String message) {
                 progress.dismiss();
+                cardCurrentMeal.setVisibility(View.GONE);
                 Log.w(TAG, "Failed to load meal plan: " + message);
                 Toast.makeText(AddMealActivity.this, "No existing meal plan found", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
+    // --------------------------
+    // Save Meal Plan
+    // --------------------------
     private void saveMealData(String patientId) {
-        if (patientId == null) {
-            Log.e(TAG, "Error: Patient ID is NULL!");
+        if (patientId == null || patientId.isEmpty()) {
             Toast.makeText(this, "Patient ID missing!", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -139,7 +142,6 @@ public class AddMealActivity extends AppCompatActivity {
 
         SharedPrefManager sharedPref = new SharedPrefManager(this);
         String guardianId = sharedPref.getReferenceId();
-
         if (guardianId == null || guardianId.isEmpty()) {
             Toast.makeText(this, "Reference ID not found!", Toast.LENGTH_SHORT).show();
             return;

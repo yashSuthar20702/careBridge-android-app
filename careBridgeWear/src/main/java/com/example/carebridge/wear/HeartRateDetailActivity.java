@@ -91,7 +91,6 @@ public class HeartRateDetailActivity extends AppCompatActivity implements Sensor
      * Set up UI components
      */
     private void setupUI() {
-        binding.heartRateBackButton.setOnClickListener(v -> finish());
         binding.heartRateTitle.setText(getString(R.string.heart_rate_title));
 
         binding.startMonitoringButton.setOnClickListener(v -> toggleMonitoring());

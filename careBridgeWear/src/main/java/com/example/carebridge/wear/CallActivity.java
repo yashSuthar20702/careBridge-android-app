@@ -51,8 +51,6 @@ public class CallActivity extends AppCompatActivity implements GuardianCallAdapt
      * Initialize UI components and set up listeners
      */
     private void initializeUI() {
-        binding.callBackButton.setOnClickListener(v -> finish());
-
         binding.callEmergencyContact.setOnClickListener(v -> {
             Log.d(Constants.TAG_CALL_ACTIVITY,
                     Constants.LOG_EMOJI_CALL + Constants.SPACE + Constants.LOG_MSG_EMERGENCY_CLICKED);

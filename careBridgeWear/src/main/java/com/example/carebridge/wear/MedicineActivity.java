@@ -34,7 +34,6 @@ public class MedicineActivity extends AppCompatActivity {
         setupRecyclerView();
         loadMedicineData();
 
-        binding.medicineBackButton.setOnClickListener(v -> finish());
     }
 
     private void setupRecyclerView() {

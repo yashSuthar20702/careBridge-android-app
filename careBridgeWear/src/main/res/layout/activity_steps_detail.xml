@@ -18,26 +18,14 @@
             android:padding="@dimen/padding_medium"
             android:gravity="center_vertical">
 
-            <ImageButton
-                android:id="@+id/steps_back_button"
-                android:layout_width="@dimen/button_height_medium"
-                android:layout_height="@dimen/button_height_medium"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_arrow_left"
-                android:layout_marginStart="15dp"
-                android:layout_marginEnd="@dimen/margin_medium"
-                app:tint="@color/white" />
-
             <TextView
                 android:id="@+id/steps_title"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:text="@string/steps_tracker_title"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_medium"
                 android:textStyle="bold"
-                android:layout_marginStart="-45dp"
                 android:gravity="center" />
 
         </LinearLayout>

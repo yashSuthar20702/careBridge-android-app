@@ -13,18 +13,10 @@
         <!-- Header -->
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="2dp"
-            android:layout_marginLeft="@dimen/margin_medium">
-
-            <ImageButton
-                android:id="@+id/medicine_back_button"
-                android:layout_width="@dimen/button_height_medium"
-                android:layout_height="@dimen/button_height_medium"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/ic_arrow_left"
-                android:tint="@color/white"
-                android:layout_alignParentStart="true" />
+            android:layout_height="34dp"
+            android:layout_marginBottom="@dimen/margin_medium"
+            android:layout_marginTop="2dp"
+            android:paddingStart="@dimen/padding_medium">
 
             <TextView
                 android:layout_width="wrap_content"

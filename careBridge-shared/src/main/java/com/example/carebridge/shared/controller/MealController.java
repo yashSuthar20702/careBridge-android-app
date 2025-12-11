@@ -57,9 +57,6 @@ public class MealController {
             json.put("evening_meal", eveningMeal);
             json.put("night_meal", nightMeal);
             json.put("extra_information", extraInfo);
-
-            Log.d(TAG, "📝 JSON Payload: " + json.toString());
-
         } catch (Exception e) {
             Log.e(TAG, "JSON creation failed: " + e.getMessage(), e);
             callback.onFailure("Error creating JSON");
@@ -91,9 +88,6 @@ public class MealController {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String resStr = response.body() != null ? response.body().string() : null;
-                Log.d(TAG, "📥 HTTP Status Code: " + response.code());
-                Log.d(TAG, "📄 Raw Response Body: " + resStr);
-
                 handler.post(() -> {
                     try {
                         if (resStr == null || resStr.trim().isEmpty()) {
@@ -105,14 +99,11 @@ public class MealController {
                         boolean status = res.optBoolean("status", false);
 
                         if (!status) {
-                            String msg = res.optString("error", res.optString("message", "Failed to add meal"));
-                            callback.onFailure(msg);
+                            callback.onFailure(res.optString("error", "Failed to add meal"));
                             return;
                         }
 
-                        String successMsg = res.optString("message", "Meal plan added successfully");
-                        callback.onSuccess(successMsg);
-
+                        callback.onSuccess(res.optString("message", "Meal plan added successfully"));
                     } catch (Exception e) {
                         Log.e(TAG, "❌ JSON parsing failed: " + e.getMessage(), e);
                         callback.onFailure("Invalid server response");
@@ -123,15 +114,14 @@ public class MealController {
     }
 
     // --------------------------
-    // Fetch Meal Plan by case_id and meal_date
+    // Fetch Meal Plan by case_id ONLY
     // --------------------------
-    public void fetchMealPlan(String caseId, String mealDate, MealFetchCallback callback) {
-        Log.d(TAG, "Fetching meal plan for case_id=" + caseId + ", date=" + mealDate);
+    public void fetchMealPlanByCaseId(String caseId, MealFetchCallback callback) {
+        Log.d(TAG, "Fetching meal plan for case_id=" + caseId);
 
         JSONObject json = new JSONObject();
         try {
             json.put("case_id", caseId);
-            json.put("meal_date", mealDate);
         } catch (Exception e) {
             Log.e(TAG, "JSON creation failed: " + e.getMessage(), e);
             callback.onFailure("Error creating request JSON");
@@ -148,7 +138,7 @@ public class MealController {
 
         Request request = new Request.Builder()
                 .url(url)
-                .post(body) // POST request as your PHP expects JSON body
+                .post(body)
                 .build();
 
         Handler handler = new Handler(Looper.getMainLooper());
@@ -163,8 +153,6 @@ public class MealController {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 String resStr = response.body() != null ? response.body().string() : null;
-                Log.d(TAG, "HTTP Status: " + response.code() + ", Response: " + resStr);
-
                 handler.post(() -> {
                     try {
                         if (resStr == null || resStr.trim().isEmpty()) {
@@ -176,8 +164,7 @@ public class MealController {
                         boolean status = res.optBoolean("status", false);
 
                         if (!status) {
-                            String msg = res.optString("error", "Meal plan not found");
-                            callback.onFailure(msg);
+                            callback.onFailure(res.optString("error", "Meal plan not found"));
                             return;
                         }
 
@@ -188,7 +175,6 @@ public class MealController {
                         }
 
                         callback.onSuccess(mealPlan);
-
                     } catch (Exception e) {
                         Log.e(TAG, "JSON parsing failed: " + e.getMessage(), e);
                         callback.onFailure("Invalid server response");

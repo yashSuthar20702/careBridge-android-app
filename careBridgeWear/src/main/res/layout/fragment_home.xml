@@ -78,9 +78,15 @@
                 android:layout_margin="@dimen/margin_medium"
                 android:background="@drawable/indicator_inactive" />
 
-            <!-- Add this ImageButton to your indicators_layout -->
             <ImageButton
                 android:id="@+id/home_indicator5"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:layout_margin="@dimen/margin_medium"
+                android:background="@drawable/indicator_inactive" />
+
+            <ImageButton
+                android:id="@+id/home_indicator6"
                 android:layout_width="10dp"
                 android:layout_height="10dp"
                 android:layout_margin="@dimen/margin_medium"

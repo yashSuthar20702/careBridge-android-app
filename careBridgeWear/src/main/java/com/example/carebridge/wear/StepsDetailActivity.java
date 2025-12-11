@@ -64,7 +64,6 @@ public class StepsDetailActivity extends AppCompatActivity implements SensorEven
      * Set up UI components
      */
     private void setupUI() {
-        binding.stepsBackButton.setOnClickListener(v -> finish());
         binding.stepsTitle.setText(getString(R.string.steps_tracker_title));
     }
 

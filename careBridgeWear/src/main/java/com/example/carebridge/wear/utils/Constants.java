@@ -96,7 +96,7 @@ public class Constants {
     public static final String SAMPLE_PHONE_DR_SMITH = "+1 519-555-1234";
 
     // Layout & UI Constants
-    public static final int HOME_PAGER_COUNT = 6; // Call, Medicine, Patient Health, Guardian Info, Health Monitor, Logout
+    public static final int HOME_PAGER_COUNT = 7; // Call, Medicine, Patient Health, Guardian Info, Health Monitor, Logout
     public static final int HEALTH_METRICS_COUNT = 3; // Heart Rate, Steps, Blood Oxygen
     public static final int HEALTH_HISTORY_LIMIT = 100; // Max stored heart rate readings
     public static final int STEPS_HISTORY_LIMIT = 50; // Max stored steps readings
@@ -160,13 +160,14 @@ public class Constants {
     public static final int POSITION_INVALID = -1;
     public static final int POSITION_FIRST = 0;
 
-    // Button Index Constants (Home Pager)
+    //  Button Index Constants (Home Pager)
     public static final int BUTTON_CALL = 0;
     public static final int BUTTON_MEDICINE = 1;
-    public static final int BUTTON_PATIENT_HEALTH = 2;
-    public static final int BUTTON_GUARDIAN_INFO = 3;
-    public static final int BUTTON_HEALTH_MONITOR = 4;
-    public static final int BUTTON_LOGOUT = 5;
+    public static final int BUTTON_MEAL = 2;
+    public static final int BUTTON_PATIENT_HEALTH = 3;
+    public static final int BUTTON_GUARDIAN_INFO = 4;
+    public static final int BUTTON_HEALTH_MONITOR = 5;
+    public static final int BUTTON_LOGOUT = 6;
 
     // Date/Time Formats
     public static final String TIME_FORMAT_HH_MM = "HH:mm";
@@ -361,6 +362,21 @@ public class Constants {
     public static final float FLOAT_SCALE_INACTIVE = 1.0f;
     public static final float FLOAT_SCALE_ACTIVE = 1.25f;
 
+
+    public static final String MEAL_TITLE = "Meal Planner";
+    public static final String MEAL_BREAKFAST = "Breakfast";
+    public static final String MEAL_LUNCH = "Lunch";
+    public static final String MEAL_DINNER = "Dinner";
+
+    public static final String MEAL_TIME_BREAKFAST = "08:30 AM";
+    public static final String MEAL_TIME_LUNCH = "01:00 PM";
+    public static final String MEAL_TIME_DINNER = "08:00 PM";
+
+    public static final String MEAL_DESC_BREAKFAST = "Oats + Fruits";
+    public static final String MEAL_DESC_LUNCH = "Rice + Dal";
+    public static final String MEAL_DESC_DINNER = "Chapati + Curry";
+
+    public static final String EXTRA_MEAL_NAME = "meal_name";
 
 
 

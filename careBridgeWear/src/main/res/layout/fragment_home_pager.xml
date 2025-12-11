@@ -8,7 +8,6 @@
         android:layout_height="match_parent"
         android:background="@color/black">
 
-        <!-- Centered Container -->
         <LinearLayout
             android:id="@+id/center_container"
             android:layout_width="wrap_content"
@@ -21,9 +20,9 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent">
 
-            <!-- Main Action Button -->
+            <!-- ✅ THIS ID MUST MATCH JAVA -->
             <ImageButton
-                android:id="@+id/home_main_button"
+                android:id="@+id/homeMainButton"
                 android:layout_width="@dimen/button_width_medium"
                 android:layout_height="@dimen/button_width_medium"
                 android:background="@drawable/circle_button_bg"
@@ -31,13 +30,13 @@
                 android:stateListAnimator="@anim/button_state_anim"
                 app:tint="@color/icon_tint" />
 
-            <!-- Button Label -->
+            <!-- ✅ THIS ID MUST MATCH JAVA -->
             <TextView
-                android:id="@+id/home_button_label"
+                android:id="@+id/homeButtonLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
-                android:text="@string/call"
+                android:text="Meal Planner"
                 android:textStyle="bold"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_small"

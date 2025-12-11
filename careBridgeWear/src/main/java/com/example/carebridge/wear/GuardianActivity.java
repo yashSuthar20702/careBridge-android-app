@@ -37,7 +37,6 @@ public class GuardianActivity extends AppCompatActivity {
         wearSharedPrefManager = new WearSharedPrefManager(this);
 
         setupRecyclerView();
-        setupClickListeners();
         fetchGuardiansData();
     }
 
@@ -52,13 +51,6 @@ public class GuardianActivity extends AppCompatActivity {
 
         // Show loading state initially
         showLoadingState();
-    }
-
-    /**
-     * Set up click listeners for UI elements
-     */
-    private void setupClickListeners() {
-        binding.guardianBackButton.setOnClickListener(v -> finish());
     }
 
     /**
