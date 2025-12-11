@@ -1,194 +1,153 @@
 package com.example.carebridge.shared.utils;
 
+import android.util.Log;
+
 /**
  * API Configuration Constants for CareBridge Application
  *
- * This class contains all API endpoint configurations and server settings
- * for the Android application. It provides centralized management of
- * API URLs and server connections.
+ * Centralizes all API endpoint configurations and server settings
+ * for the Android application.
  */
 public class ApiConstants {
+
+    private static final String TAG = "ApiConstants";
 
     // ============================================
     // SERVER CONFIGURATION SETTINGS
     // ============================================
 
     /**
-     * Switch between local development server and production/device server
-     * Set to true during development to use Android Emulator's localhost
-     * Set to false for production or testing on physical devices
+     * true  → Android Emulator (10.0.2.2)
+     * false → Physical device or production server IP
      */
-    public static final boolean USE_LOCALHOST = true;
+    public static final boolean USE_LOCALHOST = false;
 
-    /**
-     * Localhost IP for Android Emulator (10.0.2.2 points to host machine's localhost)
-     * Used when USE_LOCALHOST = true
-     */
     private static final String LOCALHOST_IP = "10.0.2.2";
-
-    /**
-     * Device server IP for physical devices or production
-     * Used when USE_LOCHOST = false
-     */
     private static final String DEVICE_SERVER_IP = "10.0.0.165";
 
-    /**
-     * Root path for all API endpoints on the server
-     * This is the base directory where all PHP endpoints are located
-     */
-    private static final String API_ROOT = "/CareBridge/careBridge-web-app/careBridge-website/endpoints/";
+    /** Root server path for all PHP endpoints */
+    private static final String API_ROOT =
+            "/careBridge/careBridge-web-app/careBridge-website/endpoints/";
 
     // ============================================
-    // SERVER URL CONSTRUCTION HELPER
+    // URL HELPERS
     // ============================================
 
-    /**
-     * Determines the base host IP based on the USE_LOCALHOST flag
-     *
-     * @return The appropriate IP address (localhost for emulator, device IP for physical devices)
-     */
     private static String getBaseHost() {
-        return USE_LOCALHOST ? LOCALHOST_IP : DEVICE_SERVER_IP;
+        String host = USE_LOCALHOST ? LOCALHOST_IP : DEVICE_SERVER_IP;
+        Log.d(TAG, "Selected Host: " + host);
+        return host;
+    }
+
+    private static String buildBaseUrl(String moduleName) {
+        String url = "http://" + getBaseHost() + API_ROOT + moduleName + "/";
+        Log.d(TAG, "Base URL for module (" + moduleName + "): " + url);
+        return url;
     }
 
     // ============================================
-    // BASE URL CONSTRUCTORS FOR DIFFERENT MODULES
+    // BASE MODULE URLS
     // ============================================
 
-    /**
-     * @return Base URL for authentication-related endpoints
-     */
-    public static String getAuthBaseUrl() {
-        return "http://" + getBaseHost() + API_ROOT + "auth/";
-    }
+    public static String getAuthBaseUrl() { return buildBaseUrl("auth"); }
+    public static String getGuardianBaseUrl() { return buildBaseUrl("guardians"); }
+    public static String getPatientBaseUrl() { return buildBaseUrl("patients"); }
+    public static String getPatientGuardianAssignmentBaseUrl() { return buildBaseUrl("patientguardianassignment"); }
+    public static String getPrescriptionBaseUrl() { return buildBaseUrl("prescription"); }
+    public static String getFcmBaseUrl() { return buildBaseUrl("users"); }
+    public static String getMedicineLogBaseUrl() { return buildBaseUrl("medicine_log"); }
+    public static String getDailyTipsBaseUrl() { return buildBaseUrl("daily_tips"); }
 
-    /**
-     * @return Base URL for guardian-related endpoints
-     */
-    public static String getGuardianBaseUrl() {
-        return "http://" + getBaseHost() + API_ROOT + "guardians/";
-    }
-
-    /**
-     * @return Base URL for patient-related endpoints
-     */
-    public static String getPatientBaseUrl() {
-        return "http://" + getBaseHost() + API_ROOT + "patients/";
-    }
-
-    /**
-     * @return Base URL for patient-guardian assignment endpoints
-     */
-    public static String getPatientGuardianAssignmentBaseUrl() {
-        return "http://" + getBaseHost() + API_ROOT + "patientguardianassignment/";
-    }
-
-    /**
-     * @return Base URL for prescription-related endpoints
-     */
-    public static String getPrescriptionBaseUrl() {
-        return "http://" + getBaseHost() + API_ROOT + "prescription/";
-    }
-
-    /**
-     * @return Base URL for Firebase Cloud Messaging (FCM) endpoints
-     */
-    public static String getFcmBaseUrl() {
-        return "http://" + getBaseHost() + API_ROOT + "users/";
-    }
+    /** NEW MODULE: Meal Plan */
+    public static String getMealPlanBaseUrl() { return buildBaseUrl("mealplan"); }
 
     // ============================================
-    // SPECIFIC API ENDPOINTS
+    // SPECIFIC ENDPOINT URLS
     // ============================================
 
-    /**
-     * @return Complete URL for user login endpoint
-     */
     public static String getLoginUrl() {
-        return getAuthBaseUrl() + "login.php";
+        String url = getAuthBaseUrl() + "login.php";
+        Log.d(TAG, "Login URL: " + url);
+        return url;
     }
 
-    /**
-     * @param guardianId The unique identifier of the guardian
-     * @return Complete URL to fetch guardian details by ID
-     */
     public static String getGuardianByIdUrl(String guardianId) {
-        return getGuardianBaseUrl() + "getOne.php?guardian_id=" + guardianId;
+        String url = getGuardianBaseUrl() + "getOne.php?guardian_id=" + guardianId;
+        Log.d(TAG, "Guardian By ID URL: " + url);
+        return url;
     }
 
-    /**
-     * @param caseId The unique case identifier of the patient
-     * @return Complete URL to fetch patient details by case ID
-     */
     public static String getPatientByCaseIdUrl(String caseId) {
-        return getPatientBaseUrl() + "getOne.php?case_id=" + caseId;
+        String url = getPatientBaseUrl() + "getOne.php?case_id=" + caseId;
+        Log.d(TAG, "Patient By Case ID URL: " + url);
+        return url;
     }
 
-    /**
-     * @param caseId The unique case identifier of the patient
-     * @return Complete URL to fetch guardian assignments for a specific patient
-     */
     public static String getGuardianAssignmentByPatientUrl(String caseId) {
-        return getPatientGuardianAssignmentBaseUrl() + "getByPatient.php?case_id=" + caseId;
+        String url = getPatientGuardianAssignmentBaseUrl() + "getByPatient.php?case_id=" + caseId;
+        Log.d(TAG, "Guardian Assignment By Patient URL: " + url);
+        return url;
     }
 
-    /**
-     * @param guardianId The unique identifier of the guardian
-     * @return Complete URL to fetch all patients assigned to a specific guardian
-     */
     public static String getAssignedPatientsUrl(String guardianId) {
-        return getPatientGuardianAssignmentBaseUrl() + "getByGuardian.php?guardian_id=" + guardianId;
+        String url = getPatientGuardianAssignmentBaseUrl()
+                + "getByGuardian.php?guardian_id=" + guardianId;
+        Log.d(TAG, "Assigned Patients URL: " + url);
+        return url;
     }
 
-    /**
-     * @param caseId The unique case identifier of the patient
-     * @return Complete URL to fetch prescriptions for a specific patient
-     */
     public static String getPrescriptionByCaseIdUrl(String caseId) {
-        return getPrescriptionBaseUrl() + "get.php?case_id=" + caseId;
+        String url = getPrescriptionBaseUrl() + "get.php?case_id=" + caseId;
+        Log.d(TAG, "Prescription By Case ID URL: " + url);
+        return url;
     }
 
-    /**
-     * @return Complete URL for updating FCM token for mobile device
-     */
+    // FCM
     public static String getUpdateFcmTokenUrl() {
-        return getFcmBaseUrl() + "save_fcm_token.php";
+        String url = getFcmBaseUrl() + "save_fcm_token.php";
+        Log.d(TAG, "Update FCM Token URL: " + url);
+        return url;
     }
 
-    /**
-     * @return Complete URL for deleting FCM token for mobile device
-     */
     public static String getDeleteFcmTokenUrl() {
-        return getFcmBaseUrl() + "delete_fcm_token.php";
+        String url = getFcmBaseUrl() + "delete_fcm_token.php";
+        Log.d(TAG, "Delete FCM Token URL: " + url);
+        return url;
     }
 
-    /**
-     * @return Complete URL for updating FCM token for wearable device
-     */
     public static String getUpdateWearFcmTokenUrl() {
-        return getFcmBaseUrl() + "save_wear_fcm_token.php";
+        String url = getFcmBaseUrl() + "save_wear_fcm_token.php";
+        Log.d(TAG, "Update Wear FCM Token URL: " + url);
+        return url;
     }
 
-    /**
-     * @return Complete URL for deleting FCM token for wearable device
-     */
     public static String getDeleteWearFcmTokenUrl() {
-        return getFcmBaseUrl() + "delete_wear_fcm_token.php";
+        String url = getFcmBaseUrl() + "delete_wear_fcm_token.php";
+        Log.d(TAG, "Delete Wear FCM Token URL: " + url);
+        return url;
     }
 
-    /**
-     * @param caseId The unique case identifier of the patient
-     * @return Complete URL to fetch medicine log entries for a specific patient
-     */
     public static String getMedicineLogByCaseIdUrl(String caseId) {
-        return "http://" + getBaseHost() + API_ROOT + "medicine_log/get.php?case_id=" + caseId;
+        String url = getMedicineLogBaseUrl() + "get.php?case_id=" + caseId;
+        Log.d(TAG, "Medicine Log By Case ID URL: " + url);
+        return url;
     }
 
-    /**
-     * @return Complete URL to fetch daily health tips
-     */
     public static String getDailyTipsUrl() {
-        return "http://" + getBaseHost() + API_ROOT + "daily_tips/get_tips.php";
+        String url = getDailyTipsBaseUrl() + "get_tips.php";
+        Log.d(TAG, "Daily Tips URL: " + url);
+        return url;
     }
 
+    public static String getAddMealPlanUrl() {
+        String url = getMealPlanBaseUrl() + "addmealplan.php";
+        Log.d(TAG, "Add Meal Plan URL: " + url);
+        return url;
+    }
+
+    public static String getMealPlanUrl() {
+        String url = getMealPlanBaseUrl() + "getmealplan.php";
+        Log.d(TAG, "Get Meal Plan URL: " + url);
+        return url;
+    }
 }

@@ -215,7 +215,7 @@
                 app:iconPadding="12dp"
                 app:iconTint="@color/white"
                 app:iconGravity="textStart"
-                android:backgroundTint="@color/status_active"
+                android:backgroundTint="@color/accent_blue"
                 android:textColor="@color/white"
                 app:cornerRadius="16dp"
                 android:paddingVertical="14dp"/>
