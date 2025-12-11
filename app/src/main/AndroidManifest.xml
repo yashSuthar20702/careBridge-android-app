@@ -84,6 +84,10 @@
             android:name=".view.FullMapActivityBlue"
             android:exported="false" />
 
+        <activity
+            android:name=".view.AddMealActivity"
+            android:exported="false"
+            android:theme="@style/Theme.CareBridge" />
         <!-- Firebase Messaging Service -->
         <service
             android:name=".service.MyFirebaseMessagingService"

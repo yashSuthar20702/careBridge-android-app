@@ -64,4 +64,11 @@
 
 
     <color name="shadow_gray">#DDDDDD</color>
+
+
+    <color name="gray_200">#E5E7EB</color>
+
+
+    <color name="black">#000000</color>
+
 </resources>

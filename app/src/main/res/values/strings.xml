@@ -185,5 +185,19 @@
     <string name="medicine_icon_description">Medicine icon</string>
     <string name="no_medicines_message">No medicines assigned by the doctor yet</string>
 
+    <!-- Add Meal Strings -->
+    <string name="add_meal_title">Add Meal</string>
+    <string name="morning">Morning</string>
+    <string name="afternoon">Afternoon</string>
+    <string name="evening">Evening</string>
+    <string name="night">Night</string>
+    <string name="morning_hint">What did you eat for breakfast?</string>
+    <string name="afternoon_hint">What did you eat for lunch?</string>
+    <string name="evening_hint">What did you eat for dinner?</string>
+    <string name="night_hint">What did you eat as a late snack?</string>
+    <string name="submit">Submit</string>
+    <string name="clear">Clear</string>
+    <string name="back">Back</string>
+
 
 </resources>

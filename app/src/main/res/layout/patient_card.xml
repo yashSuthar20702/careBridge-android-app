@@ -202,6 +202,24 @@
                     android:textSize="16sp"
                     android:textStyle="italic"/>
             </LinearLayout>
+
+            <!-- Single Add Meal Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnAddMeal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Add Meal"
+                android:textAllCaps="false"
+                android:layout_marginTop="12dp"
+                app:icon="@drawable/ic_add"
+                app:iconPadding="12dp"
+                app:iconTint="@color/white"
+                app:iconGravity="textStart"
+                android:backgroundTint="@color/status_active"
+                android:textColor="@color/white"
+                app:cornerRadius="16dp"
+                android:paddingVertical="14dp"/>
+
         </LinearLayout>
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

@@ -1,6 +1,7 @@
 package com.example.carebridge.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
@@ -19,7 +20,9 @@ import com.example.carebridge.R;
 import com.example.carebridge.shared.controller.AssignedPatientController;
 import com.example.carebridge.shared.model.AssignedPatientInfo;
 import com.example.carebridge.shared.utils.SharedPrefManager;
+import com.example.carebridge.view.AddMealActivity;
 import com.facebook.shimmer.ShimmerFrameLayout;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
 
 import java.util.List;
@@ -223,6 +226,15 @@ public class GuardianPatientsFragment extends Fragment {
                     .setText(getString(R.string.white_space) + safe(patient.getAssigned_date()));
             ((TextView) cardView.findViewById(R.id.tvPatientNotes))
                     .setText(getString(R.string.white_space) + safe(patient.getNotes()));
+
+            // ADD THIS: Add Meal button click listener
+            MaterialButton btnAddMeal = cardView.findViewById(R.id.btnAddMeal);
+            btnAddMeal.setOnClickListener(v -> {
+                Intent intent = new Intent(getActivity(), AddMealActivity.class);
+                intent.putExtra("PATIENT_ID", patient.getPatient_id());
+                intent.putExtra("PATIENT_NAME", patient.getFull_name());
+                startActivity(intent);
+            });
 
             patientsListContainer.addView(cardView);
         }
