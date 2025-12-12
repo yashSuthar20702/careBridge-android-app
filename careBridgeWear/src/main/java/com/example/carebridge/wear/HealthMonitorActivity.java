@@ -218,19 +218,6 @@ public class HealthMonitorActivity extends AppCompatActivity implements
                 R.color.steps_end,
                 Constants.CLASS_STEPS_DETAIL
         ));
-
-        healthMetrics.add(new HealthMetric(
-                Constants.METRIC_BLOOD_OXYGEN,
-                getString(R.string.blood_oxygen_label),
-                String.valueOf(Constants.DEFAULT_BLOOD_OXYGEN),
-                getString(R.string.unit_percent),
-                getString(R.string.blood_oxygen_desc),
-                R.drawable.ic_droplet,
-                R.color.blue_500,
-                R.color.blood_oxygen_start,
-                R.color.blood_oxygen_end,
-                Constants.CLASS_BLOOD_OXYGEN_DETAIL
-        ));
     }
 
     /**
