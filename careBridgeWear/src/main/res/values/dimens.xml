@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Text Sizes -->
+
+    <!-- ===================== -->
+    <!-- TEXT SIZES -->
+    <!-- ===================== -->
     <dimen name="text_size_xsmall">8sp</dimen>
     <dimen name="text_size_small">12sp</dimen>
     <dimen name="text_size_medium">14sp</dimen>
@@ -8,23 +11,27 @@
     <dimen name="text_size_xlarge">18sp</dimen>
     <dimen name="text_size_xxlarge">36sp</dimen>
 
-
-
-    <!-- Spacing -->
+    <!-- ===================== -->
+    <!-- SPACING -->
+    <!-- ===================== -->
     <dimen name="spacing_xsmall">2dp</dimen>
     <dimen name="spacing_small">4dp</dimen>
     <dimen name="spacing_medium">6dp</dimen>
     <dimen name="spacing_large">8dp</dimen>
     <dimen name="spacing_xlarge">12dp</dimen>
 
-    <!-- Padding -->
+    <!-- ===================== -->
+    <!-- PADDING -->
+    <!-- ===================== -->
     <dimen name="padding_xsmall">4dp</dimen>
     <dimen name="padding_small">8dp</dimen>
     <dimen name="padding_medium">10dp</dimen>
     <dimen name="padding_large">16dp</dimen>
     <dimen name="padding_xlarge">20dp</dimen>
 
-    <!-- Margin -->
+    <!-- ===================== -->
+    <!-- MARGIN -->
+    <!-- ===================== -->
     <dimen name="margin_xsmall">2dp</dimen>
     <dimen name="margin_small">4dp</dimen>
     <dimen name="margin_medium">8dp</dimen>
@@ -32,7 +39,9 @@
     <dimen name="margin_xlarge">16dp</dimen>
     <dimen name="margin_xxlarge">20dp</dimen>
 
-    <!-- Button Sizes -->
+    <!-- ===================== -->
+    <!-- BUTTON SIZES -->
+    <!-- ===================== -->
     <dimen name="button_height_xsmall">28dp</dimen>
     <dimen name="button_height_small">32dp</dimen>
     <dimen name="button_height_medium">40dp</dimen>
@@ -41,7 +50,9 @@
     <dimen name="button_width_medium">70dp</dimen>
     <dimen name="button_width_large">80dp</dimen>
 
-    <!-- Icon Sizes -->
+    <!-- ===================== -->
+    <!-- ICON SIZES -->
+    <!-- ===================== -->
     <dimen name="icon_size_xsmall">8dp</dimen>
     <dimen name="icon_size_small">12dp</dimen>
     <dimen name="icon_size_medium">16dp</dimen>
@@ -49,39 +60,108 @@
     <dimen name="icon_size_xlarge">24dp</dimen>
     <dimen name="icon_size_xxlarge">44dp</dimen>
 
-    <!-- Graph/Chart Dimensions -->
+    <!-- ===================== -->
+    <!-- GRAPH / CHART -->
+    <!-- ===================== -->
     <dimen name="graph_height">80dp</dimen>
     <dimen name="graph_bar_width">8dp</dimen>
     <dimen name="graph_bar_margin">2dp</dimen>
 
-    <!-- Card/Container Dimensions -->
+    <!-- ===================== -->
+    <!-- CARD / CONTAINER -->
+    <!-- ===================== -->
     <dimen name="card_corner_radius_small">16dp</dimen>
     <dimen name="card_corner_radius_medium">20dp</dimen>
     <dimen name="card_corner_radius_large">24dp</dimen>
     <dimen name="container_height_metric">70dp</dimen>
     <dimen name="container_width_metric">160dp</dimen>
+    <dimen name="card_elevation_medium">4dp</dimen>
 
-    <!-- Progress Bar -->
+    <!-- ===================== -->
+    <!-- PROGRESS / INDICATORS -->
+    <!-- ===================== -->
     <dimen name="progress_bar_height">8dp</dimen>
-
-    <!-- Selection Cursor -->
     <dimen name="cursor_width">3dp</dimen>
-
-    <!-- Indicator Sizes -->
     <dimen name="indicator_size">10dp</dimen>
     <dimen name="indicator_margin">8dp</dimen>
+    <dimen name="sensor_indicator_size">8dp</dimen>
 
-    <!-- Input Field Heights -->
+    <!-- ===================== -->
+    <!-- INPUT FIELDS -->
+    <!-- ===================== -->
     <dimen name="input_height_small">32dp</dimen>
     <dimen name="input_height_medium">40dp</dimen>
     <dimen name="input_height_large">48dp</dimen>
+    <dimen name="input_padding_horizontal">14dp</dimen>
 
-    <!-- User Icon -->
+    <!-- ===================== -->
+    <!-- USER / WEAR -->
+    <!-- ===================== -->
     <dimen name="user_icon_size">64dp</dimen>
     <dimen name="user_icon_padding">16dp</dimen>
-
-    <!-- Wear Specific -->
     <dimen name="wear_button_height">42dp</dimen>
     <dimen name="wear_button_corner_radius">16dp</dimen>
     <dimen name="wear_input_margin_horizontal">20dp</dimen>
+
+    <!-- ===================== -->
+    <!-- HEADERS -->
+    <!-- ===================== -->
+    <dimen name="blood_oxygen_header_height">34dp</dimen>
+    <dimen name="call_header_height">34dp</dimen>
+    <dimen name="guardian_header_height">34dp</dimen>
+    <dimen name="patient_header_height">34dp</dimen>
+    <dimen name="health_monitor_header_height">34dp</dimen>
+    <dimen name="heart_rate_header_height">34dp</dimen>
+
+    <!-- ===================== -->
+    <!-- HEALTH MONITOR -->
+    <!-- ===================== -->
+    <dimen name="health_monitor_list_margin_top">50dp</dimen>
+    <dimen name="health_monitor_list_margin_bottom">5dp</dimen>
+
+    <!-- ===================== -->
+    <!-- LOGIN SCREEN -->
+    <!-- ===================== -->
+    <dimen name="login_content_padding_bottom">40dp</dimen>
+
+    <!-- ===================== -->
+    <!-- ZERO / WEIGHTS -->
+    <!-- ===================== -->
+    <dimen name="size_zero">0dp</dimen>
+    <dimen name="padding_none">0dp</dimen>
+    <dimen name="weight_full">1</dimen>
+    <dimen name="layout_weight_full">1</dimen>
+
+    <!-- ===================== -->
+    <!-- ALPHA -->
+    <!-- ===================== -->
+    <dimen name="alpha_subtle">0.8</dimen>
+    <dimen name="wear_safe_bottom_padding">28dp</dimen>
+
+    <dimen name="meal_header_height">34dp</dimen>
+    <dimen name="medicine_header_height">34dp</dimen>
+    <dimen name="header_elevation">4dp</dimen>
+
+    <dimen name="logout_message_padding_bottom">28dp</dimen>
+
+    <dimen name="logout_button_size">60dp</dimen>
+    <dimen name="logout_button_line_height">72dp</dimen>
+    <dimen name="logout_button_text_size">28sp</dimen>
+    <dimen name="card_elevation_small">2dp</dimen>
+    <dimen name="indent_medium">24dp</dimen>
+
+    <dimen name="icon_container_size">32dp</dimen>
+    <dimen name="spacing_xxsmall">2dp</dimen>
+
+    <dimen name="text_size_xxsmall">9sp</dimen>
+    <dimen name="text_size_xxxsmall">8sp</dimen>
+
+    <dimen name="alpha_low">0.2</dimen>
+    <dimen name="alpha_high">0.9</dimen>
+    <dimen name="header_height_small">34dp</dimen>
+    <dimen name="icon_touch_size">40dp</dimen>
+    <dimen name="oxygen_graph_bar_corner_radius">4dp</dimen>
+    <dimen name="metric_corner_radius">16dp</dimen>
+
+
 </resources>

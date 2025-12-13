@@ -8,21 +8,35 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import com.example.carebridge.wear.fragments.HomePagerFragment;
 import com.example.carebridge.wear.utils.Constants;
 
+/**
+ * Adapter for Wear OS home ViewPager.
+ * Responsible for providing fragments based on pager position.
+ */
 public class HomePagerAdapter extends FragmentStateAdapter {
 
+    /**
+     * Constructor receives FragmentActivity required by FragmentStateAdapter.
+     */
     public HomePagerAdapter(@NonNull FragmentActivity fragmentActivity) {
         super(fragmentActivity);
     }
 
+    /**
+     * Creates and returns a fragment for the given position.
+     * Each page uses the same fragment class with different position data.
+     */
     @NonNull
     @Override
     public Fragment createFragment(int position) {
-        // ✅ ALWAYS show ROUND BUTTON for every page
         return HomePagerFragment.newInstance(position);
     }
 
+    /**
+     * Returns total number of pages in the home pager.
+     * Value is centralized in Constants to avoid hardcoding.
+     */
     @Override
     public int getItemCount() {
-        return Constants.HOME_PAGER_COUNT; // ✅ MUST = 7
+        return Constants.HOME_PAGER_COUNT;
     }
 }

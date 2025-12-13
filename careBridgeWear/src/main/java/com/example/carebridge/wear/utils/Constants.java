@@ -237,6 +237,27 @@ public class Constants {
     public static final String SAMPLE_AGE = "29";
     public static final String SAMPLE_ADDRESS = "123 Oak Street, Springfield";
 
+    // ==========================
+// Meal Planner – JSON Keys
+// ==========================
+    public static final String JSON_MORNING_MEAL = "morning_meal";
+    public static final String JSON_AFTERNOON_MEAL = "afternoon_meal";
+    public static final String JSON_EVENING_MEAL = "evening_meal";
+    public static final String JSON_NIGHT_MEAL = "night_meal";
+
+    // ==========================
+// Meal Planner – Time Labels
+// ==========================
+    public static final String MEAL_TIME_BREAKFAST = "08:00 AM";
+    public static final String MEAL_TIME_LUNCH = "01:00 PM";
+    public static final String MEAL_TIME_EVENING = "06:00 PM";
+    public static final String MEAL_TIME_DINNER = "09:00 PM";
+
+    // ==========================
+// Common fallback value
+// ==========================
+
+
     // Logging Tags
     public static final String TAG_HEALTH_MONITOR_ACTIVITY = "HealthMonitorActivity";
 
@@ -368,15 +389,32 @@ public class Constants {
     public static final String MEAL_LUNCH = "Lunch";
     public static final String MEAL_DINNER = "Dinner";
 
-    public static final String MEAL_TIME_BREAKFAST = "08:30 AM";
-    public static final String MEAL_TIME_LUNCH = "01:00 PM";
-    public static final String MEAL_TIME_DINNER = "08:00 PM";
+
+
+
 
     public static final String MEAL_DESC_BREAKFAST = "Oats + Fruits";
     public static final String MEAL_DESC_LUNCH = "Rice + Dal";
     public static final String MEAL_DESC_DINNER = "Chapati + Curry";
 
     public static final String EXTRA_MEAL_NAME = "meal_name";
+
+    public static final String NOTIFICATION_CHANNEL_ID = "carebridge_wear_channel";
+
+
+
+
+
+
+
+    public static final String KEY_LOG_ID = "log_id";
+    public static final String KEY_TAKEN_STATUS = "taken_status";
+    public static final String KEY_TITLE = "title";
+    public static final String KEY_BODY = "body";
+
+    public static final String PREF_WEAR_NAME = "carebridge_wear_preferences";
+
+
 
 
 

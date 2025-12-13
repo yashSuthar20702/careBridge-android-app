@@ -6,35 +6,37 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/black"
-    android:padding="16dp">
+    android:baselineAligned="false"
+    android:background="@color/screen_background_black"
+    android:padding="@dimen/padding_large">
 
     <!-- Header -->
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="34dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginLeft="8dp">
+        android:layout_height="@dimen/header_height_small"
+        android:layout_marginTop="@dimen/margin_small"
+        android:layout_marginBottom="@dimen/margin_small"
+        android:layout_marginStart="@dimen/margin_small">
 
         <ImageButton
             android:id="@+id/patient_health_back_button"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="@dimen/icon_touch_size"
+            android:layout_height="@dimen/icon_touch_size"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_arrow_left"
-            android:tint="@color/white"
-            android:layout_marginStart="2dp"
+            app:tint="@color/icon_tint_light"
+            android:contentDescription="@string/back_button_desc"
             android:layout_alignParentStart="true" />
 
         <TextView
+            android:id="@+id/patient_health_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Patient Info"
-            android:textColor="@color/white"
-            android:textSize="18sp"
+            android:text="@string/patient_info"
+            android:textColor="@color/text_white"
+            android:textSize="@dimen/text_size_large"
             android:textStyle="bold"
-            android:layout_marginStart="30dp"
+            android:layout_marginStart="@dimen/margin_xlarge"
             android:layout_centerVertical="true" />
 
     </RelativeLayout>
@@ -44,9 +46,9 @@
         android:id="@+id/health_info_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_weight="@dimen/layout_weight_full"
         android:clipToPadding="false"
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp" />
+        android:paddingTop="@dimen/padding_small"
+        android:paddingBottom="@dimen/padding_small" />
 
 </LinearLayout>

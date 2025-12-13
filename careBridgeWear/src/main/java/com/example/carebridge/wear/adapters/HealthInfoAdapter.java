@@ -1,62 +1,104 @@
 package com.example.carebridge.wear.adapters;
 
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.carebridge.wear.R;
+import com.example.carebridge.wear.databinding.ItemHealthInfoBinding;
 import com.example.carebridge.wear.models.HealthInfo;
 
 import java.util.List;
 
-public class HealthInfoAdapter extends RecyclerView.Adapter<HealthInfoAdapter.HealthInfoViewHolder> {
+/**
+ * RecyclerView Adapter for displaying patient health information
+ * on Wear OS (e.g., Blood Group, Age, Address).
 
-    private List<HealthInfo> healthInfoList;
+ * Uses ViewBinding for safe and clean view access.
+ */
+public class HealthInfoAdapter
+        extends RecyclerView.Adapter<HealthInfoAdapter.HealthInfoViewHolder> {
 
-    public HealthInfoAdapter(List<HealthInfo> healthInfoList) {
+    // Immutable list of health info items
+    private final List<HealthInfo> healthInfoList;
+
+    /**
+     * Adapter constructor
+     *
+     * @param healthInfoList list of health information items
+     */
+    public HealthInfoAdapter(@NonNull List<HealthInfo> healthInfoList) {
         this.healthInfoList = healthInfoList;
     }
 
+    /**
+     * Inflates the item layout using ViewBinding
+     */
     @NonNull
     @Override
-    public HealthInfoViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_health_info, parent, false);
-        return new HealthInfoViewHolder(view);
+    public HealthInfoViewHolder onCreateViewHolder(
+            @NonNull ViewGroup parent,
+            int viewType
+    ) {
+        ItemHealthInfoBinding binding =
+                ItemHealthInfoBinding.inflate(
+                        LayoutInflater.from(parent.getContext()),
+                        parent,
+                        false
+                );
+
+        return new HealthInfoViewHolder(binding);
     }
 
+    /**
+     * Binds data to the ViewHolder safely
+     */
     @Override
-    public void onBindViewHolder(@NonNull HealthInfoViewHolder holder, int position) {
-        HealthInfo healthInfo = healthInfoList.get(position);
-        holder.bind(healthInfo);
+    public void onBindViewHolder(
+            @NonNull HealthInfoViewHolder holder,
+            int position
+    ) {
+        if (position < 0 || position >= healthInfoList.size()) {
+            return;
+        }
+
+        holder.bind(healthInfoList.get(position));
     }
 
+    /**
+     * Returns total number of items
+     */
     @Override
     public int getItemCount() {
         return healthInfoList.size();
     }
 
-    static class HealthInfoViewHolder extends RecyclerView.ViewHolder {
-        private TextView infoLabel;
-        private TextView infoValue;
-        private ImageView infoIcon;
+    /**
+     * ViewHolder class for a single health info item
+     */
+    static final class HealthInfoViewHolder
+            extends RecyclerView.ViewHolder {
 
-        public HealthInfoViewHolder(@NonNull View itemView) {
-            super(itemView);
-            infoLabel = itemView.findViewById(R.id.info_label);
-            infoValue = itemView.findViewById(R.id.info_value);
-            infoIcon = itemView.findViewById(R.id.info_icon);
+        private final ItemHealthInfoBinding binding;
+
+        /**
+         * ViewHolder constructor using ViewBinding
+         */
+        HealthInfoViewHolder(
+                @NonNull ItemHealthInfoBinding binding
+        ) {
+            super(binding.getRoot());
+            this.binding = binding;
         }
 
-        public void bind(HealthInfo healthInfo) {
-            infoLabel.setText(healthInfo.getLabel());
-            infoValue.setText(healthInfo.getValue());
-            infoIcon.setImageResource(healthInfo.getIconRes());
+        /**
+         * Binds HealthInfo model data to UI components
+         */
+        void bind(@NonNull HealthInfo healthInfo) {
+            binding.infoLabel.setText(healthInfo.getLabel());
+            binding.infoValue.setText(healthInfo.getValue());
+            binding.infoIcon.setImageResource(healthInfo.getIconRes());
         }
     }
 }

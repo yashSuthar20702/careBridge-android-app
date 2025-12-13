@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.wear.widget.SwipeDismissFrameLayout
         android:layout_width="match_parent"
@@ -21,30 +21,28 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:gravity="center_horizontal"
-                android:paddingBottom="40dp">
+                android:paddingBottom="@dimen/login_content_padding_bottom">
 
                 <!-- Time -->
                 <TextView
                     android:id="@+id/tvLiveTime"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="12:00"
-                    android:textColor="#97E248"
+                    android:text="@string/live_time_sample"
+                    android:textColor="@color/time_green"
                     android:textSize="@dimen/text_size_medium"
                     android:textStyle="bold"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    android:paddingTop="5dp"
+                    android:paddingTop="@dimen/padding_xsmall"
                     android:paddingBottom="@dimen/padding_medium" />
 
                 <!-- User Icon -->
                 <ImageView
-                    android:layout_width="64dp"
-                    android:layout_height="64dp"
+                    android:layout_width="@dimen/user_icon_size"
+                    android:layout_height="@dimen/user_icon_size"
                     android:src="@drawable/ic_carebridge"
                     android:padding="@dimen/padding_large"
-                    android:layout_marginBottom="@dimen/margin_large" />
+                    android:layout_marginBottom="@dimen/margin_large"
+                    android:contentDescription="@string/app_name" />
 
                 <!-- Title -->
                 <TextView
@@ -65,7 +63,7 @@
                     android:textColor="@color/wear_error_red"
                     android:textSize="@dimen/text_size_small"
                     android:visibility="gone"
-                    android:layout_marginBottom="10dp"
+                    android:layout_marginBottom="@dimen/margin_small"
                     android:maxLines="2"
                     android:gravity="center" />
 
@@ -73,37 +71,40 @@
                 <EditText
                     android:id="@+id/username_edit_text"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="@dimen/input_height_medium"
                     android:layout_marginHorizontal="@dimen/margin_medium"
                     android:background="@drawable/wear_input"
                     android:hint="@string/username_hint"
-                    android:paddingStart="14dp"
-                    android:paddingEnd="14dp"
+                    android:paddingStart="@dimen/input_padding_horizontal"
+                    android:paddingEnd="@dimen/input_padding_horizontal"
                     android:inputType="text|textNoSuggestions"
                     android:imeOptions="actionNext"
                     android:singleLine="true"
+                    android:autofillHints="username"
                     android:textColor="@color/white"
                     android:textColorHint="@color/gray_400"
-                    android:layout_marginBottom="10dp" />
+                    android:layout_marginBottom="@dimen/margin_small" />
 
                 <!-- Password -->
                 <EditText
                     android:id="@+id/password_edit_text"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
+                    android:layout_height="@dimen/input_height_medium"
                     android:layout_marginHorizontal="@dimen/margin_medium"
                     android:background="@drawable/wear_input"
                     android:hint="@string/password_hint"
-                    android:paddingStart="14dp"
-                    android:paddingEnd="14dp"
+                    android:paddingStart="@dimen/input_padding_horizontal"
+                    android:paddingEnd="@dimen/input_padding_horizontal"
                     android:textColor="@color/white"
                     android:textColorHint="@color/gray_400"
                     android:inputType="textPassword"
                     android:imeOptions="actionDone"
                     android:singleLine="true"
+                    android:autofillHints="password"
                     android:layout_marginBottom="@dimen/margin_xlarge"
                     tools:ignore="WearPasswordInput" />
 
+                <!-- Login Button -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/login_button"
                     android:layout_width="match_parent"
@@ -115,8 +116,7 @@
                     android:textColor="@color/white"
                     android:textSize="@dimen/text_size_medium"
                     android:textStyle="bold"
-                    android:backgroundTint="@color/status_blue" />
-
+                    android:backgroundTint="@color/status_blue"/>
 
                 <!-- Footer -->
                 <TextView
@@ -124,8 +124,8 @@
                     android:layout_height="wrap_content"
                     android:text="@string/login_footer"
                     android:textColor="@color/gray_400"
-                    android:textSize="10sp"
-                    android:alpha="0.8" />
+                    android:textSize="@dimen/text_size_xsmall"
+                    android:alpha="@dimen/alpha_subtle" />
 
             </LinearLayout>
         </ScrollView>

@@ -5,6 +5,7 @@ import android.animation.PropertyValuesHolder;
 import android.animation.ValueAnimator;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,14 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+/**
+ * HomeFragment
+
+ * Displays the main Wear OS home screen with:
+ * - ViewPager navigation
+ * - Animated page indicators
+ * - Live time display
+ */
 public class HomeFragment extends Fragment {
 
     private FragmentHomeBinding binding;
@@ -33,17 +42,20 @@ public class HomeFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-
+    public View onCreateView(
+            @NonNull LayoutInflater inflater,
+            @Nullable ViewGroup container,
+            @Nullable Bundle savedInstanceState
+    ) {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
 
     @Override
-    public void onViewCreated(@NonNull View view,
-                              @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(
+            @NonNull View view,
+            @Nullable Bundle savedInstanceState
+    ) {
         super.onViewCreated(view, savedInstanceState);
 
         initIndicators();
@@ -52,7 +64,7 @@ public class HomeFragment extends Fragment {
     }
 
     /**
-     * ✅ Initialize page indicators
+     * Initializes page indicators and click navigation.
      */
     private void initIndicators() {
         indicators = new View[]{
@@ -66,26 +78,26 @@ public class HomeFragment extends Fragment {
         };
 
         for (int i = Constants.POSITION_FIRST; i < indicators.length; i++) {
-            int index = i;
-            indicators[i].setOnClickListener(v ->
-                    binding.viewPager.setCurrentItem(index, true)
+            final int index = i;
+            indicators[i].setOnClickListener(
+                    v -> binding.viewPager.setCurrentItem(index, true)
             );
         }
     }
 
     /**
-     * ✅ FIXED: Set up ViewPager with correct Activity-based adapter
+     * Sets up ViewPager with FragmentStateAdapter.
      */
     private void setupViewPager() {
-        // ✅ THIS FIXES YOUR CRASH
-        HomePagerAdapter adapter = new HomePagerAdapter(requireActivity());
+        HomePagerAdapter adapter =
+                new HomePagerAdapter(requireActivity());
+
         binding.viewPager.setAdapter(adapter);
 
         binding.viewPager.registerOnPageChangeCallback(
                 new ViewPager2.OnPageChangeCallback() {
                     @Override
                     public void onPageSelected(int position) {
-                        super.onPageSelected(position);
                         updateIndicators(position);
                     }
                 }
@@ -95,91 +107,100 @@ public class HomeFragment extends Fragment {
     }
 
     /**
-     * ✅ Update indicator appearance based on active position
+     * Updates indicator appearance based on selected page.
      */
-    private void updateIndicators(int activePos) {
+    private void updateIndicators(int activePosition) {
         for (int i = Constants.POSITION_FIRST; i < indicators.length; i++) {
             View indicator = indicators[i];
 
-            if (i == activePos) {
-                indicator.setBackgroundResource(R.drawable.indicator_active);
+            if (i == activePosition) {
+                indicator.setBackgroundResource(
+                        R.drawable.indicator_active
+                );
                 animateActive(indicator);
             } else {
-                indicator.setBackgroundResource(R.drawable.indicator_inactive);
+                indicator.setBackgroundResource(
+                        R.drawable.indicator_inactive
+                );
                 animateInactive(indicator);
             }
 
-            animateMargin(indicator, i == activePos);
+            animateMargin(indicator, i == activePosition);
         }
     }
 
     /**
-     * ✅ Animate active indicator with scale up
+     * Scales indicator up when active.
      */
     private void animateActive(View view) {
-        PropertyValuesHolder scaleX = PropertyValuesHolder.ofFloat(
-                View.SCALE_X,
-                Constants.FLOAT_SCALE_INACTIVE,
-                Constants.FLOAT_SCALE_ACTIVE
+        ObjectAnimator animator =
+                ObjectAnimator.ofPropertyValuesHolder(
+                        view,
+                        PropertyValuesHolder.ofFloat(
+                                View.SCALE_X,
+                                Constants.FLOAT_SCALE_INACTIVE,
+                                Constants.FLOAT_SCALE_ACTIVE
+                        ),
+                        PropertyValuesHolder.ofFloat(
+                                View.SCALE_Y,
+                                Constants.FLOAT_SCALE_INACTIVE,
+                                Constants.FLOAT_SCALE_ACTIVE
+                        )
+                );
+
+        animator.setDuration(Constants.ANIMATION_DURATION_MEDIUM);
+        animator.setInterpolator(
+                new AccelerateDecelerateInterpolator()
         );
-
-        PropertyValuesHolder scaleY = PropertyValuesHolder.ofFloat(
-                View.SCALE_Y,
-                Constants.FLOAT_SCALE_INACTIVE,
-                Constants.FLOAT_SCALE_ACTIVE
-        );
-
-        ObjectAnimator anim =
-                ObjectAnimator.ofPropertyValuesHolder(view, scaleX, scaleY);
-
-        anim.setDuration(Constants.ANIMATION_DURATION_MEDIUM);
-        anim.setInterpolator(new AccelerateDecelerateInterpolator());
-        anim.start();
+        animator.start();
     }
 
     /**
-     * ✅ Animate inactive indicator with scale down
+     * Scales indicator down when inactive.
      */
     private void animateInactive(View view) {
-        PropertyValuesHolder scaleX = PropertyValuesHolder.ofFloat(
-                View.SCALE_X,
-                Constants.FLOAT_SCALE_ACTIVE,
-                Constants.FLOAT_SCALE_INACTIVE
+        ObjectAnimator animator =
+                ObjectAnimator.ofPropertyValuesHolder(
+                        view,
+                        PropertyValuesHolder.ofFloat(
+                                View.SCALE_X,
+                                Constants.FLOAT_SCALE_ACTIVE,
+                                Constants.FLOAT_SCALE_INACTIVE
+                        ),
+                        PropertyValuesHolder.ofFloat(
+                                View.SCALE_Y,
+                                Constants.FLOAT_SCALE_ACTIVE,
+                                Constants.FLOAT_SCALE_INACTIVE
+                        )
+                );
+
+        animator.setDuration(Constants.ANIMATION_DURATION_SHORT);
+        animator.setInterpolator(
+                new AccelerateDecelerateInterpolator()
         );
-
-        PropertyValuesHolder scaleY = PropertyValuesHolder.ofFloat(
-                View.SCALE_Y,
-                Constants.FLOAT_SCALE_ACTIVE,
-                Constants.FLOAT_SCALE_INACTIVE
-        );
-
-        ObjectAnimator anim =
-                ObjectAnimator.ofPropertyValuesHolder(view, scaleX, scaleY);
-
-        anim.setDuration(Constants.ANIMATION_DURATION_SHORT);
-        anim.setInterpolator(new AccelerateDecelerateInterpolator());
-        anim.start();
+        animator.start();
     }
 
     /**
-     * ✅ Animate margin changes for indicators
+     * Animates margin spacing for active/inactive indicators.
      */
     private void animateMargin(View view, boolean isActive) {
         ViewGroup.MarginLayoutParams params =
                 (ViewGroup.MarginLayoutParams) view.getLayoutParams();
 
-        int start = params.leftMargin;
-        int end = isActive
+        int startMargin = params.leftMargin;
+        int endMargin = isActive
                 ? Constants.INDICATOR_MARGIN_ACTIVE
                 : Constants.INDICATOR_MARGIN_INACTIVE;
 
-        ValueAnimator animator = ValueAnimator.ofInt(start, end);
-        animator.setDuration(Constants.ANIMATION_DURATION_MEDIUM);
+        ValueAnimator animator =
+                ValueAnimator.ofInt(startMargin, endMargin);
 
+        animator.setDuration(Constants.ANIMATION_DURATION_MEDIUM);
         animator.addUpdateListener(animation -> {
-            int marginValue = (int) animation.getAnimatedValue();
-            params.leftMargin = marginValue;
-            params.rightMargin = marginValue;
+            int value = (int) animation.getAnimatedValue();
+            params.leftMargin = value;
+            params.rightMargin = value;
             view.setLayoutParams(params);
         });
 
@@ -187,45 +208,44 @@ public class HomeFragment extends Fragment {
     }
 
     /**
-     * ✅ Start time update handler
+     * Starts handler to update time every second.
      */
     private void startTimeUpdates() {
-        timeHandler = new Handler();
+        timeHandler = new Handler(Looper.getMainLooper());
 
-        timeRunnable = new Runnable() {
-            @Override
-            public void run() {
-                updateTime();
-                timeHandler.postDelayed(
-                        this,
-                        Constants.UPDATE_INTERVAL_FAST
-                );
-            }
+        timeRunnable = () -> {
+            updateTime();
+            timeHandler.postDelayed(
+                    timeRunnable,
+                    Constants.UPDATE_INTERVAL_FAST
+            );
         };
 
         timeHandler.post(timeRunnable);
     }
 
     /**
-     * ✅ Update time display
+     * Updates current time on home screen.
      */
     private void updateTime() {
         if (binding == null) return;
 
-        SimpleDateFormat sdf =
+        SimpleDateFormat formatter =
                 new SimpleDateFormat(
                         Constants.TIME_FORMAT_HH_MM,
                         Locale.getDefault()
                 );
 
-        binding.homeTime.setText(sdf.format(new Date()));
+        binding.homeTime.setText(
+                formatter.format(new Date())
+        );
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
 
-        if (timeHandler != null) {
+        if (timeHandler != null && timeRunnable != null) {
             timeHandler.removeCallbacks(timeRunnable);
         }
 

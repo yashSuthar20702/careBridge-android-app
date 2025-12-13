@@ -27,6 +27,13 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+/**
+ * MainActivity
+ *
+ * Acts as the entry point after successful login.
+ * Handles fragment navigation, notification permission checks,
+ * logout flow, and server-side FCM token cleanup.
+ */
 public class MainActivity extends FragmentActivity {
 
     private ActivityMainBinding binding;
@@ -41,37 +48,39 @@ public class MainActivity extends FragmentActivity {
 
         wearSharedPrefManager = new WearSharedPrefManager(this);
 
-        // Check if user is logged in, redirect to login if not
+        // If user session does not exist, redirect to LoginActivity
         if (!wearSharedPrefManager.isLoggedIn()) {
             startActivity(new Intent(this, LoginActivity.class));
             finish();
             return;
         }
 
-        // Request notification permission on startup
+        // Request notification permission if required (Android 13+)
         askNotificationPermission();
 
-        // Set up home fragment if no saved state
+        // Load HomeFragment only once
         if (savedInstanceState == null) {
             initializeHomeFragment();
         }
     }
 
     /**
-     * Initialize home fragment in container
+     * Loads HomeFragment into the fragment container
      */
     private void initializeHomeFragment() {
-        getSupportFragmentManager().beginTransaction()
+        getSupportFragmentManager()
+                .beginTransaction()
                 .replace(R.id.fragment_container, new HomeFragment())
                 .commit();
     }
 
     /**
-     * Request notification permission for API 33+
+     * Requests notification permission for Android API level 33 and above
      */
     private void askNotificationPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            boolean notificationsEnabled = NotificationManagerCompat.from(this).areNotificationsEnabled();
+            boolean notificationsEnabled =
+                    NotificationManagerCompat.from(this).areNotificationsEnabled();
 
             if (!notificationsEnabled) {
                 requestPermissions(
@@ -83,8 +92,11 @@ public class MainActivity extends FragmentActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(
+            int requestCode,
+            @NonNull String[] permissions,
+            @NonNull int[] grantResults) {
+
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         if (requestCode == Constants.PERMISSIONS_REQUEST_NOTIFICATIONS) {
@@ -93,20 +105,22 @@ public class MainActivity extends FragmentActivity {
     }
 
     /**
-     * Handle notification permission request result
+     * Handles the result of the notification permission request
      */
     private void handleNotificationPermissionResult(@NonNull int[] grantResults) {
         if (grantResults.length > 0 &&
                 grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-            showConfirmationOverlay(ConfirmationOverlay.SUCCESS_ANIMATION);
+            showConfirmationOverlay(
+                    ConfirmationOverlay.SUCCESS_ANIMATION);
         } else {
-            showConfirmationOverlay(ConfirmationOverlay.FAILURE_ANIMATION);
+            showConfirmationOverlay(
+                    ConfirmationOverlay.FAILURE_ANIMATION);
         }
     }
 
     /**
-     * Show confirmation overlay with specified animation type
+     * Displays a Wear OS confirmation overlay
      */
     private void showConfirmationOverlay(int animationType) {
         new ConfirmationOverlay()
@@ -115,36 +129,47 @@ public class MainActivity extends FragmentActivity {
     }
 
     /**
-     * Logout user and delete FCM token
+     * Public method triggered from UI to start logout process
      */
     public void logout() {
         showLogoutConfirmationDialog();
     }
 
     /**
-     * Display logout confirmation dialog
+     * Shows a confirmation dialog before logging out
      */
     private void showLogoutConfirmationDialog() {
-        View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_logout, null);
+        View dialogView =
+                LayoutInflater.from(this).inflate(
+                        R.layout.dialog_logout, null);
 
-        TextView btnCancel = dialogView.findViewById(R.id.btnCancel);
-        TextView btnConfirm = dialogView.findViewById(R.id.btnConfirm);
+        TextView btnCancel =
+                dialogView.findViewById(R.id.btnCancel);
+        TextView btnConfirm =
+                dialogView.findViewById(R.id.btnConfirm);
 
-        AlertDialog dialog = new AlertDialog.Builder(this, R.style.WearDialogTheme)
-                .setView(dialogView)
-                .setCancelable(true)
-                .create();
+        AlertDialog dialog =
+                new AlertDialog.Builder(this, R.style.WearDialogTheme)
+                        .setView(dialogView)
+                        .setCancelable(true)
+                        .create();
 
         dialog.show();
 
-        setupDialogButtonListeners(btnCancel, btnConfirm, dialog);
+        setupDialogButtonListeners(
+                btnCancel, btnConfirm, dialog);
     }
 
     /**
-     * Setup dialog button click listeners
+     * Assigns click listeners to logout dialog buttons
      */
-    private void setupDialogButtonListeners(TextView btnCancel, TextView btnConfirm, AlertDialog dialog) {
+    private void setupDialogButtonListeners(
+            TextView btnCancel,
+            TextView btnConfirm,
+            AlertDialog dialog) {
+
         btnCancel.setOnClickListener(v -> dialog.dismiss());
+
         btnConfirm.setOnClickListener(v -> {
             dialog.dismiss();
             deleteWearFcmToken();
@@ -152,7 +177,7 @@ public class MainActivity extends FragmentActivity {
     }
 
     /**
-     * Delete FCM token from server
+     * Initiates background request to remove Wear FCM token from server
      */
     private void deleteWearFcmToken() {
         int userId = wearSharedPrefManager.getUserId();
@@ -160,54 +185,66 @@ public class MainActivity extends FragmentActivity {
         new Thread(() -> {
             try {
                 sendFcmTokenDeleteRequest(userId);
-                runOnUiThread(this::proceedLogout);
             } catch (Exception e) {
                 e.printStackTrace();
+            } finally {
                 runOnUiThread(this::proceedLogout);
             }
         }).start();
     }
 
     /**
-     * Send HTTP request to delete FCM token
+     * Sends HTTP request to backend to delete FCM token
      */
     private void sendFcmTokenDeleteRequest(int userId) throws Exception {
-        URL url = new URL(ApiConstants.getDeleteWearFcmTokenUrl());
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        URL url =
+                new URL(ApiConstants.getDeleteWearFcmTokenUrl());
 
-        conn.setRequestMethod(Constants.HTTP_METHOD_POST);
-        conn.setDoOutput(true);
-        conn.setRequestProperty(Constants.HTTP_HEADER_CONTENT_TYPE, Constants.HTTP_CONTENT_TYPE_JSON);
+        HttpURLConnection connection =
+                (HttpURLConnection) url.openConnection();
+
+        connection.setRequestMethod(
+                Constants.HTTP_METHOD_POST);
+        connection.setDoOutput(true);
+        connection.setRequestProperty(
+                Constants.HTTP_HEADER_CONTENT_TYPE,
+                Constants.HTTP_CONTENT_TYPE_JSON);
 
         JSONObject json = new JSONObject();
         json.put(Constants.KEY_USER_ID, userId);
 
-        OutputStream os = conn.getOutputStream();
+        OutputStream os = connection.getOutputStream();
         os.write(json.toString().getBytes());
         os.flush();
         os.close();
 
-        conn.getResponseCode(); // Ensure request completes
-        conn.disconnect();
+        connection.getResponseCode();
+        connection.disconnect();
     }
 
     /**
-     * Proceed with logout after token deletion
+     * Clears session and navigates back to LoginActivity
      */
     private void proceedLogout() {
         wearSharedPrefManager.logout();
 
-        showConfirmationOverlay(ConfirmationOverlay.SUCCESS_ANIMATION);
+        showConfirmationOverlay(
+                ConfirmationOverlay.SUCCESS_ANIMATION);
 
         navigateToLoginActivity();
     }
 
     /**
-     * Navigate to login activity with clear task flags
+     * Navigates to LoginActivity and clears activity stack
      */
     private void navigateToLoginActivity() {
-        Intent intent = new Intent(this, LoginActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        Intent intent =
+                new Intent(this, LoginActivity.class);
+
+        intent.setFlags(
+                Intent.FLAG_ACTIVITY_NEW_TASK
+                        | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
         startActivity(intent);
         finish();
     }

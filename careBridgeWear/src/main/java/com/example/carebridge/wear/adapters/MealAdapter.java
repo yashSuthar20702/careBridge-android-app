@@ -14,26 +14,41 @@ import com.example.carebridge.wear.models.MealItem;
 import java.util.List;
 
 /**
- * Adapter for displaying meals fetched from API.
+ * RecyclerView adapter for displaying meal plan items on Wear OS.
  */
 public class MealAdapter extends RecyclerView.Adapter<MealAdapter.MealViewHolder> {
 
     private final List<MealItem> mealList;
 
-    public MealAdapter(List<MealItem> mealList) {
+    /**
+     * Adapter constructor.
+     */
+    public MealAdapter(@NonNull List<MealItem> mealList) {
         this.mealList = mealList;
     }
 
+    /**
+     * Inflates the meal item layout.
+     */
     @NonNull
     @Override
-    public MealViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public MealViewHolder onCreateViewHolder(
+            @NonNull ViewGroup parent,
+            int viewType
+    ) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_meal, parent, false);
         return new MealViewHolder(view);
     }
 
+    /**
+     * Binds meal data to the UI.
+     */
     @Override
-    public void onBindViewHolder(@NonNull MealViewHolder holder, int position) {
+    public void onBindViewHolder(
+            @NonNull MealViewHolder holder,
+            int position
+    ) {
         MealItem meal = mealList.get(position);
 
         holder.mealName.setText(meal.getName());
@@ -41,17 +56,27 @@ public class MealAdapter extends RecyclerView.Adapter<MealAdapter.MealViewHolder
         holder.mealDescription.setText(meal.getDescription());
     }
 
+    /**
+     * Returns number of meals.
+     */
     @Override
     public int getItemCount() {
         return mealList.size();
     }
 
+    /**
+     * ViewHolder for a single meal item.
+     * Package-private + static is the correct RecyclerView pattern.
+     */
     static class MealViewHolder extends RecyclerView.ViewHolder {
 
-        TextView mealName, mealTime, mealDescription;
+        final TextView mealName;
+        final TextView mealTime;
+        final TextView mealDescription;
 
-        public MealViewHolder(@NonNull View itemView) {
+        MealViewHolder(@NonNull View itemView) {
             super(itemView);
+
             mealName = itemView.findViewById(R.id.meal_name);
             mealTime = itemView.findViewById(R.id.meal_time);
             mealDescription = itemView.findViewById(R.id.meal_description);

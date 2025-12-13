@@ -13,18 +13,20 @@ import com.example.carebridge.wear.adapters.GuardianAdapter;
 import com.example.carebridge.wear.databinding.ActivityGuardianBinding;
 import com.example.carebridge.wear.models.Guardian;
 import com.example.carebridge.wear.utils.Constants;
-import com.example.carebridge.wear.utils.WearSharedPrefManager;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * GuardianActivity
+ * Displays guardians assigned to the current patient on Wear OS
+ */
 public class GuardianActivity extends AppCompatActivity {
 
     private ActivityGuardianBinding binding;
     private List<Guardian> guardianList;
-    private GuardianAdapter adapter;
+    private GuardianAdapter guardianAdapter;
     private PatientGuardianInfoController guardianController;
-    private WearSharedPrefManager wearSharedPrefManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,50 +34,42 @@ public class GuardianActivity extends AppCompatActivity {
         binding = ActivityGuardianBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // Initialize controllers and managers
         guardianController = new PatientGuardianInfoController(this);
-        wearSharedPrefManager = new WearSharedPrefManager(this);
 
         setupRecyclerView();
-        fetchGuardiansData();
+        fetchGuardianData();
     }
 
     /**
-     * Set up RecyclerView with adapter and layout manager
+     * Setup RecyclerView
      */
     private void setupRecyclerView() {
         guardianList = new ArrayList<>();
-        adapter = new GuardianAdapter(guardianList);
-        binding.guardianRecyclerView.setAdapter(adapter);
-        binding.guardianRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        guardianAdapter = new GuardianAdapter(guardianList);
 
-        // Show loading state initially
+        binding.guardianRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        binding.guardianRecyclerView.setAdapter(guardianAdapter);
+
         showLoadingState();
     }
 
     /**
-     * Fetch guardians data from API
+     * Fetch guardian data from API
      */
-    private void fetchGuardiansData() {
+    private void fetchGuardianData() {
         Log.d(Constants.TAG_GUARDIAN_ACTIVITY,
-                Constants.LOG_EMOJI_INFO + Constants.SPACE + Constants.LOG_MSG_GUARDIAN_FETCHING_STARTED);
+                Constants.LOG_EMOJI_INFO + " Fetching guardian data");
 
         guardianController.getCurrentGuardian(new PatientGuardianInfoController.PatientGuardianCallback() {
+
             @Override
             public void onSuccess(List<PatientGuardianInfo> patientGuardianList) {
-                Log.d(Constants.TAG_GUARDIAN_ACTIVITY,
-                        Constants.LOG_EMOJI_SUCCESS + Constants.SPACE + Constants.LOG_MSG_GUARDIAN_FETCH_SUCCESS +
-                                Constants.COLON + Constants.SPACE + patientGuardianList.size());
-
-                // Convert PatientGuardianInfo to Guardian list
                 convertToGuardianList(patientGuardianList);
 
-                // Update UI on main thread
                 runOnUiThread(() -> {
                     hideLoadingState();
-                    adapter.notifyDataSetChanged();
+                    guardianAdapter.notifyDataSetChanged();
 
-                    // Show empty state if no guardians
                     if (guardianList.isEmpty()) {
                         showEmptyState();
                     }
@@ -85,14 +79,11 @@ public class GuardianActivity extends AppCompatActivity {
             @Override
             public void onFailure(String message) {
                 Log.e(Constants.TAG_GUARDIAN_ACTIVITY,
-                        Constants.LOG_EMOJI_ERROR + Constants.SPACE + Constants.LOG_MSG_GUARDIAN_FETCH_FAILED +
-                                Constants.COLON + Constants.SPACE + message);
+                        Constants.LOG_EMOJI_ERROR + " " + message);
 
-                // Update UI on main thread
                 runOnUiThread(() -> {
                     hideLoadingState();
-                    showErrorState(message);
-                    // Fallback to sample data if API fails
+                    showErrorState();
                     initializeSampleData();
                 });
             }
@@ -100,77 +91,71 @@ public class GuardianActivity extends AppCompatActivity {
     }
 
     /**
-     * Convert PatientGuardianInfo objects to Guardian model objects
+     * Convert API model to UI model
      */
     private void convertToGuardianList(List<PatientGuardianInfo> patientGuardianList) {
         guardianList.clear();
 
-        for (PatientGuardianInfo patientGuardian : patientGuardianList) {
-            // Map PatientGuardianInfo to Guardian model
-            Guardian guardian = new Guardian(
-                    patientGuardian.getFull_name(),
-                    patientGuardian.getType(),
-                    patientGuardian.getRole(),
-                    patientGuardian.getPhone()
-            );
-            guardianList.add(guardian);
+        if (patientGuardianList == null || patientGuardianList.isEmpty()) {
+            Log.d(Constants.TAG_GUARDIAN_ACTIVITY,
+                    Constants.LOG_EMOJI_INFO + " No guardian data");
+            return;
         }
 
-        // Log if no data from API
-        if (guardianList.isEmpty()) {
-            Log.d(Constants.TAG_GUARDIAN_ACTIVITY,
-                    Constants.LOG_EMOJI_INFO + Constants.SPACE + Constants.LOG_MSG_GUARDIAN_NO_DATA);
+        for (PatientGuardianInfo info : patientGuardianList) {
+            guardianList.add(new Guardian(
+                    info.getFull_name(),
+                    info.getType(),
+                    info.getRole(),
+                    info.getPhone()
+            ));
         }
     }
 
     /**
-     * Initialize with sample data when API fails
+     * Fallback sample data
      */
     private void initializeSampleData() {
-        // Fallback to sample data if API fails
         guardianList.clear();
-        guardianList.add(new Guardian(Constants.SAMPLE_NAME_YASH, Constants.SAMPLE_TYPE_FAMILY,
-                Constants.SAMPLE_RELATION_FRIEND, Constants.SAMPLE_PHONE_YASH));
-        guardianList.add(new Guardian(Constants.SAMPLE_NAME_DHWANI, Constants.SAMPLE_TYPE_CARETAKER,
-                Constants.SAMPLE_RELATION_NURSE, Constants.SAMPLE_PHONE_DHWANI));
-        adapter.notifyDataSetChanged();
+
+        guardianList.add(new Guardian(
+                Constants.SAMPLE_NAME_YASH,
+                Constants.SAMPLE_TYPE_FAMILY,
+                Constants.SAMPLE_RELATION_FRIEND,
+                Constants.SAMPLE_PHONE_YASH
+        ));
+
+        guardianList.add(new Guardian(
+                Constants.SAMPLE_NAME_DHWANI,
+                Constants.SAMPLE_TYPE_CARETAKER,
+                Constants.SAMPLE_RELATION_NURSE,
+                Constants.SAMPLE_PHONE_DHWANI
+        ));
+
+        guardianAdapter.notifyDataSetChanged();
     }
 
-    /**
-     * Show loading state while fetching data
-     */
+    /* ---------------- UI STATES ---------------- */
+
     private void showLoadingState() {
-        runOnUiThread(() -> {
-            binding.guardianRecyclerView.setVisibility(View.GONE);
-            // You can add a progress bar to your layout if needed
-        });
+        binding.progressGuardian.setVisibility(View.VISIBLE);
+        binding.guardianRecyclerView.setVisibility(View.GONE);
+        binding.tvEmptyState.setVisibility(View.GONE);
+        binding.tvErrorState.setVisibility(View.GONE);
     }
 
-    /**
-     * Hide loading state when data is loaded
-     */
     private void hideLoadingState() {
-        runOnUiThread(() -> {
-            binding.guardianRecyclerView.setVisibility(View.VISIBLE);
-        });
+        binding.progressGuardian.setVisibility(View.GONE);
+        binding.guardianRecyclerView.setVisibility(View.VISIBLE);
     }
 
-    /**
-     * Show empty state when no guardians available
-     */
     private void showEmptyState() {
-        Log.d(Constants.TAG_GUARDIAN_ACTIVITY,
-                Constants.LOG_EMOJI_INFO + Constants.SPACE + Constants.LOG_MSG_GUARDIAN_EMPTY_STATE);
-        // You can add an empty state view to your layout
+        binding.tvEmptyState.setVisibility(View.VISIBLE);
+        binding.guardianRecyclerView.setVisibility(View.GONE);
     }
 
-    /**
-     * Show error state with message
-     */
-    private void showErrorState(String message) {
-        Log.e(Constants.TAG_GUARDIAN_ACTIVITY,
-                Constants.LOG_EMOJI_ERROR + Constants.SPACE + Constants.LOG_MSG_GUARDIAN_ERROR_STATE +
-                        Constants.COLON + Constants.SPACE + message);
-        // You can add an error message view to your layout
+    private void showErrorState() {
+        binding.tvErrorState.setVisibility(View.VISIBLE);
+        binding.guardianRecyclerView.setVisibility(View.GONE);
     }
 }

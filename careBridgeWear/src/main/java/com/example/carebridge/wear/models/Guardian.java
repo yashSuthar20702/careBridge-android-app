@@ -1,11 +1,28 @@
 package com.example.carebridge.wear.models;
 
-public class Guardian {
-    private String name;
-    private String type;
-    private String relation;
-    private String phone;
+/**
+ * Guardian model class
 
+ * Represents a guardian or caregiver linked to a patient.
+ * This class is used to transfer guardian data to UI components.
+ */
+public class Guardian {
+
+    // Guardian's full name
+    private final String name;
+
+    // Guardian category (Family, Medical, Caretaker, etc.)
+    private final String type;
+
+    // Relationship with the patient
+    private final String relation;
+
+    // Guardian contact phone number
+    private final String phone;
+
+    /**
+     * Constructor used to create a Guardian object
+     */
     public Guardian(String name, String type, String relation, String phone) {
         this.name = name;
         this.type = type;
@@ -13,15 +30,23 @@ public class Guardian {
         this.phone = phone;
     }
 
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
+    // Returns guardian name
+    public String getName() {
+        return name;
+    }
 
-    public String getType() { return type; }
-    public void setType(String type) { this.type = type; }
+    // Returns guardian type
+    public String getType() {
+        return type;
+    }
 
-    public String getRelation() { return relation; }
-    public void setRelation(String relation) { this.relation = relation; }
+    // Returns guardian relationship
+    public String getRelation() {
+        return relation;
+    }
 
-    public String getPhone() { return phone; }
-    public void setPhone(String phone) { this.phone = phone; }
+    // Returns guardian phone number
+    public String getPhone() {
+        return phone;
+    }
 }

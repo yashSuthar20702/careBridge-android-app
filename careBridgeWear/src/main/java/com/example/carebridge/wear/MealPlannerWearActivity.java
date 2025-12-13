@@ -8,11 +8,11 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.carebridge.shared.controller.MealController;
 import com.example.carebridge.shared.utils.SharedPrefManager;
 import com.example.carebridge.wear.adapters.MealAdapter;
+import com.example.carebridge.wear.databinding.ActivityMealPlannerWearBinding;
 import com.example.carebridge.wear.models.MealItem;
 
 import org.json.JSONObject;
@@ -20,78 +20,141 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * MealPlannerWearActivity
+
+ * Displays the daily meal plan for a patient on Wear OS.
+ * The meal data is fetched from the backend using the
+ * patient (case) ID stored in Shared Preferences.
+ */
 public class MealPlannerWearActivity extends AppCompatActivity {
 
     private static final String TAG = "MealPlannerWearActivity";
 
+    private ActivityMealPlannerWearBinding binding;
     private MealController mealController;
-    private String patientId;
 
-    private RecyclerView recyclerView;
     private MealAdapter adapter;
-    private List<MealItem> meals;
+    private final List<MealItem> meals = new ArrayList<>();
+
+    private String patientId;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_meal_planner_wear);
 
+        // Initialize ViewBinding
+        binding = ActivityMealPlannerWearBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
+        // Initialize controller responsible for API calls
         mealController = new MealController();
 
-        // RecyclerView setup
-        recyclerView = findViewById(R.id.meal_recycler_view);
-        meals = new ArrayList<>();
-        adapter = new MealAdapter(meals);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(adapter);
+        setupRecyclerView();
+        loadPatientIdAndFetchMeals();
+    }
 
-        // Get patientId from SharedPrefManager
-        SharedPrefManager sharedPref = new SharedPrefManager(this);
-        patientId = sharedPref.getReferenceId();
+    /**
+     * Sets up the RecyclerView for displaying meal items
+     */
+    private void setupRecyclerView() {
+        adapter = new MealAdapter(meals);
+        binding.mealRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        binding.mealRecyclerView.setAdapter(adapter);
+    }
+
+    /**
+     * Retrieves patient ID from Shared Preferences
+     * and fetches the meal plan if available
+     */
+    private void loadPatientIdAndFetchMeals() {
+        SharedPrefManager sharedPrefManager = new SharedPrefManager(this);
+        patientId = sharedPrefManager.getReferenceId();
 
         if (patientId != null && !patientId.isEmpty()) {
             fetchMealPlan(patientId);
         } else {
-            Toast.makeText(this, "Patient ID not found", Toast.LENGTH_SHORT).show();
+            Toast.makeText(
+                    this,
+                    getString(R.string.error_patient_id_not_found),
+                    Toast.LENGTH_SHORT
+            ).show();
         }
     }
 
+    /**
+     * Fetches the meal plan for the given patient ID
+     */
     private void fetchMealPlan(String patientId) {
-        ProgressDialog progress = new ProgressDialog(this);
-        progress.setMessage("Loading meal plan...");
-        progress.setCancelable(false);
-        progress.show();
 
-        // Fetch meal plan by case_id only
-        mealController.fetchMealPlanByCaseId(patientId, new MealController.MealFetchCallback() {
-            @Override
-            public void onSuccess(JSONObject mealPlan) {
-                progress.dismiss();
+        ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage(getString(R.string.loading_meal_plan));
+        progressDialog.setCancelable(false);
+        progressDialog.show();
 
-                try {
-                    meals.clear();
+        mealController.fetchMealPlanByCaseId(
+                patientId,
+                new MealController.MealFetchCallback() {
 
-                    meals.add(new MealItem("Morning", "08:00 AM", mealPlan.optString("morning_meal", "-")));
-                    meals.add(new MealItem("Afternoon", "01:00 PM", mealPlan.optString("afternoon_meal", "-")));
-                    meals.add(new MealItem("Evening", "06:00 PM", mealPlan.optString("evening_meal", "-")));
-                    meals.add(new MealItem("Night", "09:00 PM", mealPlan.optString("night_meal", "-")));
+                    @Override
+                    public void onSuccess(JSONObject mealPlan) {
+                        progressDialog.dismiss();
 
-                    adapter.notifyDataSetChanged();  // Important! Updates the RecyclerView
+                        try {
+                            meals.clear();
 
-                    Log.d(TAG, "Meal plan loaded successfully");
+                            // Map backend response to UI model
+                            meals.add(new MealItem(
+                                    getString(R.string.meal_morning),
+                                    getString(R.string.meal_time_morning),
+                                    mealPlan.optString("morning_meal", getString(R.string.meal_not_available))
+                            ));
 
-                } catch (Exception e) {
-                    Log.e(TAG, "Error parsing meal plan JSON", e);
-                    Toast.makeText(MealPlannerWearActivity.this, "Failed to load meal plan", Toast.LENGTH_SHORT).show();
+                            meals.add(new MealItem(
+                                    getString(R.string.meal_afternoon),
+                                    getString(R.string.meal_time_afternoon),
+                                    mealPlan.optString("afternoon_meal", getString(R.string.meal_not_available))
+                            ));
+
+                            meals.add(new MealItem(
+                                    getString(R.string.meal_evening),
+                                    getString(R.string.meal_time_evening),
+                                    mealPlan.optString("evening_meal", getString(R.string.meal_not_available))
+                            ));
+
+                            meals.add(new MealItem(
+                                    getString(R.string.meal_night),
+                                    getString(R.string.meal_time_night),
+                                    mealPlan.optString("night_meal", getString(R.string.meal_not_available))
+                            ));
+
+                            adapter.notifyDataSetChanged();
+
+                            Log.d(TAG, "Meal plan loaded successfully");
+
+                        } catch (Exception e) {
+                            Log.e(TAG, "Error parsing meal plan JSON", e);
+                            Toast.makeText(
+                                    MealPlannerWearActivity.this,
+                                    getString(R.string.error_loading_meal_plan),
+                                    Toast.LENGTH_SHORT
+                            ).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(String message) {
+                        progressDialog.dismiss();
+
+                        Toast.makeText(
+                                MealPlannerWearActivity.this,
+                                getString(R.string.error_meal_fetch_failed, message),
+                                Toast.LENGTH_SHORT
+                        ).show();
+
+                        Log.e(TAG, "Meal fetch failed: " + message);
+                    }
                 }
-            }
-
-            @Override
-            public void onFailure(String message) {
-                progress.dismiss();
-                Toast.makeText(MealPlannerWearActivity.this, "Failed: " + message, Toast.LENGTH_SHORT).show();
-                Log.e(TAG, "Meal fetch failed: " + message);
-            }
-        });
+        );
     }
 }

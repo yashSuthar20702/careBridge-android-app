@@ -13,16 +13,15 @@
         <!-- Header -->
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="34dp"
+            android:layout_height="@dimen/call_header_height"
             android:layout_marginBottom="@dimen/margin_medium"
             android:layout_marginTop="@dimen/margin_medium"
-            android:layout_marginLeft="@dimen/margin_medium">
+            android:layout_marginStart="@dimen/margin_medium">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
+                android:layout_centerInParent="true"
                 android:text="@string/call"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_medium"
@@ -50,7 +49,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/margin_large"
                     app:cardCornerRadius="@dimen/card_corner_radius_large"
-                    app:cardElevation="4dp"
+                    app:cardElevation="@dimen/card_elevation_medium"
                     app:cardBackgroundColor="@color/white">
 
                     <LinearLayout
@@ -65,6 +64,7 @@
                             android:layout_height="@dimen/icon_size_xlarge"
                             android:src="@drawable/ic_alert"
                             android:layout_marginEnd="@dimen/margin_large"
+                            android:contentDescription="@string/emergency_icon_desc"
                             app:tint="@color/black" />
 
                         <LinearLayout
@@ -94,6 +94,7 @@
                             android:layout_width="@dimen/icon_size_large"
                             android:layout_height="@dimen/icon_size_large"
                             android:src="@drawable/ic_phone"
+                            android:contentDescription="@string/phone_icon_desc"
                             app:tint="@color/gray_600" />
 
                     </LinearLayout>

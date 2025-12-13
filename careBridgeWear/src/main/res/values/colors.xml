@@ -119,4 +119,35 @@
     <color name="medicine_pending">#6B7280</color>
     <color name="medicine_overdue">#EF4444</color>
 
+
+    <color name="screen_background_black">#000000</color>
+    <color name="text_white">#FFFFFF</color>
+
+
+    <color name="text_secondary">#9E9E9E</color>
+    <color name="card_background">#2A2A2A</color>
+    <color name="steps_icon_tint">#9C27B0</color>
+
+    <!-- Card backgrounds -->
+    <color name="card_background_white">#FFFFFF</color>
+
+    <!-- Icon tints -->
+    <color name="icon_tint_light">#FFFFFF</color>
+    <color name="icon_tint_secondary">#757575</color>
+
+    <!-- Icon backgrounds -->
+    <color name="icon_background_dark">#000000</color>
+    <color name="blood_oxygen_icon_tint">#2196F3</color>
+    <color name="card_background_dark">#2A2A2A</color>
+
+    <!-- Text colors -->
+    <color name="text_primary">#000000</color>
+    <color name="icon_tint_primary">#000000</color>
+    <color name="time_accent">#1E88E5</color>
+    <color name="gray">#B0B0B0</color>
+    <color name="error_red">#FF4444</color>
+    <color name="heart_rate_primary">#FF5252</color>
+    <color name="steps_primary">#7E57C2</color>
+    <color name="blood_oxygen_primary">#42A5F5</color>
+
 </resources>

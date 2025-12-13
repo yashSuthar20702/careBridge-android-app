@@ -5,6 +5,7 @@ import android.os.Handler;
 import android.os.Looper;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatImageView;
 
 import com.example.carebridge.wear.databinding.ActivityBloodOxygenDetailBinding;
 
@@ -13,17 +14,12 @@ import java.util.Random;
 public class BloodOxygenDetailActivity extends AppCompatActivity {
 
     private ActivityBloodOxygenDetailBinding binding;
-    private Handler handler = new Handler(Looper.getMainLooper());
-    private Random random = new Random();
-    private int bloodOxygenLevel = 98;
+    private final Handler handler = new Handler(Looper.getMainLooper());
+    private final Random random = new Random();
 
-    private Runnable updateRunnable = new Runnable() {
-        @Override
-        public void run() {
-            updateSimulatedData();
-            handler.postDelayed(this, 3000); // Update every 3 seconds
-        }
-    };
+    private int bloodOxygenLevel;
+
+    private Runnable updateRunnable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,12 +27,14 @@ public class BloodOxygenDetailActivity extends AppCompatActivity {
         binding = ActivityBloodOxygenDetailBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        bloodOxygenLevel = getResources().getInteger(R.integer.oxygen_default_level);
+
         String oxygenValue = getIntent().getStringExtra("metric_value");
         if (oxygenValue != null) {
             try {
                 bloodOxygenLevel = Integer.parseInt(oxygenValue);
-            } catch (NumberFormatException e) {
-                bloodOxygenLevel = 98;
+            } catch (NumberFormatException ignored) {
+                bloodOxygenLevel = getResources().getInteger(R.integer.oxygen_default_level);
             }
         }
 
@@ -47,35 +45,46 @@ public class BloodOxygenDetailActivity extends AppCompatActivity {
 
     private void setupUI() {
         binding.bloodOxygenTitle.setText(getString(R.string.blood_oxygen_title));
-
-        // Set normal range
         binding.normalRange.setText(getString(R.string.blood_oxygen_normal_range));
-
-        // Set measurement tip
         binding.measurementTip.setText(getString(R.string.blood_oxygen_measurement_tip));
     }
 
     private void startUpdates() {
+        updateRunnable = new Runnable() {
+            @Override
+            public void run() {
+                updateSimulatedData();
+                handler.postDelayed(
+                        this,
+                        getResources().getInteger(R.integer.oxygen_update_interval_ms)
+                );
+            }
+        };
         handler.post(updateRunnable);
     }
 
     private void updateSimulatedData() {
-        // Simulate small fluctuations
-        int change = random.nextInt(3) - 1; // -1, 0, or 1
-        bloodOxygenLevel = Math.max(95, Math.min(100, bloodOxygenLevel + change));
+        int randomRange = getResources().getInteger(R.integer.oxygen_random_range);
+        int change = random.nextInt(randomRange) - 1;
 
+        int min = getResources().getInteger(R.integer.oxygen_normal_min);
+        int max = getResources().getInteger(R.integer.oxygen_max);
+
+        bloodOxygenLevel = Math.max(min, Math.min(max, bloodOxygenLevel + change));
         runOnUiThread(this::updateDisplay);
     }
 
     private void updateDisplay() {
         binding.bloodOxygenValue.setText(String.valueOf(bloodOxygenLevel));
 
-        // Update status
-        if (bloodOxygenLevel >= 95) {
+        int normalMin = getResources().getInteger(R.integer.oxygen_normal_min);
+        int lowMin = getResources().getInteger(R.integer.oxygen_low_min);
+
+        if (bloodOxygenLevel >= normalMin) {
             binding.oxygenStatus.setText(getString(R.string.blood_oxygen_status_normal));
             binding.oxygenStatus.setTextColor(getColor(R.color.green));
             binding.statusDescription.setText(getString(R.string.blood_oxygen_status_normal_desc));
-        } else if (bloodOxygenLevel >= 90) {
+        } else if (bloodOxygenLevel >= lowMin) {
             binding.oxygenStatus.setText(getString(R.string.blood_oxygen_status_low));
             binding.oxygenStatus.setTextColor(getColor(R.color.orange));
             binding.statusDescription.setText(getString(R.string.blood_oxygen_status_low_desc));
@@ -85,39 +94,43 @@ public class BloodOxygenDetailActivity extends AppCompatActivity {
             binding.statusDescription.setText(getString(R.string.blood_oxygen_status_very_low_desc));
         }
 
-        // Update graph
         updateGraph();
     }
 
     private void updateGraph() {
         binding.graphContainer.removeAllViews();
 
-        int maxHeight = 80;
-        int[] recentReadings = {95, 96, 97, 98, 97, 98, 99, 98, 97, bloodOxygenLevel};
+        int maxHeight = getResources().getInteger(R.integer.oxygen_graph_max_height);
+        int barWidth = getResources().getInteger(R.integer.oxygen_graph_bar_width);
+        int barMargin = getResources().getInteger(R.integer.oxygen_graph_bar_margin);
+        float cornerRadius = getResources().getDimension(R.dimen.oxygen_graph_bar_corner_radius);
 
-        for (int i = 0; i < recentReadings.length; i++) {
-            int reading = recentReadings[i];
-            float percentage = (float) (reading - 90) / 10; // 90-100% range
+        int[] recentReadings = {
+                95, 96, 97, 98, 97, 98, 99, 98, 97, bloodOxygenLevel
+        };
+
+        for (int reading : recentReadings) {
+            float percentage = (float) (reading - 90) / 10;
             int height = (int) (maxHeight * percentage);
 
-            androidx.appcompat.widget.AppCompatImageView bar = new androidx.appcompat.widget.AppCompatImageView(this);
+            AppCompatImageView bar = new AppCompatImageView(this);
 
-            // Create gradient drawable for bar
-            android.graphics.drawable.GradientDrawable gradient = new android.graphics.drawable.GradientDrawable();
+            android.graphics.drawable.GradientDrawable gradient =
+                    new android.graphics.drawable.GradientDrawable();
             gradient.setColors(new int[]{
                     getColor(R.color.blue_500),
                     getColor(R.color.cyan)
             });
-            gradient.setOrientation(android.graphics.drawable.GradientDrawable.Orientation.BOTTOM_TOP);
-            gradient.setCornerRadius(4f);
+            gradient.setOrientation(
+                    android.graphics.drawable.GradientDrawable.Orientation.BOTTOM_TOP
+            );
+            gradient.setCornerRadius(cornerRadius);
+
             bar.setBackground(gradient);
 
             android.widget.LinearLayout.LayoutParams params =
-                    new android.widget.LinearLayout.LayoutParams(
-                            12, // width
-                            height
-                    );
-            params.setMargins(2, maxHeight - height, 2, 0);
+                    new android.widget.LinearLayout.LayoutParams(barWidth, height);
+            params.setMargins(barMargin, maxHeight - height, barMargin, 0);
 
             binding.graphContainer.addView(bar, params);
         }

@@ -186,6 +186,142 @@
     <string name="sample_evening_desc">Tea and  Snacks</string>
     <string name="sample_dinner_desc">Chapati and  Curry</string>
 
+    <!-- Sample Blood Oxygen Value -->
+    <string name="blood_oxygen_value_sample">98</string>
+
+    <string name="emergency_icon_desc">Emergency alert icon</string>
+    <string name="phone_icon_desc">Phone call icon</string>
+
+    <string name="heart_icon_desc">Heart rate icon</string>
+    <string name="heart_rate_value_placeholder">72</string>
+    <string name="live_time_sample">12:00</string>
+
+    <string name="steps_value_placeholder">0</string>
+    <string name="distance_value_placeholder">0 km</string>
+    <string name="calories_value_placeholder">0 cal</string>
+    <string name="active_minutes_value_placeholder">0 min</string>
+
+    <string name="steps_icon_desc">Steps icon</string>
+
+
+    <string name="page_indicator_desc">Page indicator</string>
+
+    <string name="logout_cancel_symbol">✖</string>
+    <string name="logout_confirm_symbol">✔</string>
+    <string name="back_button_desc">Back</string>
+    <string name="user_icon_desc">User icon</string>
+
+
+
+        <!-- Guardian item (Call screen) -->
+        <string name="guardian_icon_desc">Guardian</string>
+        <string name="guardian_relation_placeholder">Relation</string>
+        <string name="guardian_phone_placeholder">Phone</string>
+        <string name="info_icon_desc">Information icon</string>
+
+    <string name="blood_oxygen_value_placeholder">--</string>
+    <string name="blood_oxygen_icon_desc">Blood oxygen icon</string>
+
+    <string name="metric_icon_desc">Metric icon</string>
+    <string name="metric_value_placeholder">--</string>
+    <string name="arrow_icon_desc">Navigate</string>
+    <string name="meal_button_desc">Open meal planner</string>
+    <string name="meal_icon_desc">Meal icon</string>
+    <string name="meal_name_placeholder">Meal name</string>
+    <string name="meal_time_placeholder">Meal time</string>
+    <string name="meal_description_placeholder">Meal description</string>
+    <string name="medicine_icon_desc">Medicine icon</string>
+    <string name="patient_info">Patient Info</string>
+
+
+
+
+
+
+
+    <!-- Sample Guardians (API failure fallback) -->
+    <string name="sample_name_yash">Yash</string>
+    <string name="sample_type_family">Family</string>
+    <string name="sample_relation_friend">Friend</string>
+    <string name="sample_phone_yash">+1234567890</string>
+
+    <string name="sample_name_dhwani">Dhwani</string>
+    <string name="sample_type_caretaker">Caretaker</string>
+    <string name="sample_relation_nurse">Nurse</string>
+    <string name="sample_phone_dhwani">+1234567891</string>
+
+    <string name="sample_name_jasjit">Jasjit</string>
+    <string name="sample_relation_guardian">Guardian</string>
+    <string name="sample_phone_jasjit">+1234567892</string>
+
+    <string name="sample_name_dr_smith">Dr. Smith</string>
+    <string name="sample_type_medical">Medical</string>
+    <string name="sample_relation_doctor">Doctor</string>
+    <string name="sample_phone_dr_smith">+1234567893</string>
+    <string name="guardian_empty">No guardians available</string>
+    <string name="guardian_error">Unable to load guardians</string>
+    <string name="health_info_error">Unable to load health information</string>
+
+    <!-- Meal Planner -->
+    <string name="loading_meal_plan">Loading meal plan...</string>
+    <string name="error_patient_id_not_found">Patient ID not found</string>
+    <string name="error_loading_meal_plan">Failed to load meal plan</string>
+    <string name="error_meal_fetch_failed">Failed: %1$s</string>
+    <string name="meal_not_available">-</string>
+
+    <!-- Meal Labels -->
+    <string name="meal_morning">Morning</string>
+    <string name="meal_afternoon">Afternoon</string>
+    <string name="meal_evening">Evening</string>
+    <string name="meal_night">Night</string>
+
+    <!-- Meal Times -->
+    <string name="meal_time_morning">08:00 AM</string>
+    <string name="meal_time_afternoon">01:00 PM</string>
+    <string name="meal_time_evening">06:00 PM</string>
+    <string name="meal_time_night">09:00 PM</string>
+    <string name="steps_distance_value">%1$.2f km</string>
+    <string name="steps_calories_value">%1$d kcal</string>
+    <string name="steps_active_minutes_value">%1$d min</string>
+    <string name="guardian_details_format">%1$s • %2$s</string>
+    <string name="log_adapter_initialized">Adapter initialized. Item count = %1$d</string>
+    <string name="log_invalid_position">Invalid click position</string>
+
+    <!-- Meal Planner -->
+
+    <string name="error_failed_load_meal_plan">Failed to load meal plan</string>
+    <string name="error_failed_with_message">Failed: %1$s</string>
+
+
+    <!-- Logs -->
+    <string name="log_meal_plan_loaded">Meal plan loaded successfully</string>
+    <string name="log_meal_parse_error">Error parsing meal plan JSON</string>
+
+    <string name="notification_medicine_title">Medicine Reminder</string>
+    <string name="notification_medicine_message">Tap to update status</string>
+
+    <string name="action_taken">Taken</string>
+    <string name="action_not_taken">Not Taken</string>
+
+    <string name="notification_channel_name">Medication Alerts</string>
+    <string name="toast_medicine_status">Medicine %1$s</string>
+
+
+
+    <string name="heart_rate">Heart Rate</string>
+
+    <string name="error_no_internet">No internet connection</string>
+    <string name="steps">Steps</string>
+    <string name="blood_oxygen">Blood Oxygen</string>
+    <string name="error_load_failed">Failed to load data</string>
+    <string name="error_call_failed">Call failed</string>
+
+
+
+
+
+
+
 
 
 

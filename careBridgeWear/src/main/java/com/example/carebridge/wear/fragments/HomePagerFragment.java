@@ -22,149 +22,166 @@ import com.example.carebridge.wear.databinding.FragmentHomePagerBinding;
 import com.example.carebridge.wear.utils.Constants;
 
 /**
- *  HomePagerFragment
- * This fragment represents ONE page inside the ViewPager on the Wear OS home screen.
- * It dynamically changes button icon, label, and click behavior based on position.
+ * HomePagerFragment
+
+ * Represents a single page inside the Wear OS home ViewPager.
+ * Displays one main action button based on the current position.
  */
 public class HomePagerFragment extends Fragment {
 
-    //  ViewBinding object for accessing UI elements safely
     private FragmentHomePagerBinding binding;
-
-    //  Stores the position of the current page
-    private int position;
+    private int position = Constants.POSITION_FIRST;
 
     /**
-     *  Factory Method
-     * Creates fragment and passes page position using Bundle
+     * Factory method to create fragment with page position.
      */
     public static HomePagerFragment newInstance(int position) {
         HomePagerFragment fragment = new HomePagerFragment();
         Bundle args = new Bundle();
-        args.putInt(Constants.ARG_POSITION, position); // Save position
+        args.putInt(Constants.ARG_POSITION, position);
         fragment.setArguments(args);
         return fragment;
     }
 
     /**
-     *  Called when fragment is created
-     * Reads the position value from Bundle
+     * Reads page position from arguments.
      */
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         if (getArguments() != null) {
-            position = getArguments().getInt(Constants.ARG_POSITION);
+            position = getArguments().getInt(
+                    Constants.ARG_POSITION,
+                    Constants.POSITION_FIRST
+            );
         }
     }
 
     /**
-     *  Inflates the UI layout using ViewBinding
+     * Inflates layout using ViewBinding.
      */
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-
+    public View onCreateView(
+            @NonNull LayoutInflater inflater,
+            @Nullable ViewGroup container,
+            @Nullable Bundle savedInstanceState
+    ) {
         binding = FragmentHomePagerBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
 
     /**
-     *  Called after the view is created
-     * Used to setup the button
+     * Initializes button after view creation.
      */
     @Override
-    public void onViewCreated(@NonNull View view,
-                              @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(
+            @NonNull View view,
+            @Nullable Bundle savedInstanceState
+    ) {
         super.onViewCreated(view, savedInstanceState);
-        setupButton(); // Initialize button logic
+        setupButton();
     }
 
     /**
-     *  Sets button icon, label, and click listener dynamically
+     * Configures button icon, label, and click action.
      */
     private void setupButton() {
-        int[] buttonIcons = getButtonIcons();     // Load all icons
-        String[] buttonLabels = getButtonLabels(); // Load all labels
+        int[] buttonIcons = getButtonIcons();
+        int[] buttonLabels = getButtonLabels();
 
-        // Set correct icon & text based on position
-        binding.homeMainButton.setImageResource(buttonIcons[position]);
-        binding.homeButtonLabel.setText(buttonLabels[position]);
+        if (position >= buttonIcons.length) {
+            return;
+        }
 
-        // Handle click action
-        binding.homeMainButton.setOnClickListener(v -> handleButtonClick());
+        binding.homeMainButton.setImageResource(
+                buttonIcons[position]
+        );
+
+        binding.homeButtonLabel.setText(
+                getString(buttonLabels[position])
+        );
+
+        binding.homeMainButton.setOnClickListener(
+                v -> handleButtonClick()
+        );
     }
 
     /**
-     *  Returns array of button icons based on feature
+     * Returns drawable resources for each page.
      */
     private int[] getButtonIcons() {
         return new int[]{
-                R.drawable.ic_phone_scaled,      // 0 - Call
-                R.drawable.ic_pill_scaled,       // 1 - Medicine
-                R.drawable.ic_meal,              // 2 - Meal Planner
-                R.drawable.ic_activity_scaled,  // 3 - Patient Health
-                R.drawable.ic_user_scaled,      // 4 - Guardian
-                R.drawable.ic_heart_scaled,     // 5 - Health Monitor
-                R.drawable.ic_logout_scaled     // 6 - Logout
+                R.drawable.ic_phone_scaled,
+                R.drawable.ic_pill_scaled,
+                R.drawable.ic_meal,
+                R.drawable.ic_activity_scaled,
+                R.drawable.ic_user_scaled,
+                R.drawable.ic_heart_scaled,
+                R.drawable.ic_logout_scaled
         };
     }
 
     /**
-     *  Returns array of button labels
+     * Returns string resources for each page label.
      */
-    private String[] getButtonLabels() {
-        return new String[]{
-                getString(R.string.call),             // 0
-                getString(R.string.medicine),         // 1
-                getString(R.string.meal_planner),     // 2
-                getString(R.string.patient_health),  // 3
-                getString(R.string.guardian_info),    // 4
-                getString(R.string.health_monitor),  // 5
-                getString(R.string.logout)            // 6
+    private int[] getButtonLabels() {
+        return new int[]{
+                R.string.call,
+                R.string.medicine,
+                R.string.meal_planner,
+                R.string.patient_health,
+                R.string.guardian_info,
+                R.string.health_monitor,
+                R.string.logout
         };
     }
 
     /**
-     *  Handles navigation based on selected button position
+     * Handles navigation based on page position.
      */
     private void handleButtonClick() {
+        Intent intent = null;
+
         switch (position) {
 
-            case 0:
-                startActivity(new Intent(requireContext(), CallActivity.class));
+            case Constants.BUTTON_CALL:
+                intent = new Intent(requireContext(), CallActivity.class);
                 break;
 
-            case 1:
-                startActivity(new Intent(requireContext(), MedicineActivity.class));
+            case Constants.BUTTON_MEDICINE:
+                intent = new Intent(requireContext(), MedicineActivity.class);
                 break;
 
-            case 2:
-                startActivity(new Intent(requireContext(), MealPlannerWearActivity.class));
+            case Constants.BUTTON_MEAL:
+                intent = new Intent(requireContext(), MealPlannerWearActivity.class);
                 break;
 
-            case 3:
-                startActivity(new Intent(requireContext(), HealthInfoActivity.class));
+            case Constants.BUTTON_PATIENT_HEALTH:
+                intent = new Intent(requireContext(), HealthInfoActivity.class);
                 break;
 
-            case 4:
-                startActivity(new Intent(requireContext(), GuardianActivity.class));
+            case Constants.BUTTON_GUARDIAN_INFO:
+                intent = new Intent(requireContext(), GuardianActivity.class);
                 break;
 
-            case 5:
-                startActivity(new Intent(requireContext(), HealthMonitorActivity.class));
+            case Constants.BUTTON_HEALTH_MONITOR:
+                intent = new Intent(requireContext(), HealthMonitorActivity.class);
                 break;
 
-            case 6:
+            case Constants.BUTTON_LOGOUT:
                 handleLogout();
-                break;
+                return;
+        }
+
+        if (intent != null) {
+            startActivity(intent);
         }
     }
 
     /**
-     *  Calls logout method from MainActivity
+     * Triggers logout via MainActivity.
      */
     private void handleLogout() {
         if (requireActivity() instanceof MainActivity) {
@@ -173,7 +190,7 @@ public class HomePagerFragment extends Fragment {
     }
 
     /**
-     *  Clears binding reference to prevent memory leaks
+     * Clears ViewBinding reference.
      */
     @Override
     public void onDestroyView() {

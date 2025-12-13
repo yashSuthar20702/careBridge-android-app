@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <LinearLayout
         android:id="@+id/patient_health_screen"
@@ -13,31 +12,51 @@
         <!-- Header -->
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="34dp"
+            android:layout_height="@dimen/patient_header_height"
+            android:layout_marginTop="@dimen/margin_xsmall"
             android:layout_marginBottom="@dimen/margin_medium"
-            android:layout_marginTop="2dp"
-            android:paddingStart="@dimen/padding_medium">
+            android:paddingStart="@dimen/padding_medium"
+            android:paddingEnd="@dimen/padding_medium">
 
             <TextView
+                android:id="@+id/tvTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/patient_health"
                 android:textColor="@color/white"
                 android:textSize="@dimen/text_size_medium"
                 android:textStyle="bold"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"/>
-
+                android:layout_centerInParent="true" />
         </RelativeLayout>
+
+        <!-- Loading State -->
+        <ProgressBar
+            android:id="@+id/progressHealthInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone" />
+
+        <!-- Error State -->
+        <TextView
+            android:id="@+id/tvErrorState"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/health_info_error"
+            android:textColor="@color/error_red"
+            android:textSize="@dimen/text_size_small"
+            android:gravity="center"
+            android:visibility="gone"
+            android:padding="@dimen/padding_small" />
 
         <!-- Health Info List -->
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/health_info_recycler_view"
+            android:id="@+id/healthInfoRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_weight="@dimen/layout_weight_full"
             android:clipToPadding="false"
-            android:paddingTop="5dp"
+            android:paddingTop="@dimen/padding_xsmall"
             android:paddingBottom="@dimen/padding_medium" />
 
     </LinearLayout>

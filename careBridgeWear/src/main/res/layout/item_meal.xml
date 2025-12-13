@@ -6,55 +6,58 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/margin_medium"
     app:cardCornerRadius="@dimen/card_corner_radius_large"
-    app:cardElevation="3dp"
-    app:cardBackgroundColor="@color/white">
+    app:cardElevation="@dimen/card_elevation_medium"
+    app:cardBackgroundColor="@color/card_background_white">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:padding="@dimen/padding_large"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:baselineAligned="false">
 
         <ImageView
+            android:id="@+id/meal_icon"
             android:layout_width="@dimen/icon_size_xlarge"
             android:layout_height="@dimen/icon_size_xlarge"
             android:src="@drawable/ic_meal"
-            app:tint="@color/black"
-            android:layout_marginEnd="@dimen/margin_large" />
-
+            app:tint="@color/icon_tint_primary"
+            android:layout_marginEnd="@dimen/margin_large"
+            android:contentDescription="@string/meal_icon_desc" />
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="@dimen/layout_weight_full"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/meal_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Breakfast"
-                android:textColor="@color/black"
-                android:textSize="15sp"
+                android:text="@string/meal_name_placeholder"
+                android:textColor="@color/text_primary"
+                android:textSize="@dimen/text_size_medium"
                 android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/meal_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="08:30 AM"
-                android:textColor="@color/gray_600"
-                android:textSize="12sp" />
+                android:text="@string/meal_time_placeholder"
+                android:textColor="@color/text_secondary"
+                android:textSize="@dimen/text_size_small" />
 
             <TextView
                 android:id="@+id/meal_description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Oats + Fruits"
-                android:textColor="@color/gray_600"
-                android:textSize="12sp" />
+                android:text="@string/meal_description_placeholder"
+                android:textColor="@color/text_secondary"
+                android:textSize="@dimen/text_size_small" />
 
         </LinearLayout>
 
     </LinearLayout>
+
 </androidx.cardview.widget.CardView>

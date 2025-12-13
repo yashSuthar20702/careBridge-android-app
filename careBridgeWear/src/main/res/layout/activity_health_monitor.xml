@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
     <FrameLayout
         android:id="@+id/health_monitor_screen"
@@ -12,10 +11,11 @@
         <!-- Header -->
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="34dp"
+            android:layout_height="@dimen/health_monitor_header_height"
             android:layout_marginBottom="@dimen/margin_medium"
-            android:layout_marginTop="2dp"
-            android:paddingStart="@dimen/padding_medium">
+            android:layout_marginTop="@dimen/margin_xsmall"
+            android:paddingStart="@dimen/padding_medium"
+            android:paddingEnd="@dimen/padding_medium">
 
             <TextView
                 android:id="@+id/health_monitor_title"
@@ -29,16 +29,16 @@
 
         </RelativeLayout>
 
-        <!-- Simple WearableRecyclerView - shows all 3 items -->
+        <!-- Wearable RecyclerView -->
         <androidx.wear.widget.WearableRecyclerView
             android:id="@+id/health_monitor_recycler_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="50dp"
-            android:layout_marginBottom="5dp"
+            android:layout_marginTop="@dimen/health_monitor_list_margin_top"
+            android:layout_marginBottom="@dimen/health_monitor_list_margin_bottom"
             android:clipToPadding="true"
-            android:paddingTop="0dp"
-            android:paddingBottom="0dp" />
+            android:paddingTop="@dimen/padding_none"
+            android:paddingBottom="@dimen/padding_none" />
 
     </FrameLayout>
 </layout>

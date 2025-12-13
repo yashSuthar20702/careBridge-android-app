@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <integer name="oxygen_default_level">98</integer>
+    <integer name="oxygen_update_interval_ms">3000</integer>
+    <integer name="oxygen_random_range">3</integer>
+
+    <integer name="oxygen_normal_min">95</integer>
+    <integer name="oxygen_low_min">90</integer>
+    <integer name="oxygen_max">100</integer>
+
+    <integer name="oxygen_graph_max_height">80</integer>
+    <integer name="oxygen_graph_bar_width">12</integer>
+    <integer name="oxygen_graph_bar_margin">2</integer>
+
+</resources>

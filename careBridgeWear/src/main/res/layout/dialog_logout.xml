@@ -4,67 +4,66 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <FrameLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:baselineAligned="false"
         android:padding="@dimen/padding_large"
         android:background="@drawable/wear_circle_gray"
-        android:gravity="center"
         android:backgroundTint="@android:color/transparent">
 
+        <!-- Message -->
+        <TextView
+            android:id="@+id/tvMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/logout_confirmation"
+            android:textColor="@color/text_white"
+            android:textSize="@dimen/text_size_xlarge"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:paddingBottom="@dimen/logout_message_padding_bottom" />
+
+        <!-- Buttons -->
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:gravity="center">
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:baselineAligned="false">
 
+            <!-- Cancel -->
             <TextView
-                android:id="@+id/tvMessage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/logout_confirmation"
-                android:textColor="@color/white"
-                android:textSize="@dimen/text_size_xlarge"
-                android:textStyle="bold"
+                android:id="@+id/btnCancel"
+                android:layout_width="@dimen/logout_button_size"
+                android:layout_height="@dimen/logout_button_size"
+                android:layout_marginEnd="@dimen/margin_xsmall"
+                android:background="@drawable/wear_button_circle_dark"
                 android:gravity="center"
-                android:paddingBottom="28dp" />
+                android:includeFontPadding="false"
+                android:lineHeight="@dimen/logout_button_line_height"
+                android:text="@string/logout_cancel_symbol"
+                android:textSize="@dimen/logout_button_text_size"
+                android:textColor="@color/text_white" />
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center">
-
-                <TextView
-                    android:id="@+id/btnCancel"
-                    android:layout_width="@dimen/button_width_small"
-                    android:layout_height="@dimen/button_width_small"
-                    android:layout_marginEnd="@dimen/margin_xsmall"
-                    android:background="@drawable/wear_button_circle_dark"
-                    android:gravity="center"
-                    android:includeFontPadding="false"
-                    android:lineHeight="72dp"
-                    android:text="✖"
-                    android:textSize="28sp"
-                    android:textColor="@color/white" />
-
-                <TextView
-                    android:id="@+id/btnConfirm"
-                    android:layout_width="@dimen/button_width_small"
-                    android:layout_height="@dimen/button_width_small"
-                    android:layout_marginStart="@dimen/margin_medium"
-                    android:background="@drawable/wear_button_circle_light"
-                    android:gravity="center"
-                    android:includeFontPadding="false"
-                    android:lineHeight="72dp"
-                    android:text="✔"
-                    android:textSize="28sp"
-                    android:textColor="@color/white" />
-
-            </LinearLayout>
+            <!-- Confirm -->
+            <TextView
+                android:id="@+id/btnConfirm"
+                android:layout_width="@dimen/logout_button_size"
+                android:layout_height="@dimen/logout_button_size"
+                android:layout_marginStart="@dimen/margin_medium"
+                android:background="@drawable/wear_button_circle_light"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:lineHeight="@dimen/logout_button_line_height"
+                android:text="@string/logout_confirm_symbol"
+                android:textSize="@dimen/logout_button_text_size"
+                android:textColor="@color/text_white" />
 
         </LinearLayout>
 
-    </FrameLayout>
+    </LinearLayout>
 
 </androidx.wear.widget.SwipeDismissFrameLayout>

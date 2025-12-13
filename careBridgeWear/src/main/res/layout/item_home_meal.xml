@@ -4,22 +4,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black">
+    android:background="@color/screen_background_black">
 
-    <!-- ✅ CENTERED CONTAINER -->
     <LinearLayout
         android:id="@+id/center_container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="center"
-
+        android:baselineAligned="false"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <!-- ✅ MAIN ROUND WHITE BUTTON -->
         <ImageButton
             android:id="@+id/meal_main_button"
             android:layout_width="@dimen/button_width_medium"
@@ -28,19 +26,19 @@
             android:scaleType="centerInside"
             android:src="@drawable/ic_meal"
             android:stateListAnimator="@anim/button_state_anim"
-            app:tint="@color/icon_tint" />
+            app:tint="@color/icon_tint"
+            android:contentDescription="@string/meal_button_desc" />
 
-        <!-- ✅ BUTTON LABEL -->
         <TextView
             android:id="@+id/meal_button_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:text="Meal Planner"
+            android:layout_marginTop="@dimen/spacing_small"
+            android:text="@string/meal_planner"
             android:textStyle="bold"
-            android:textColor="@color/white"
+            android:textColor="@color/text_white"
             android:textSize="@dimen/text_size_small"
-            android:gravity="center"/>
+            android:gravity="center" />
 
     </LinearLayout>
 

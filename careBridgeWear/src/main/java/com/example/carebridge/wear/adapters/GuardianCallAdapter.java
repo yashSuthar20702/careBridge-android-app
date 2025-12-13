@@ -14,7 +14,12 @@ import com.example.carebridge.wear.models.Guardian;
 
 import java.util.List;
 
-public class GuardianCallAdapter extends RecyclerView.Adapter<GuardianCallAdapter.GuardianCallViewHolder> {
+/**
+ * RecyclerView adapter used to display guardians and trigger call action.
+ * Designed for Wear OS and follows best practices.
+ */
+public class GuardianCallAdapter
+        extends RecyclerView.Adapter<GuardianCallAdapter.GuardianCallViewHolder> {
 
     private static final String TAG = "GuardianCallAdapter";
 
@@ -25,92 +30,84 @@ public class GuardianCallAdapter extends RecyclerView.Adapter<GuardianCallAdapte
         void onGuardianCall(Guardian guardian);
     }
 
-    public GuardianCallAdapter(List<Guardian> guardianList, OnGuardianCallListener callListener) {
+    public GuardianCallAdapter(@NonNull List<Guardian> guardianList,
+                               @NonNull OnGuardianCallListener callListener) {
         this.guardianList = guardianList;
         this.callListener = callListener;
 
-        Log.d(TAG, "🟢 Adapter created with " + (guardianList != null ? guardianList.size() : 0) + " guardians");
+        Log.d(
+                TAG,
+                String.valueOf(guardianList.size())
+        );
     }
 
     @NonNull
     @Override
-    public GuardianCallViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public GuardianCallViewHolder onCreateViewHolder(
+            @NonNull ViewGroup parent,
+            int viewType
+    ) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_guardian_call, parent, false);
-
-        Log.d(TAG, "🟢 ViewHolder created");
         return new GuardianCallViewHolder(view, callListener);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull GuardianCallViewHolder holder, int position) {
-        Guardian guardian = guardianList.get(position);
-
-        Log.d(TAG, "🔄 Binding guardian at position " + position + ": "
-                + guardian.getName() + " | " + guardian.getPhone());
-
-        holder.bind(guardian);
+    public void onBindViewHolder(
+            @NonNull GuardianCallViewHolder holder,
+            int position
+    ) {
+        holder.bind(guardianList.get(position));
     }
 
     @Override
     public int getItemCount() {
-        int count = guardianList != null ? guardianList.size() : 0;
-        Log.d(TAG, "📌 Adapter count = " + count);
-        return count;
+        return guardianList.size();
     }
 
-    static class GuardianCallViewHolder extends RecyclerView.ViewHolder {
+    /**
+     * ViewHolder responsible for binding guardian data.
+     */
+    public static class GuardianCallViewHolder extends RecyclerView.ViewHolder {
 
         private final TextView guardianName;
         private final TextView guardianRelation;
         private final TextView guardianPhone;
         private final OnGuardianCallListener callListener;
 
-        private static final String VH_TAG = "GuardianVH";
-
-        public GuardianCallViewHolder(@NonNull View itemView, OnGuardianCallListener callListener) {
+        public GuardianCallViewHolder(
+                @NonNull View itemView,
+                @NonNull OnGuardianCallListener callListener
+        ) {
             super(itemView);
-
             this.callListener = callListener;
 
             guardianName = itemView.findViewById(R.id.guardian_name);
             guardianRelation = itemView.findViewById(R.id.guardian_relation);
             guardianPhone = itemView.findViewById(R.id.guardian_phone);
-
-            Log.d(VH_TAG, "🟢 ViewHolder initialized (Views found successfully)");
         }
 
-        public void bind(Guardian guardian) {
+        /**
+         * Binds guardian data and handles click events.
+         */
+        public void bind(@NonNull Guardian guardian) {
             guardianName.setText(guardian.getName());
             guardianRelation.setText(guardian.getRelation());
             guardianPhone.setText(guardian.getPhone());
 
-            Log.d(VH_TAG, "🔗 Binding: " + guardian.getName());
-
-            // CLICK HANDLER FOR ITEM
             itemView.setOnClickListener(v -> {
-                int pos = getAdapterPosition();
+                int position = getBindingAdapterPosition();
 
-                Log.d(VH_TAG, "👉 CLICK at position: " + pos);
-
-                if (pos == RecyclerView.NO_POSITION) {
-                    Log.e(VH_TAG, "❌ Invalid adapter position");
+                if (position == RecyclerView.NO_POSITION) {
+                    Log.e(
+                            TAG,
+                            itemView.getContext()
+                                    .getString(R.string.log_invalid_position)
+                    );
                     return;
                 }
 
-                if (callListener == null) {
-                    Log.e(VH_TAG, "❌ CallListener is NULL");
-                    return;
-                }
-
-                Log.d(VH_TAG, "📞 Calling guardian: " + guardian.getName());
                 callListener.onGuardianCall(guardian);
-            });
-
-            // OPTIONAL LONG PRESS LOG
-            itemView.setOnLongClickListener(v -> {
-                Log.d(VH_TAG, "🔍 Long click → " + guardian.getName());
-                return true;
             });
         }
     }

@@ -1,96 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools"
+<layout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/black"
+        android:background="@color/screen_background_black"
         android:padding="@dimen/padding_large">
 
+        <!-- Time -->
         <TextView
             android:id="@+id/home_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="12:00"
-            android:textColor="#97E248"
+            android:text="@string/time_placeholder"
+            android:textColor="@color/time_green"
             android:textSize="@dimen/text_size_medium"
             android:textStyle="bold"
+            android:paddingTop="@dimen/padding_xsmall"
+            android:paddingBottom="@dimen/padding_medium"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:paddingTop="5dp"
-            android:paddingBottom="@dimen/padding_medium" />
+            app:layout_constraintEnd_toEndOf="parent" />
 
+        <!-- ViewPager -->
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/view_pager"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:padding="5dp"
+            android:padding="@dimen/padding_xsmall"
+            app:layout_constraintTop_toBottomOf="@id/home_time"
             app:layout_constraintBottom_toTopOf="@id/indicators_layout"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/home_time" />
+            app:layout_constraintEnd_toEndOf="parent" />
 
+        <!-- Indicators -->
         <LinearLayout
             android:id="@+id/indicators_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:baselineAligned="false"
+            android:paddingBottom="@dimen/padding_xsmall"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:paddingBottom="1dp">
+            app:layout_constraintEnd_toEndOf="parent">
 
             <ImageButton
                 android:id="@+id/home_indicator0"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
+                android:layout_width="@dimen/indicator_size"
+                android:layout_height="@dimen/indicator_size"
                 android:layout_margin="@dimen/margin_medium"
-                android:background="@drawable/indicator_active" />
+                android:background="@drawable/indicator_active"
+                android:contentDescription="@string/page_indicator_desc" />
 
             <ImageButton
                 android:id="@+id/home_indicator1"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
+                android:layout_width="@dimen/indicator_size"
+                android:layout_height="@dimen/indicator_size"
                 android:layout_margin="@dimen/margin_medium"
-                android:background="@drawable/indicator_inactive" />
+                android:background="@drawable/indicator_inactive"
+                android:contentDescription="@string/page_indicator_desc" />
 
             <ImageButton
                 android:id="@+id/home_indicator2"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
+                android:layout_width="@dimen/indicator_size"
+                android:layout_height="@dimen/indicator_size"
                 android:layout_margin="@dimen/margin_medium"
-                android:background="@drawable/indicator_inactive" />
+                android:background="@drawable/indicator_inactive"
+                android:contentDescription="@string/page_indicator_desc" />
 
             <ImageButton
                 android:id="@+id/home_indicator3"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
+                android:layout_width="@dimen/indicator_size"
+                android:layout_height="@dimen/indicator_size"
                 android:layout_margin="@dimen/margin_medium"
-                android:background="@drawable/indicator_inactive" />
+                android:background="@drawable/indicator_inactive"
+                android:contentDescription="@string/page_indicator_desc" />
 
             <ImageButton
                 android:id="@+id/home_indicator4"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
+                android:layout_width="@dimen/indicator_size"
+                android:layout_height="@dimen/indicator_size"
                 android:layout_margin="@dimen/margin_medium"
-                android:background="@drawable/indicator_inactive" />
+                android:background="@drawable/indicator_inactive"
+                android:contentDescription="@string/page_indicator_desc" />
 
             <ImageButton
                 android:id="@+id/home_indicator5"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
+                android:layout_width="@dimen/indicator_size"
+                android:layout_height="@dimen/indicator_size"
                 android:layout_margin="@dimen/margin_medium"
-                android:background="@drawable/indicator_inactive" />
+                android:background="@drawable/indicator_inactive"
+                android:contentDescription="@string/page_indicator_desc" />
 
             <ImageButton
                 android:id="@+id/home_indicator6"
-                android:layout_width="10dp"
-                android:layout_height="10dp"
+                android:layout_width="@dimen/indicator_size"
+                android:layout_height="@dimen/indicator_size"
                 android:layout_margin="@dimen/margin_medium"
-                android:background="@drawable/indicator_inactive" />
+                android:background="@drawable/indicator_inactive"
+                android:contentDescription="@string/page_indicator_desc" />
+
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

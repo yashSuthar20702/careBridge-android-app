@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/metric_container"
     android:layout_width="match_parent"
@@ -12,37 +13,39 @@
     android:gravity="center_vertical"
     android:clickable="true"
     android:focusable="true"
-    android:foreground="?attr/selectableItemBackground">
+    android:foreground="?attr/selectableItemBackground"
+    android:baselineAligned="false">
 
-    <!-- Selection Indicator (Cursor) - Initially hidden -->
+    <!-- Selection Indicator -->
     <View
         android:id="@+id/selection_cursor"
         android:layout_width="@dimen/cursor_width"
         android:layout_height="match_parent"
-        android:background="@color/white"
-        android:alpha="0.9"
-        android:layout_marginEnd="6dp"
+        android:background="@color/text_white"
+        android:alpha="@dimen/alpha_high"
+        android:layout_marginEnd="@dimen/spacing_xsmall"
         android:visibility="gone" />
 
     <!-- Icon Container -->
     <FrameLayout
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:layout_marginEnd="6dp">
+        android:layout_width="@dimen/icon_container_size"
+        android:layout_height="@dimen/icon_container_size"
+        android:layout_marginEnd="@dimen/spacing_xsmall">
 
         <View
             android:id="@+id/icon_background"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@drawable/circle_bg"
-            android:alpha="0.2" />
+            android:alpha="@dimen/alpha_low" />
 
         <ImageView
             android:id="@+id/metric_icon"
-            android:layout_width="18dp"
-            android:layout_height="18dp"
+            android:layout_width="@dimen/icon_size_small"
+            android:layout_height="@dimen/icon_size_small"
             android:layout_gravity="center"
-            app:tint="@color/white" />
+            app:tint="@color/text_white"
+            android:contentDescription="@string/metric_icon_desc" />
 
     </FrameLayout>
 
@@ -50,8 +53,9 @@
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:orientation="vertical">
+        android:layout_weight="@dimen/layout_weight_full"
+        android:orientation="vertical"
+        android:baselineAligned="false">
 
         <!-- Label -->
         <TextView
@@ -59,8 +63,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/heart_rate_label"
-            android:textColor="@color/white"
-            android:textSize="10sp"
+            android:textColor="@color/text_white"
+            android:textSize="@dimen/text_size_xsmall"
             android:textStyle="bold"
             android:maxLines="1"
             android:ellipsize="end" />
@@ -71,15 +75,16 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:layout_marginTop="1dp">
+            android:layout_marginTop="@dimen/spacing_xxsmall"
+            android:baselineAligned="false">
 
             <TextView
                 android:id="@+id/metric_value"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="72"
-                android:textColor="@color/white"
-                android:textSize="18sp"
+                android:text="@string/metric_value_placeholder"
+                android:textColor="@color/text_white"
+                android:textSize="@dimen/text_size_large"
                 android:textStyle="bold"
                 android:maxLines="1" />
 
@@ -88,9 +93,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/unit_bpm"
-                android:textColor="@color/white"
-                android:textSize="9sp"
-                android:layout_marginStart="2dp"
+                android:textColor="@color/text_white"
+                android:textSize="@dimen/text_size_xxsmall"
+                android:layout_marginStart="@dimen/spacing_xxsmall"
                 android:maxLines="1" />
 
         </LinearLayout>
@@ -101,9 +106,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/real_time"
-            android:textColor="@color/gray_400"
-            android:textSize="8sp"
-            android:layout_marginTop="1dp"
+            android:textColor="@color/text_secondary"
+            android:textSize="@dimen/text_size_xxxsmall"
+            android:layout_marginTop="@dimen/spacing_xxsmall"
             android:maxLines="1"
             android:ellipsize="end" />
 
@@ -112,10 +117,11 @@
     <!-- Arrow Icon -->
     <ImageView
         android:id="@+id/arrow_icon"
-        android:layout_width="10dp"
-        android:layout_height="10dp"
+        android:layout_width="@dimen/icon_size_xsmall"
+        android:layout_height="@dimen/icon_size_xsmall"
         android:src="@drawable/ic_arrow_right"
-        app:tint="@color/gray_400"
-        android:layout_marginStart="@dimen/spacing_small" />
+        app:tint="@color/text_secondary"
+        android:layout_marginStart="@dimen/spacing_small"
+        android:contentDescription="@string/arrow_icon_desc" />
 
 </LinearLayout>

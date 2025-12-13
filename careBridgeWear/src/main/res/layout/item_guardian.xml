@@ -6,8 +6,8 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/margin_medium"
     app:cardCornerRadius="@dimen/card_corner_radius_small"
-    app:cardElevation="2dp"
-    app:cardBackgroundColor="@color/white">
+    app:cardElevation="@dimen/card_elevation_small"
+    app:cardBackgroundColor="@color/card_background_white">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -21,6 +21,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
+            android:baselineAligned="false"
             android:layout_marginBottom="@dimen/margin_medium">
 
             <ImageView
@@ -28,17 +29,18 @@
                 android:layout_width="@dimen/icon_size_large"
                 android:layout_height="@dimen/icon_size_large"
                 android:src="@drawable/ic_user"
-                android:tint="@color/white"
-                android:background="@color/black"
+                app:tint="@color/icon_tint_light"
+                android:background="@color/icon_background_dark"
                 android:padding="@dimen/spacing_small"
-                android:layout_marginEnd="@dimen/margin_medium" />
+                android:layout_marginEnd="@dimen/margin_medium"
+                android:contentDescription="@string/user_icon_desc" />
 
             <TextView
                 android:id="@+id/guardian_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/guardian_name_placeholder"
-                android:textColor="@color/black"
+                android:textColor="@color/text_primary"
                 android:textSize="@dimen/text_size_medium"
                 android:textStyle="bold" />
 
@@ -50,24 +52,26 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
+            android:baselineAligned="false"
             android:layout_marginBottom="@dimen/spacing_small"
-            android:paddingStart="24dp">
+            android:paddingStart="@dimen/indent_medium">
 
             <ImageView
                 android:id="@+id/icon_heart"
                 android:layout_width="@dimen/icon_size_small"
                 android:layout_height="@dimen/icon_size_small"
                 android:src="@drawable/ic_heart"
-                android:tint="@color/gray_600"
-                android:layout_marginEnd="@dimen/spacing_small" />
+                app:tint="@color/icon_tint_secondary"
+                android:layout_marginEnd="@dimen/spacing_small"
+                android:contentDescription="@string/heart_icon_desc" />
 
             <TextView
                 android:id="@+id/guardian_details"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/guardian_details_placeholder"
-                android:textColor="@color/gray_600"
-                android:textSize="11sp" />
+                android:textColor="@color/text_secondary"
+                android:textSize="@dimen/text_size_xsmall" />
 
         </LinearLayout>
 
@@ -77,23 +81,25 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
-            android:paddingStart="24dp">
+            android:baselineAligned="false"
+            android:paddingStart="@dimen/indent_medium">
 
             <ImageView
                 android:id="@+id/icon_phone"
                 android:layout_width="@dimen/icon_size_small"
                 android:layout_height="@dimen/icon_size_small"
                 android:src="@drawable/ic_phone"
-                android:tint="@color/gray_600"
-                android:layout_marginEnd="@dimen/spacing_small" />
+                app:tint="@color/icon_tint_secondary"
+                android:layout_marginEnd="@dimen/spacing_small"
+                android:contentDescription="@string/phone_icon_desc" />
 
             <TextView
                 android:id="@+id/guardian_phone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/phone_placeholder"
-                android:textColor="@color/gray_600"
-                android:textSize="11sp" />
+                android:textColor="@color/text_secondary"
+                android:textSize="@dimen/text_size_xsmall" />
 
         </LinearLayout>
 

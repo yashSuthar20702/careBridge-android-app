@@ -11,21 +11,51 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+
 public class HealthDataManager {
-    private static final String PREFS_NAME = "HealthDataPrefs";
+
+    // SharedPreferences file name
+    private static final String PREF_HEALTH_DATA = "health_data_prefs";
+
+    // Preference keys
     private static final String KEY_HEART_RATE_DATA = "heart_rate_data";
     private static final String KEY_STEPS_DATA = "steps_data";
     private static final String KEY_LAST_HEART_RATE = "last_heart_rate";
     private static final String KEY_LAST_STEPS = "last_steps";
     private static final String KEY_LAST_UPDATE = "last_update";
 
-    private SharedPreferences prefs;
-    private Gson gson = new Gson();
+    // History limits (Wear-friendly)
+    private static final int MAX_HEART_RATE_HISTORY = 100;
+    private static final int MAX_STEPS_HISTORY = 50;
 
+    // Data types
+    private static final String TYPE_HEART_RATE = Constants.METRIC_HEART_RATE;
+    private static final String TYPE_STEPS = Constants.METRIC_STEPS;
+
+    // Time constants
+    private static final long ONE_DAY_MILLIS = Constants.ONE_DAY_MS;
+
+    private static final String EMPTY_JSON_ARRAY = "[]";
+
+    private final SharedPreferences preferences;
+    private final Gson gson = new Gson();
+
+    /**
+     * Constructor
+     *
+     * @param context Wear OS application context
+     */
     public HealthDataManager(Context context) {
-        prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        preferences =
+                context.getSharedPreferences(
+                        PREF_HEALTH_DATA,
+                        Context.MODE_PRIVATE
+                );
     }
 
+    /**
+     * Represents a single health data reading.
+     */
     public static class HealthDataPoint {
         public int value;
         public long timestamp;
@@ -33,60 +63,76 @@ public class HealthDataManager {
 
         public HealthDataPoint(int value, String type) {
             this.value = value;
-            this.timestamp = new Date().getTime();
             this.type = type;
+            this.timestamp = new Date().getTime();
         }
     }
 
+    // =================================================
+    // Save Operations
+    // =================================================
+
+    /**
+     * Saves heart rate reading and updates history.
+     */
     public void saveHeartRate(int heartRate) {
-        // Save to history
+        if (heartRate <= 0) return;
+
         List<HealthDataPoint> data = getHeartRateData();
-        data.add(new HealthDataPoint(heartRate, "heart_rate"));
+        data.add(new HealthDataPoint(heartRate, TYPE_HEART_RATE));
 
-        // Keep only last 100 readings
-        if (data.size() > 100) {
-            data = data.subList(data.size() - 100, data.size());
-        }
-
+        trimHistory(data, MAX_HEART_RATE_HISTORY);
         saveData(KEY_HEART_RATE_DATA, data);
 
-        // Save last reading
-        prefs.edit()
+        preferences.edit()
                 .putInt(KEY_LAST_HEART_RATE, heartRate)
                 .putLong(KEY_LAST_UPDATE, System.currentTimeMillis())
                 .apply();
     }
 
+    /**
+     * Saves steps reading and updates history.
+     */
     public void saveSteps(int steps) {
-        // Save to history
+        if (steps < 0) return;
+
         List<HealthDataPoint> data = getStepsData();
-        data.add(new HealthDataPoint(steps, "steps"));
+        data.add(new HealthDataPoint(steps, TYPE_STEPS));
 
-        // Keep only last 50 readings
-        if (data.size() > 50) {
-            data = data.subList(data.size() - 50, data.size());
-        }
-
+        trimHistory(data, MAX_STEPS_HISTORY);
         saveData(KEY_STEPS_DATA, data);
 
-        // Save last reading
-        prefs.edit()
+        preferences.edit()
                 .putInt(KEY_LAST_STEPS, steps)
                 .putLong(KEY_LAST_UPDATE, System.currentTimeMillis())
                 .apply();
     }
 
+    // =================================================
+    // Get Latest Values
+    // =================================================
+
     public int getLastHeartRate() {
-        return prefs.getInt(KEY_LAST_HEART_RATE, 72); // Default 72 BPM
+        return preferences.getInt(
+                KEY_LAST_HEART_RATE,
+                Constants.DEFAULT_HEART_RATE
+        );
     }
 
     public int getLastSteps() {
-        return prefs.getInt(KEY_LAST_STEPS, 0);
+        return preferences.getInt(
+                KEY_LAST_STEPS,
+                Constants.DEFAULT_STEPS
+        );
     }
 
     public long getLastUpdateTime() {
-        return prefs.getLong(KEY_LAST_UPDATE, 0);
+        return preferences.getLong(KEY_LAST_UPDATE, 0);
     }
+
+    // =================================================
+    // History Access
+    // =================================================
 
     public List<HealthDataPoint> getHeartRateData() {
         return getData(KEY_HEART_RATE_DATA);
@@ -95,6 +141,10 @@ public class HealthDataManager {
     public List<HealthDataPoint> getStepsData() {
         return getData(KEY_STEPS_DATA);
     }
+
+    // =================================================
+    // Calculations
+    // =================================================
 
     public int getAverageHeartRate() {
         List<HealthDataPoint> data = getHeartRateData();
@@ -113,9 +163,7 @@ public class HealthDataManager {
 
         int max = Integer.MIN_VALUE;
         for (HealthDataPoint point : data) {
-            if (point.value > max) {
-                max = point.value;
-            }
+            max = Math.max(max, point.value);
         }
         return max;
     }
@@ -126,29 +174,38 @@ public class HealthDataManager {
 
         int min = Integer.MAX_VALUE;
         for (HealthDataPoint point : data) {
-            if (point.value < min) {
-                min = point.value;
-            }
+            min = Math.min(min, point.value);
         }
         return min;
     }
 
+    /**
+     * Returns total steps taken in the last 24 hours.
+     */
     public int getTotalStepsToday() {
         List<HealthDataPoint> data = getStepsData();
         if (data.isEmpty()) return getLastSteps();
 
-        long today = System.currentTimeMillis() - (24 * 60 * 60 * 1000);
+        long since = System.currentTimeMillis() - ONE_DAY_MILLIS;
         int total = 0;
+
         for (HealthDataPoint point : data) {
-            if (point.timestamp > today) {
+            if (point.timestamp >= since) {
                 total = Math.max(total, point.value);
             }
         }
         return total;
     }
 
+    // =================================================
+    // Utilities
+    // =================================================
+
+    /**
+     * Clears all stored health data.
+     */
     public void clearAllData() {
-        prefs.edit()
+        preferences.edit()
                 .remove(KEY_HEART_RATE_DATA)
                 .remove(KEY_STEPS_DATA)
                 .remove(KEY_LAST_HEART_RATE)
@@ -158,14 +215,21 @@ public class HealthDataManager {
     }
 
     private List<HealthDataPoint> getData(String key) {
-        String json = prefs.getString(key, "[]");
-        Type type = new TypeToken<List<HealthDataPoint>>(){}.getType();
+        String json = preferences.getString(key, EMPTY_JSON_ARRAY);
+        Type type = new TypeToken<List<HealthDataPoint>>() {}.getType();
         List<HealthDataPoint> data = gson.fromJson(json, type);
         return data != null ? data : new ArrayList<>();
     }
 
     private void saveData(String key, List<HealthDataPoint> data) {
-        String json = gson.toJson(data);
-        prefs.edit().putString(key, json).apply();
+        preferences.edit()
+                .putString(key, gson.toJson(data))
+                .apply();
+    }
+
+    private void trimHistory(List<HealthDataPoint> data, int maxSize) {
+        if (data.size() > maxSize) {
+            data.subList(0, data.size() - maxSize).clear();
+        }
     }
 }
